@@ -19,13 +19,17 @@ def fast_iter(context):
             for form in forms]
 
 
+def load(stdin=stdout):
+    with open(stdin, 'rb') as i:
+        return cloudpickle.load(i)
+
+
 def main(args):
-    with open(document) as stdin:
-        result = fast_iter(iterparse(stdin, html=True))
     if args.load:
-        with open(args.output, 'rb') as i:
-            print(cloudpickle.load(i))
+        print(load(args.output))
     else:
+        with open(document) as stdin:
+            result = fast_iter(iterparse(stdin, html=True))
         with open(args.output, 'wb') as out:
             cloudpickle.dump(result, out)
         if args.verbose:
