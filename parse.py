@@ -13,9 +13,8 @@ document = 'USC_all_courses.html'
 def fast_iter(context):
     forms = (elem.findall('input') for event, elem in context
              if event == 'end' and elem.tag == 'form' and elem.text != 'Search')
-    return (({item[0]: item[1] for item in field.items()
-                               if item[1] != 'hidden' and item[0] != 'style'}
-             for field in form if field.items()[1][1] != 'dummy')
+    return (({item[0]: item[1] for item in field.items()}
+             for field in form)
             for form in forms)
 
 
@@ -31,7 +30,8 @@ def main(args):
     elif args.save or args.verbose:
         with open(args.input) as stdin:
             result = filter(None, fast_iter(iterparse(stdin, html=True)))
-            result = filter(None, ({d['name']: d['value'] for d in form}
+            result = filter(None, ({d['name']: d['value'] for d in form
+                                    if d['name'] in ('SEL_CRSE', 'sel_subj', 'term_in')}
                                    for form in result))
         if args.save:
             with open(args.output, 'wb') as out:
