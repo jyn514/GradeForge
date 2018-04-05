@@ -38,6 +38,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
+    parser.add_argument('output', help='File to store binary', default=stdout,
+                        nargs='?')
     action = parser.add_mutually_exclusive_group()
     action.add_argument('--save', '-s', '--save-binary', action='store_true',
                         help='Save result of main() in binary form',
@@ -46,6 +48,4 @@ if __name__ == '__main__':
                         help='Show result on stdout')
     parser.add_argument('--verbose', '-v', help='Show result',
                         action='store_true')
-    parser.add_argument('--output', '-o', help='File to store binary',
-                        default=stdout)
     main(parser.parse_args())

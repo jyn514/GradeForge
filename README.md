@@ -9,4 +9,7 @@ I plan to eventually add an SQL database.
 - (optional) `cloudpickle`
 
 # Usage
-`./parse.py`
+- Parsing: `./parse.py [filename]`
+- Viewing: `./parse.py -l`
+- Parse and view: `./parse.py -v`
+- Help: `./parse.py -h`
