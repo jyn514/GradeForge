@@ -10,8 +10,8 @@ document = 'USC_all_courses.html'
 def fast_iter(context):
     forms = (elem.findall('input') for event, elem in context
              if event == 'end' and elem.tag == 'form' and elem.text != 'Search')
-    return [i.items() for inputs in forms
-            for i in inputs if i.items()[1][1] != 'dummy']
+    return [[i.items() for i in inputs]
+            for inputs in forms]
 
 
 def load():
