@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-from __future__ import print_function
+from __future__ import print_function, generators
 # note: only works with python2 (sorry)
 from lxml import etree
 import cloudpickle
