@@ -10,12 +10,23 @@ import cloudpickle
 stdout = 'output.data'
 document = 'USC_all_courses.html'
 
-def fast_iter(context):
-    forms = (elem.findall('input') for event, elem in context
-             if event == 'end' and elem.tag == 'form' and elem.text != 'Search')
-    return (({item[0]: item[1] for item in field.items()}
-             for field in form)
-            for form in forms)
+def parse(context):
+    classes = []
+    departments = {}
+    code = True
+    for event, elem in context:
+        if event == 'end' and elem.text is not None and elem.text != '\n':
+            if elem.tag == 'th':
+                header = elem.text.split(' - ')
+                departments[header[0]] = header[1]
+            elif elem.tag == 'td':
+                if code:
+                    current = {'code': elem.text, 'abbr': header[0]}
+                else:
+                    current.update({'title': elem.text})
+                    classes.append(current)
+                code = not code
+    return filter(None, classes), departments
 
 
 def load(stdin=stdout):
@@ -24,20 +35,16 @@ def load(stdin=stdout):
 
 
 def main(args):
-    print(args)
     if args.load:
         print(load(args.output))
     elif args.save or args.verbose:
         with open(args.input) as stdin:
-            result = filter(None, fast_iter(iterparse(stdin, html=True)))
-            result = filter(None, ({d['name']: d['value'] for d in form
-                                    if d['name'] in ('SEL_CRSE', 'sel_subj', 'term_in')}
-                                   for form in result))
+            classes, departments = parse(iterparse(stdin, html=True))
         if args.save:
             with open(args.output, 'wb') as out:
-                cloudpickle.dump(result, out)
+                cloudpickle.dump((classes, departments), out)
         if args.verbose:
-            print(result)
+            print(classes, departments)
 
 
 if __name__ == '__main__':
