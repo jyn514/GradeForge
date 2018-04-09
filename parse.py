@@ -1,9 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 from __future__ import print_function, generators
 from argparse import ArgumentParser
 from sys import argv
 
-# note: only works with python2 (sorry)
 from lxml.etree import iterparse
 import cloudpickle
 
@@ -38,7 +37,7 @@ def main(args):
     if args.load:
         print(load(args.output))
     elif args.save or args.verbose:
-        with open(args.input) as stdin:
+        with open(args.input, 'rb') as stdin:
             classes, departments = parse(iterparse(stdin, html=True))
         if args.save:
             with open(args.output, 'wb') as out:
