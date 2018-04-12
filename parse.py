@@ -1,11 +1,15 @@
 #!/usr/bin/env python
+
+'''HTML parsing. Generally, works only on files, not on strings'''
+
 from __future__ import print_function, generators
 from argparse import ArgumentParser
 from os.path import exists
 
 from lxml.etree import iterparse
 
-from post import *
+from utils import DAYS, save, load, army_time, parse_semester
+from post import  get_calendar, get_bookstore
 
 def parse_catalog(html):
     '''
@@ -140,7 +144,7 @@ def parse_sections(html):
                     elif i == 5:
                         pass  # already covered earlier (schedule type)
                     elif i == 6:
-                        if (column.text is None):
+                        if column.text is None:
                             course['instructor'] = 'TBA'
                         else:
                             course['instructor'] = column.text.split(' (')[0].replace('   ', ' ')
@@ -160,8 +164,8 @@ def parse_sections(html):
 def parse_days(text):
     text = text.split(' Meeting Times')[0]
     if 'Only' in text:
-        return days[text.split(' Only')[0]]
-    return ''.join(days[d] for d in text.split('/'))
+        return DAYS[text.split(' Only')[0]]
+    return ''.join(DAYS[d] for d in text.split('/'))
 
 
 def parse_exam(html):

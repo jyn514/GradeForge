@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+'''Misc utils. Strictly functional, not state-based.'''
+
 from datetime import date
 from argparse import HelpFormatter
 import cloudpickle
@@ -32,7 +34,7 @@ allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "2015
            'number': ('',) + tuple(range(1, 1000)),
            'level': ('%', 'GR', 'LW', 'MD', 'UG'),
            'term': ("1A", "1B", "10", "2A", "2B", "20", "3A", "3B", "30", "4A", "4B",
-                       "40", "50", "6A", "6B", "60", "7A", "7B", "70", "8A", "8B", "80"),
+                    "40", "50", "6A", "6B", "60", "7A", "7B", "70", "8A", "8B", "80"),
            'times': ('%', 'E', 'O', 'W'),
            'location': ('%', "1A@S", "3FJ", "3GDC", "3GDG", "3GDI", "3GDL", "3GDR",
                         "8GRV", "8GRS", "7LAU", "3PLM", "3HNR", "1HNR", "1ONL",
@@ -42,11 +44,13 @@ allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "2015
            'end_hour': range(24),
            'end_minute': range(60),
            'days': ('m', 't', 'w', 'r', 'f', 's', 'u'),
-           'credits': range(4)
-           }
+           'credits': range(4)}
 
 # https://stackoverflow.com/a/16969505
 class SingleMetavarFormatter(HelpFormatter):
+    '''For the picky among us.
+    Turns the default: -s ARGS, --long ARGS
+              into:    -s, --long ARGS'''
     def _format_action_invocation(self, action):
         if not action.option_strings:
             return self._metavar_formatter(action, action.dest)(1)[0]
@@ -114,7 +118,7 @@ def army_time(ampm):
         hours = str((int(hours) + 12) % 24)  # midnight is 00:00
     return ':'.join((hours, minutes))
 
-days = {'Monday': 'M',
+DAYS = {'Monday': 'M',
         'Tuesday': 'T',
         'Wednesday': 'W',
         'Thursday': 'R',
