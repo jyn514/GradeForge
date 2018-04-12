@@ -1,0 +1,3411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<HTML lang="en">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" name="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" name="Cache-Control" content="no-cache">
+<LINK REL="stylesheet" HREF="/css/web_defaultapp.css" TYPE="text/css">
+<LINK REL="stylesheet" HREF="/css/web_defaultprint.css" TYPE="text/css" media="print">
+<link rel="stylesheet" type="text/css" href="/css/app-overrides.css">
+<link rel="stylesheet" type="text/css" href="/css/common-platform.css">
+<link rel="stylesheet" type="text/css" href="/css/common-controls.css">
+<LINK REL="stylesheet" type="text/css" href="/css/jquery/jquery.autocomplete.css">
+<LINK REL="stylesheet" type="text/css" href="/css/cascade.css">
+<!--[if IE 6]><link href="/css/ie6.css" rel="stylesheet" type="text/css"><![endif]-->
+<!--[if IE 7]><link href="/css/ie7.css" rel="stylesheet" type="text/css"><![endif]-->
+<!--[if IE 8]><link href="/css/ie8.css" rel="stylesheet" type="text/css"><![endif]-->
+<LINK REL="stylesheet" type="text/css" href="/css/cascade-print.css" media="print">
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.includeMany-1.2.0.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.history.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui-personalized-1.5.3.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.colorpicker.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/js/jquery/json2xml.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.jsonp-2.1.3.min.js"></script>
+<script type="text/javascript" src="/js/serviceProperties.js"></script>
+<script type="text/javascript" src="/js/common-controls-min.js"></script>
+<script type="text/javascript" src="/js/common-integrate-min.js"></script>
+<script type="text/javascript" src="/js/common-navigation-min.js"></script>
+<script type="text/javascript" src="/js/common-platform-min.js"></script>
+<script type="text/javascript" src="/js/cascade-utils-min.js"></script>
+<script type="text/javascript" src="/js/cascade-controls-min.js"></script>
+<script type="text/javascript" src="/js/udcxml-service-min.js"></script>
+<script type="text/javascript" src="/js/cascade-parser-min.js"></script>
+<script type="text/javascript" src="/js/cascade-ext-min.js"></script>
+<title>Class Schedule Listing</title>
+<meta http-equiv="Content-Script-Type" name="Default_Script_Language" content="text/javascript">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- Hide JavaScript from older browsers 
+window.onunload = function() {submitcount=0;}
+var submitcount=0;
+function checkSubmit() {
+if (submitcount == 0)
+   {
+   submitcount++;
+   return true;
+   }
+else
+   {
+alert("Your changes have already been submitted.");
+   return false;
+   }
+}
+//  End script hiding -->
+</SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- Hide JavaScript from older browsers 
+//  Function to open a window
+function windowOpen(window_url) {
+   helpWin = window.open(window_url,'','toolbar=yes,status=no,scrollbars=yes,menubar=yes,resizable=yes,directories=no,location=no,width=350,height=400');
+   if (document.images) { 
+       if (helpWin) helpWin.focus()
+   }
+}
+//  End script hiding -->
+</SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- Hide JavaScript from older browsers 
+var level_depth = "0";
+var userDetails = "";
+var wcMessage = "";
+var locale_val = "AMERICAN_AMERICA";
+var locale_lang = "en_US";
+var help_width= "450";
+var help_height = "500";
+//  End script hiding -->
+</SCRIPT>
+</head>
+<body>
+<div class="headerwrapperdiv">
+<div class="pageheaderdiv1">
+<a href="#main_content" onMouseover="window.status='Go to Main Content'; return true" onMouseout="window.status=''; return true" OnFocus="window.status='Go to Main Content'; return true" onBlur="window.status=''; return true" class="skiplinks">Go to Main Content</a>
+<h1>University of South Carolina (BILD)</h1></DIV><div class="headerlinksdiv">
+</DIV>
+<table  CLASS="plaintable" SUMMARY="This table displays Menu Items and Banner Search textbox."
+         WIDTH="100%">
+<tr>
+<TD CLASS="pldefault">
+<div class="headerlinksdiv2">
+&nbsp;
+</div>
+</TD>
+<TD CLASS="pldefault"><p class="rightaligntext" /p>
+<SPAN class="pageheaderlinks">
+<a href="/wtlhelp/twbhhelp.htm" accesskey="H" onClick="popup = window.open('/wtlhelp/twbhhelp.htm', 'PopupPage','height=500,width=450,scrollbars=yes,resizable=yes'); return false" target="_blank" onMouseOver="window.status='';  return true" onMouseOut="window.status=''; return true"onFocus="window.status='';  return true" onBlur="window.status=''; return true"  class="submenulinktext2">HELP</a>
+|
+<a href="twbkwbis.P_Logout" accesskey="3" class="submenulinktext2">EXIT</a>
+</span>
+</TD>
+</tr>
+</table>
+</DIV>
+<div class="pagetitlediv">
+<table  CLASS="plaintable" SUMMARY="This table displays title and static header displays."
+   WIDTH="100%">
+<tr>
+<TD CLASS="pldefault">
+<h2>Class Schedule Listing</h2>
+</TD>
+<TD CLASS="pldefault">
+&nbsp;
+</TD>
+<TD CLASS="pldefault"><p class="rightaligntext" /p>
+<div class="staticheaders">
+Fall 2018 To Fall 2018<br>
+Apr 11, 2018<br>
+</div>
+</TD>
+</tr>
+<tr>
+<TD class="bg3" width="100%" colSpan=3><img src="/wtlgifs/web_transparent.gif" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image"  NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10 /></TD>
+</tr>
+</table>
+<a name="main_content"></a>
+</DIV>
+<div class="pagebodydiv">
+<!--  ** END OF twbkwbis.P_OpenDoc **  -->
+<br />
+
+<input type="hidden" name="sel_crn" value="dummy" />
+<input type="hidden" name="assoc_term_in" value="dummy" />
+<input type="hidden" name="ADD_BTN" value="dummy" />
+<table  CLASS="datadisplaytable" SUMMARY="This layout table is used to present the sections found" width="100%"><caption class="captiontext">Sections Found</caption>
+<tr>
+<td CLASS="dddefault">&nbsp;</td>
+</tr>
+<tr>
+<th CLASS="ddlabel" scope="row" ><SPAN class="fieldOrangetextbold">Fall 2018</SPAN></th>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12566">Survey of Accounting - 12566 - ACCT 222 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+This section not open to Business majors. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=222&amp;sel_crse_end=222&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=222&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:15 pm - 2:30 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 123</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Barbara   Pierce (<ABBR title= "Primary">P</ABBR>)<a href="mailto:pierce8@mailbox.sc.edu"    target="Barbara Pierce" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=10978">Introduction to Financial Accounting - 10978 - ACCT 225 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:30 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 123</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:00 am - 9:15 am</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 123</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12578">Introduction to Financial Accounting - 12578 - ACCT 225 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:40 am - 10:30 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:30 am - 10:45 am</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12804">Introduction to Financial Accounting - 12804 - ACCT 225 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:50 am - 11:40 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:00 am - 12:15 pm</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12505">HNRS: Introduction to Financial Accounting - 12505 - ACCT 225 - H01</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=H01">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 110</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Debbie Huguley  Brumbaugh (<ABBR title= "Primary">P</ABBR>)<a href="mailto:dhbrumba@mailbox.sc.edu"    target="Debbie H. Brumbaugh" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=16940">HNRS: Introduction to Financial Accounting - 16940 - ACCT 225 - H02</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=H02">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:40 am - 12:55 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 129</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Laura S  Self (<ABBR title= "Primary">P</ABBR>)<a href="mailto:laurastudstill@yahoo.com"    target="Laura S. Self" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12535">HNRS: Introduction to Financial Accounting - 12535 - ACCT 225 - H03</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=H03">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:40 am - 10:55 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 122</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Scott B.  Jackson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:scott.jackson@moore.sc.edu"    target="Scott B. Jackson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=21066">HNRS: Introduction to Financial Accounting - 21066 - ACCT 225 - H04</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=H04">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 126</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Scott B.  Jackson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:scott.jackson@moore.sc.edu"    target="Scott B. Jackson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=23319">Introduction to Financial Accounting - 23319 - ACCT 225 - S01</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+This section is for the Business Living Learning Community only. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=225&amp;sel_crse_end=225&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=225&amp;p_seq_in=S01">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:40 am - 10:30 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:30 am - 10:45 am</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Shannon D  McCutchen (<ABBR title= "Primary">P</ABBR>)<a href="mailto:mccutch@mailbox.sc.edu"    target="Shannon D. McCutchen" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12817">Introduction to Managerial Accounting - 12817 - ACCT 226 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: Sophomore standing. Open to Business majors only. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:00 pm - 12:50 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Debbie Huguley  Brumbaugh (<ABBR title= "Primary">P</ABBR>)<a href="mailto:dhbrumba@mailbox.sc.edu"    target="Debbie H. Brumbaugh" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:30 pm - 1:45 pm</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Debbie Huguley  Brumbaugh (<ABBR title= "Primary">P</ABBR>)<a href="mailto:dhbrumba@mailbox.sc.edu"    target="Debbie H. Brumbaugh" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12818">Introduction to Managerial Accounting - 12818 - ACCT 226 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: Sophomore standing. Open to Business majors only. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:10 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Brent Steven  Daulton (<ABBR title= "Primary">P</ABBR>)<a href="mailto:brent.daulton@moore.sc.edu"    target="Brent S. Daulton" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:00 pm - 3:15 pm</td>
+<td CLASS="dddefault">F</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Brent Steven  Daulton (<ABBR title= "Primary">P</ABBR>)<a href="mailto:brent.daulton@moore.sc.edu"    target="Brent S. Daulton" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=22224">Introduction to Managerial Accounting - 22224 - ACCT 226 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: Sophomore standing. Open to Business majors only. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Brent Steven  Daulton (<ABBR title= "Primary">P</ABBR>)<a href="mailto:brent.daulton@moore.sc.edu"    target="Brent S. Daulton" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=21749">Introduction to Managerial Accounting - 21749 - ACCT 226 - 300</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: Sophomore standing. Open to Business majors only. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=300">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">7:05 pm - 8:20 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 124</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Graziella Leslie  Bruner (<ABBR title= "Primary">P</ABBR>)<a href="mailto:lbruner2@sc.rr.com"    target="Graziella L. Bruner" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=22606">HNRS: Introduction to Managerial Accounting - 22606 - ACCT 226 - H01</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=H01">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:30 am - 9:45 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 122</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=22607">HNRS: Introduction to Managerial Accounting - 22607 - ACCT 226 - H02</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=226&amp;sel_crse_end=226&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=226&amp;p_seq_in=H02">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:05 am - 11:20 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12819">Survey of Commercial Law - 12819 - ACCT 324 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=324&amp;sel_crse_end=324&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=324&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:40 am - 10:30 am</td>
+<td CLASS="dddefault">MWF</td>
+<td CLASS="dddefault">Darla Moore School of Business 123</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Julius David  Johnson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:john3689@mailbox.sc.edu"    target="Julius D. Johnson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=22661">Survey of Commercial Law - 22661 - ACCT 324 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=324&amp;sel_crse_end=324&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=324&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:50 am - 11:40 am</td>
+<td CLASS="dddefault">MWF</td>
+<td CLASS="dddefault">Darla Moore School of Business 123</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Julius David  Johnson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:john3689@mailbox.sc.edu"    target="Julius D. Johnson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12820">Survey of Commercial Law - 12820 - ACCT 324 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Open to business majors only. Open to minors and other majors, which require the course for degree completion, on April 20th.
+
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=324&amp;sel_crse_end=324&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=324&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:50 pm - 4:05 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 101</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Thomas Mazyck  Hughes (<ABBR title= "Primary">P</ABBR>)<a href="mailto:thughes@moore.sc.edu"    target="Thomas M. Hughes" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12821">HNRS: Survey of Commercial Law - 12821 - ACCT 324 - H01</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Honors College Permission
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>SC Honors College 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=324&amp;sel_crse_end=324&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=324&amp;p_seq_in=H01">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">4:25 pm - 5:40 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Thomas Mazyck  Hughes (<ABBR title= "Primary">P</ABBR>)<a href="mailto:thughes@moore.sc.edu"    target="Thomas M. Hughes" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12586">Financial Accounting I - 12586 - ACCT 401 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=401&amp;sel_crse_end=401&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=401&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:30 am - 9:45 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Andrew Marshall  Collins (<ABBR title= "Primary">P</ABBR>)<a href="mailto:andrew.collins@moore.sc.edu"    target="Andrew M. Collins" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12598">Financial Accounting I - 12598 - ACCT 401 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=401&amp;sel_crse_end=401&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=401&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:05 am - 11:20 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 113</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Andrew Marshall  Collins (<ABBR title= "Primary">P</ABBR>)<a href="mailto:andrew.collins@moore.sc.edu"    target="Andrew M. Collins" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12604">Financial Accounting I - 12604 - ACCT 401 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=401&amp;sel_crse_end=401&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=401&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:15 pm - 2:30 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 122</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Andrew Marshall  Collins (<ABBR title= "Primary">P</ABBR>)<a href="mailto:andrew.collins@moore.sc.edu"    target="Andrew M. Collins" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=14558">Financial Accounting I - 14558 - ACCT 401 - 004</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=401&amp;sel_crse_end=401&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=401&amp;p_seq_in=004">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:45 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 126</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Barbara   Pierce (<ABBR title= "Primary">P</ABBR>)<a href="mailto:pierce8@mailbox.sc.edu"    target="Barbara Pierce" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=20955">Financial Accounting I - 20955 - ACCT 401 - 007</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=401&amp;sel_crse_end=401&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=401&amp;p_seq_in=007">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:20 pm - 3:35 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 126</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Barbara   Pierce (<ABBR title= "Primary">P</ABBR>)<a href="mailto:pierce8@mailbox.sc.edu"    target="Barbara Pierce" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12822">Cost/Managerial Accounting - 12822 - ACCT 402 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=402&amp;sel_crse_end=402&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=402&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:20 pm - 3:35 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Marlys Gascho  Lipe (<ABBR title= "Primary">P</ABBR>)<a href="mailto:marlys.lipe@moore.sc.edu"    target="Marlys G. Lipe" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12823">Cost/Managerial Accounting - 12823 - ACCT 402 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=402&amp;sel_crse_end=402&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=402&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:20 pm - 3:35 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12824">Cost/Managerial Accounting - 12824 - ACCT 402 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=402&amp;sel_crse_end=402&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=402&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:05 am - 11:20 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 141</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Bryan Richard  Stikeleather (<ABBR title= "Primary">P</ABBR>)<a href="mailto:bryan.stikeleather@moore.sc.edu"    target="Bryan R. Stikeleather" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12825">Cost/Managerial Accounting - 12825 - ACCT 402 - 004</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=402&amp;sel_crse_end=402&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=402&amp;p_seq_in=004">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:40 am - 12:55 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Bryan Richard  Stikeleather (<ABBR title= "Primary">P</ABBR>)<a href="mailto:bryan.stikeleather@moore.sc.edu"    target="Bryan R. Stikeleather" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=16629">Cost/Managerial Accounting - 16629 - ACCT 402 - 005</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+ACCT majors only. Prereq: ACCT 226. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=402&amp;sel_crse_end=402&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=402&amp;p_seq_in=005">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">4:25 pm - 5:40 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12827">Tax I - 12827 - ACCT 403 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=403&amp;sel_crse_end=403&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=403&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 112</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Justin Scott  Byars (<ABBR title= "Primary">P</ABBR>)<a href="mailto:justin.byars@moore.sc.edu"    target="Justin S. Byars" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12828">Tax I - 12828 - ACCT 403 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=403&amp;sel_crse_end=403&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=403&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">3:55 pm - 5:10 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Chelsea Rae  Austin (<ABBR title= "Primary">P</ABBR>)<a href="mailto:chelsearae.austin@moore.sc.edu"    target="Chelsea R. Austin" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=15312">Tax I - 15312 - ACCT 403 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=403&amp;sel_crse_end=403&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=403&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">9:40 am - 10:55 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 129</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Justin Scott  Byars (<ABBR title= "Primary">P</ABBR>)<a href="mailto:justin.byars@moore.sc.edu"    target="Justin S. Byars" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=21937">Tax I - 21937 - ACCT 403 - 004</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=403&amp;sel_crse_end=403&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=403&amp;p_seq_in=004">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:45 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Chelsea Rae  Austin (<ABBR title= "Primary">P</ABBR>)<a href="mailto:chelsearae.austin@moore.sc.edu"    target="Chelsea R. Austin" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12829">Accounting Information Systems I - 12829 - ACCT 404 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=404&amp;sel_crse_end=404&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=404&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:15 pm - 2:30 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 126</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Dwight David  McIntyre (<ABBR title= "Primary">P</ABBR>)</td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=20972">Accounting Information Systems I - 20972 - ACCT 404 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=404&amp;sel_crse_end=404&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=404&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:40 am - 12:55 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 114</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Dwight David  McIntyre (<ABBR title= "Primary">P</ABBR>)</td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12830">Financial Accounting II - 12830 - ACCT 405 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=405&amp;sel_crse_end=405&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=405&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:30 am - 9:45 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 141</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Natalia Monakhova  Scott (<ABBR title= "Primary">P</ABBR>)<a href="mailto:natalia.scott@moore.sc.edu"    target="Natalia M. Scott" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12832">Financial Accounting II - 12832 - ACCT 405 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=405&amp;sel_crse_end=405&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=405&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:40 am - 12:55 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 126</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Natalia Monakhova  Scott (<ABBR title= "Primary">P</ABBR>)<a href="mailto:natalia.scott@moore.sc.edu"    target="Natalia M. Scott" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=21067">Financial Accounting II - 21067 - ACCT 405 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 401. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=405&amp;sel_crse_end=405&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=405&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:15 pm - 2:30 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 129</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Natalia Monakhova  Scott (<ABBR title= "Primary">P</ABBR>)<a href="mailto:natalia.scott@moore.sc.edu"    target="Natalia M. Scott" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12835">Auditing I - 12835 - ACCT 406 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 404. Prereq or coreq: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=406&amp;sel_crse_end=406&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=406&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:05 am - 11:20 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 120</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Aaron Foster  Zimbelman (<ABBR title= "Primary">P</ABBR>)<a href="mailto:aaron.zimbelman@moore.sc.edu"    target="Aaron F. Zimbelman" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12837">Auditing I - 12837 - ACCT 406 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 404. Prereq or coreq: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=406&amp;sel_crse_end=406&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=406&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:40 am - 12:55 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 133</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Aaron Foster  Zimbelman (<ABBR title= "Primary">P</ABBR>)<a href="mailto:aaron.zimbelman@moore.sc.edu"    target="Aaron F. Zimbelman" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=16631">Auditing I - 16631 - ACCT 406 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 404. Prereq or coreq: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=406&amp;sel_crse_end=406&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=406&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">4:25 pm - 5:40 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 140</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Aaron Foster  Zimbelman (<ABBR title= "Primary">P</ABBR>)<a href="mailto:aaron.zimbelman@moore.sc.edu"    target="Aaron F. Zimbelman" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12838">Financial Accounting III - 12838 - ACCT 501 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq for undergraduates: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=501&amp;sel_crse_end=501&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=501&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 129</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Feng   Yeo (<ABBR title= "Primary">P</ABBR>)<a href="mailto:yeof@mailbox.sc.edu"    target="Feng Yeo" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12839">Financial Accounting III - 12839 - ACCT 501 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq for undergraduates: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=501&amp;sel_crse_end=501&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=501&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">11:10 am - 12:25 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 141</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Marlys Gascho  Lipe (<ABBR title= "Primary">P</ABBR>)<a href="mailto:marlys.lipe@moore.sc.edu"    target="Marlys G. Lipe" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12842">Advanced Cost/Managerial Accounting - 12842 - ACCT 502 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq for undergraduates: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=502&amp;sel_crse_end=502&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=502&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">4:25 pm - 5:40 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 122</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Robert   Grasser (<ABBR title= "Primary">P</ABBR>)<a href="mailto:robert.grasser@moore.sc.edu"    target="Robert Grasser" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=20956">Advanced Cost/Managerial Accounting - 20956 - ACCT 502 - 003</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq for undergraduates: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=502&amp;sel_crse_end=502&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=502&amp;p_seq_in=003">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:50 pm - 4:05 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 122</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Robert   Grasser (<ABBR title= "Primary">P</ABBR>)<a href="mailto:robert.grasser@moore.sc.edu"    target="Robert Grasser" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=26066">Legal Issues for Accountants & Managers - 26066 - ACCT 504 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+This section is for MACC students only.
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=504&amp;sel_crse_end=504&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=504&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">3:55 pm - 5:10 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 110</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Justin Scott  Byars (<ABBR title= "Primary">P</ABBR>)<a href="mailto:justin.byars@moore.sc.edu"    target="Justin S. Byars" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12843">Governmental and Nonprofit Accounting - 12843 - ACCT 505 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=505&amp;sel_crse_end=505&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=505&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">1:15 pm - 2:30 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 119</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Laura S  Self (<ABBR title= "Primary">P</ABBR>)<a href="mailto:laurastudstill@yahoo.com"    target="Laura S. Self" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=22608">Governmental and Nonprofit Accounting - 22608 - ACCT 505 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=505&amp;sel_crse_end=505&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=505&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:50 pm - 4:05 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 125</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Laura S  Self (<ABBR title= "Primary">P</ABBR>)<a href="mailto:laurastudstill@yahoo.com"    target="Laura S. Self" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=18013">International Financial Reporting - 18013 - ACCT 506 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>GLD: Global Learning 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=506&amp;sel_crse_end=506&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=506&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">3:55 pm - 5:10 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 103</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Feng   Yeo (<ABBR title= "Primary">P</ABBR>)<a href="mailto:yeof@mailbox.sc.edu"    target="Feng Yeo" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=19781">International Financial Reporting - 19781 - ACCT 506 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Prereq: ACCT 405. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate, Undergraduate 
+<br />
+<SPAN class="fieldlabeltext">Attributes: </SPAN>GLD: Global Learning 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=506&amp;sel_crse_end=506&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=506&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:45 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 141</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Feng   Yeo (<ABBR title= "Primary">P</ABBR>)<a href="mailto:yeof@mailbox.sc.edu"    target="Feng Yeo" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=29244">Master of Accountancy Student Development - 29244 - ACCT 700 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+MACC students only
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       0.000 TO        1.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=700&amp;sel_crse_end=700&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=700&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+<td CLASS="dddefault">&nbsp;</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Jared Weston  Jones (<ABBR title= "Primary">P</ABBR>)<a href="mailto:jared.jones@moore.sc.edu"    target="Jared W. Jones" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=11700"> Financial Accounting - 11700 - ACCT 728 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MHR students.
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=728&amp;sel_crse_end=728&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=728&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:45 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 140</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Scott B.  Jackson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:scott.jackson@moore.sc.edu"    target="Scott B. Jackson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12844">Auditing II - 12844 - ACCT 732 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=732&amp;sel_crse_end=732&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=732&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:30 am - 9:45 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 124</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Scott D.  Vandervelde (<ABBR title= "Primary">P</ABBR>)<a href="mailto:vandervelde@moore.sc.edu"    target="Scott D. Vandervelde" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=20959">Accounting Research and Communication - 20959 - ACCT 734 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=734&amp;sel_crse_end=734&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=734&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:50 pm - 4:05 pm</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 140</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Chad Matthew  Stefaniak (<ABBR title= "Primary">P</ABBR>)<a href="mailto:stefani3@mailbox.sc.edu"    target="Chad M. Stefaniak" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=17131">Information Technology Assurance, Control, and Security - 17131 - ACCT 736 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=736&amp;sel_crse_end=736&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=736&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:05 am - 11:20 am</td>
+<td CLASS="dddefault">TR</td>
+<td CLASS="dddefault">Darla Moore School of Business 133</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Chad Matthew  Stefaniak (<ABBR title= "Primary">P</ABBR>)<a href="mailto:stefani3@mailbox.sc.edu"    target="Chad M. Stefaniak" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12845">Accounting Information Systems from a Strategic Perspective - 12845 - ACCT 737 - 002</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=737&amp;sel_crse_end=737&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=737&amp;p_seq_in=002">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:20 pm - 3:35 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 103</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Clark J  Hampton (<ABBR title= "Primary">P</ABBR>)</td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12846">Financial Statement Analysis - 12846 - ACCT 738 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=738&amp;sel_crse_end=738&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=738&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">2:20 pm - 3:35 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 121</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Dwight David  McIntyre (<ABBR title= "Primary">P</ABBR>)</td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=28601">Special Topics in Accounting - 28601 - ACCT 741 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=741&amp;sel_crse_end=741&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=741&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">10:50 am - 12:05 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 121</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Jason Tyler  Rasso (<ABBR title= "Primary">P</ABBR>)<a href="mailto:jason.rasso@moore.sc.edu"    target="Jason T. Rasso" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12847">Tax Research and Communication - 12847 - ACCT 750 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=750&amp;sel_crse_end=750&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=750&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">8:05 am - 9:20 am</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 141</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Julius David  Johnson (<ABBR title= "Primary">P</ABBR>)<a href="mailto:john3689@mailbox.sc.edu"    target="Julius D. Johnson" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=12849">Business Entity Tax Issue - 12849 - ACCT 751 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+Restricted to MACC students. 
+
+<br />
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Lecture Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=751&amp;sel_crse_end=751&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=751&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault">12:45 pm - 2:00 pm</td>
+<td CLASS="dddefault">MW</td>
+<td CLASS="dddefault">Darla Moore School of Business 142</td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Lecture</td>
+<td CLASS="dddefault">Donna Bobek  Schmitt (<ABBR title= "Primary">P</ABBR>)<a href="mailto:donna.schmitt@moore.sc.edu"    target="Donna B. Schmitt" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+<tr>
+<th CLASS="ddtitle" scope="colgroup" ><a href="/BANP/bwckschd.p_disp_detail_sched?term_in=201808&amp;crn_in=25692">Doctoral Seminar in Auditing and Accounting Information Systems - 25692 - ACCT 835 - 001</a></th>
+</tr>
+<tr>
+<TD CLASS="dddefault">
+<SPAN class="fieldlabeltext">Associated Term: </SPAN>Fall 2018 
+<br />
+<SPAN class="fieldlabeltext">Registration Dates: </SPAN>Feb 01, 2018 to Aug 29, 2018 
+<br />
+<SPAN class="fieldlabeltext">Levels: </SPAN>Graduate 
+<br />
+<br />
+USC Columbia Campus
+<br />
+Seminar Schedule Type
+<br />
+Face-to-Face Instruction Instructional Method
+<br />
+       3.000 Credits
+<br />
+<a href="/BANP/bwckctlg.p_display_courses?term_in=201808&amp;one_subj=ACCT&amp;sel_crse_strt=835&amp;sel_crse_end=835&amp;sel_subj=&amp;sel_levl=&amp;sel_schd=&amp;sel_coll=&amp;sel_divs=&amp;sel_dept=&amp;sel_attr=">View Catalog Entry</a>
+<br />
+<a href="/BANP/bwckbook.site?p_term_in=201808&amp;p_subj_in=ACCT&amp;p_crse_numb_in=835&amp;p_seq_in=001">Bookstore</a>
+<br />
+<br />
+<table  CLASS="datadisplaytable" SUMMARY="This table lists the scheduled meeting times and assigned instructors for this class.."><caption class="captiontext">Scheduled Meeting Times</caption>
+<tr>
+<th CLASS="ddheader" scope="col" >Type</th>
+<th CLASS="ddheader" scope="col" >Time</th>
+<th CLASS="ddheader" scope="col" >Days</th>
+<th CLASS="ddheader" scope="col" >Where</th>
+<th CLASS="ddheader" scope="col" >Date Range</th>
+<th CLASS="ddheader" scope="col" >Schedule Type</th>
+<th CLASS="ddheader" scope="col" >Instructors</th>
+</tr>
+<tr>
+<td CLASS="dddefault">Class</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+<td CLASS="dddefault">&nbsp;</td>
+<td CLASS="dddefault"><ABBR title = "To Be Announced">TBA</ABBR></td>
+<td CLASS="dddefault">Aug 23, 2018 - Dec 07, 2018</td>
+<td CLASS="dddefault">Seminar</td>
+<td CLASS="dddefault">Scott D.  Vandervelde (<ABBR title= "Primary">P</ABBR>)<a href="mailto:vandervelde@moore.sc.edu"    target="Scott D. Vandervelde" ><img src="/wtlgifs/web_email.gif" align="middle" alt="E-mail" CLASS="headerImg" TITLE="E-mail"  NAME="web_email" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=28 WIDTH=28 /></a></td>
+</tr>
+</table>
+<br />
+<br />
+</TD>
+</tr>
+</table>
+<br />
+<table  CLASS="datadisplaytable" summary="This is for formatting of the bottom links." WIDTH="50%">
+<tr>
+<TD CLASS="ntdefault">
+<a href="javascript:history.go(-1)" onMouseOver="window.status='Return to Previous';  return true" onFocus="window.status='Return to Previous';  return true" onMouseOut="window.status='';  return true"onBlur="window.status='';  return true">Return to Previous</a>
+</TD>
+</tr>
+</table>
+
+<!--  ** START OF twbkwbis.P_CloseDoc **  -->
+<table  CLASS="plaintable" SUMMARY="This is table displays line separator at end of the page."
+                                             WIDTH="100%" cellSpacing=0 cellPadding=0 border=0><tr><TD class="bgtabon" width="100%" colSpan=2><img src="/wtlgifs/web_transparent.gif" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image"  NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10 /></TD></tr></table>
+<a href="#top" onMouseover="window.status='Skip to top of page'; return true" onMouseout="window.status=''; return true" OnFocus="window.status='Skip to top of page'; return true" onBlur="window.status=''; return true" class="skiplinks">Skip to top of page</a>
+</DIV>
+<div class="footerafterdiv">
+
+</DIV>
+<div class="globalafterdiv">
+
+</DIV>
+<div class="globalfooterdiv">
+
+</DIV>
+<div class="pagefooterdiv">
+<SPAN class="releasetext">Release: 8.7.2</SPAN>
+</DIV>
+<div class="poweredbydiv">
+</DIV>
+<DIV class="div1"></DIV>
+<DIV class="div2"></DIV>
+<DIV class="div3"></DIV>
+<DIV class="div4"></DIV>
+<DIV class="div5"></DIV>
+<DIV class="div6"></DIV>
+<div class="banner_copyright"> <br><h5>© 2018 Ellucian Company L.P. and its affiliates.<br></h5></div>
+</body>
+</html>
+

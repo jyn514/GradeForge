@@ -1,11 +1,17 @@
-.PHONY: data
-data: output.data
-
 .PHONY: sql
-sql: classes.sql
+sql: classes.sql data
 
-output.data: parse.py USC_all_courses.html
-	./$<
+.PHONY: data
+data: .classes.data .sections.data
 
-classes.sql: ./sql_queries.py output.data
+.classes.data: parse.py USC_all_courses.html
+	./$< --catalog -s
+
+.sections.data: parse.py sections.html .exams.data
+	./$< --sections -s
+
+.exams.data: parse.py
+	./$< --exams -s
+
+classes.sql: ./sql_queries.py data
 	./$< | sqlite $@
