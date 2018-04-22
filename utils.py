@@ -112,6 +112,8 @@ def save(obj, stdout):
 
 
 def army_time(ampm):
+    if ampm == 'TBA':
+        return ampm
     hours, minutes = ampm.split(':')
     minutes, ampm = minutes.split(' ')
     if ampm == 'pm':
