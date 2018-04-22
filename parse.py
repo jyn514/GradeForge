@@ -3,10 +3,10 @@
 '''HTML parsing. Generally, works only on files, not on strings'''
 
 from __future__ import print_function, generators
-from argparse import ArgumentParser
 from os.path import exists
+from sys import stderr, stdin, stdout
 
-from lxml.etree import iterparse
+from lxml.etree import iterparse, XMLSyntaxError
 
 from utils import DAYS, save, load, army_time, parse_semester
 from post import  get_calendar, get_bookstore
@@ -38,7 +38,7 @@ def parse_catalog(html):
 
 def parse_sections(html):
     '''Parses sections of a course
-    Essentially a giant finite state autonoma because the HTML has very few recognizable patterns
+    Essentially a giant finite state autonoma
 
     Working:
     - title
@@ -241,35 +241,23 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
-    parser.add_argument('input', help='HTML file', nargs='?')
-    parser.add_argument('output', help='File to store binary', nargs='?')
-    action = parser.add_mutually_exclusive_group()
-    action.add_argument('--save', '-s', '--save-binary', action='store_true',
-                        default=True,
-                        help='Save result of main() in binary form')
-    action.add_argument('--load', '--print', '-l', action='store_true',
-                        help='Show result on stdout')
+    import argparse
+    import pickle
 
+    parser = argparse.ArgumentParser()
     data = parser.add_mutually_exclusive_group(required=True)
     data.add_argument('--sections', '-S', action='store_true')
     data.add_argument('--catalog', '--classes', '-C', action='store_true')
     data.add_argument('--exams', '-e', action='store_true')
-
-    parser.add_argument('--verbose', '-v', help='Show result',
-                        action='store_true')
     args = parser.parse_args()
-    if args.sections:
-        if not args.output:
-            args.output = '.sections.data'
-        if not args.input:
-            args.input = 'sections.html'
-    elif args.catalog:
-        if not args.output:
-            args.output = '.courses.data'
-        if not args.input:
-            args.input = 'USC_all_courses.html'
-    else:
-        if not args.output:
-            args.output = '.exams.data'
-    main(args)
+
+    try:
+        if args.sections:
+            result = clean_sections(parse_sections(iterparse(stdin.buffer, html=True)))
+        elif args.catalog:
+            result = parse_catalog(iterparse(stdin.buffer, html=True))
+        else:
+            result = parse_all_exams()
+        pickle.dump(result, stdout.buffer)
+    except (KeyboardInterrupt, XMLSyntaxError) as e:
+        pass
