@@ -3,6 +3,7 @@
 '''Network-based querires; GETs and POSTs'''
 
 import argparse
+from datetime import date
 
 from requests import get, post
 
@@ -71,15 +72,13 @@ def get_bookstore(semester, department, number, section):
     return post(base_url, data=data).text
 
 
-def get_calendar(year, semester=None, season=None):
+def get_calendar(year, season):
     '''str -> str (HTML)
     Return content of calendar corresponding to given semester'''
-    if semester is None and season is None:
-        raise ValueError("Must be given either semester or season")
-    if season is None:
+    if season not in ('fall', 'summer', 'spring'):
         season = get_season(parse_semester(semester))
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
-    return get(base_url + 'final-exams-%s-%s.php' % (season, year)).text
+    return get('%s/final-exams-%s-%s.php' % (base_url, season, year)).text
 
 
 def catalog_link(semester, department, code):
