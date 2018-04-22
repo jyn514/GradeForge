@@ -64,6 +64,21 @@ class SingleMetavarFormatter(HelpFormatter):
         return ', '.join(parts)
 
 
+class ReturnSame(object):
+    '''Returns the same value no matter what object is used to access.
+    Meant to mimic a dictionary.
+    Example use:
+    >>> d = ReturnSame(4)
+    >>> d['some_value']
+    4
+    '''
+    def __init__(self, value):
+        self.value = value
+
+    def __getitem__(self, item):
+        return self.value
+
+
 def print_request(req, **kwargs):
     print(req.method, req.url, req.headers, req.body, sep='\n', **kwargs)
 
@@ -106,13 +121,18 @@ def load(stdin):
         return cloudpickle.load(i)
 
 
-def save(obj, stdout):
-    with open(stdout, 'wb') as i:
-        cloudpickle.dump(obj, i)
+def save(obj, stdout, binary=True):
+    if binary:
+        with open(stdout, 'wb') as i:
+            cloudpickle.dump(obj, i)
+    else:
+        with open(stdout, 'w') as i:
+            i.write(obj)
 
 
 def army_time(ampm):
-    if ampm == 'TBA': return ampm
+    if ampm == 'TBA':
+        return ampm
     hours, minutes = ampm.split(':')
     minutes, ampm = minutes.split(' ')
     if ampm == 'pm':
