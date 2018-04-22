@@ -1,19 +1,19 @@
 EXAMS := $(addprefix exams/,$(addsuffix .html,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2016 Spring-2017 Spring-2018))
 
 .PHONY: sql
-sql: classes.sql data
+sql: classes.sql
 
 .PHONY: data
 data: .classes.data .sections.data
 
-.classes.data: parse.py USC_all_courses.html
-	./$< --catalog -s
+.classes.data: parse.py webpages/USC_all_courses.html
+	./$< --catalog < webpages/USC_all_courses.html > $@
 
-.sections.data: parse.py sections.html .exams.data
-	./$< --sections -s
+.sections.data: parse.py webpages/USC_all_sections.html # .exams.data
+	./$< --sections < webpages/USC_all_sections.html > $@
 
 .exams.data: parse.py $(EXAMS)
-	./$< --exams -s
+	./$< --exams
 
 exams:
 	mkdir exams
@@ -23,7 +23,7 @@ exams/%.html: post.py | exams
 	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	sed -i 's/\s\+$$//' $@  # lxml has trouble with too much whitespace
 
-classes.sql: ./sql_queries.py data
+classes.sql: sql_queries.py data
 	./$< | sqlite $@
 
 .PHONY: clean

@@ -100,24 +100,42 @@ def section_link(semester, CRN):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=SingleMetavarFormatter)
-    #subparsers = parser.add_subparsers(help='help', dest='subcommand')
-    #subparsers.required = True
+    subparsers = parser.add_subparsers(dest='subparsers')
+    subparsers.required = True
+
+    exams = subparsers.add_parser('exams')
+    exams.add_argument('season', choices=('fall', 'summer', 'spring'),
+                       type=str.lower)
+    exams.add_argument('year', type=int,
+                       choices=range(2013, date.today().year + 1))
+
+    sections = subparsers.add_parser('sections')
+    sections.add_argument('--semester', '-s', type=str.lower,
+                          default=get_season_today(),
+                          choices=(allowed['semester'] + ('fall', 'summer', 'spring')))
+    sections.add_argument('--campus', '-c', choices=allowed['campus'])
+    sections.add_argument('--number', '-n', help='course code', type=int, nargs='?')
+    sections.add_argument('--title', '-t', help='name of course')
+    sections.add_argument('--min_credits', '--min', '-m', type=int)
+    sections.add_argument('--max_credits', '--max', '-M', type=int)
+    sections.add_argument('--level', '-l', choices=allowed['level'])
+    sections.add_argument('--term', '-T', choices=allowed['term'])
+    sections.add_argument('--times', choices=allowed['times'])
+    sections.add_argument('--location', '-L', choices=allowed['location'])
+    sections.add_argument('subject', choices=allowed['subject'],
+                          type=str.upper, metavar='DEPARTMENT')
+
     #help_info = subparsers.add_parser('help', help='extended help about commands')
     #help_info.add_argument('semester', nargs='?')
 
     #search = subparsers.add_parser('search', help='find sections of classes')
-    parser.add_argument('--semester', '-s', default=get_season_today(),
-                        choices=(allowed['semester'] + ('fall', 'summer', 'spring')))
-    parser.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
-    parser.add_argument('--number', '-n', help='course code', type=int, nargs='?')
-    parser.add_argument('--title', '-t', help='name of course')
-    parser.add_argument('--min_credits', '--min', '-m', type=int)
-    parser.add_argument('--max_credits', '--max', '-M', type=int)
-    parser.add_argument('--level', '-l', choices=allowed['level'], default='%')
-    parser.add_argument('--term', '-T', choices=allowed['term'], default='30')
-    parser.add_argument('--times', choices=allowed['times'], default='%')
-    parser.add_argument('--location', '-L', choices=allowed['location'], default='%')
-    parser.add_argument('subject', choices=allowed['subject'], metavar='DEPARTMENT')
 
-    print(get_classes(**{k: v for k, v in parser.parse_args().__dict__.items()
-                         if v is not None}))
+    args = parser.parse_args()
+    subparser = args.subparsers
+    args = {k: v for k, v in parser.parse_args().__dict__.items()
+            if v is not None and k != 'subparsers'}
+
+    if subparser == 'exams':
+        print(get_calendar(**args))
+    else:
+        print(get_classes(**args))
