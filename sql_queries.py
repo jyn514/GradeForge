@@ -5,7 +5,7 @@
 from parse import load
 
 CLASSES, DEPARTMENTS = load('.courses.data')
-SECTIONS = load('.SECTIONS.data')
+SECTIONS = load('.sections.data')
 
 TABLES = ('''
 CREATE TABLE class(
