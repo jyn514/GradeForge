@@ -25,3 +25,7 @@ exams/%.html: post.py | exams
 
 classes.sql: ./sql_queries.py data
 	./$< | sqlite $@
+
+.PHONY: clean
+clean:
+	$(RM) -r *.pyc __pycache__
