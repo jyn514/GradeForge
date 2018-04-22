@@ -1,3 +1,4 @@
 *.data
+exams/
 secrets.py
 classes.sql
