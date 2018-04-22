@@ -152,11 +152,11 @@ def parse_sections(html):
                             if mail is not None:
                                 course['instructor_email'] = mail.attrib.get('href')
         except:
-            print(elem, elem.text, elem.attrib, course)
+            print(elem, elem.text, elem.tail, elem.attrib, course, elem.getchildren(), elem.getnext(), elem.getprevious().tail, file=stderr)
             if 'following' in locals():
-                print(following)
+                print(following, file=stderr)
             if 'i' in locals() or 'column' in locals():
-                print(i, column, column.text)
+                print(i, column, column.text, file=stderr)
             raise
     return sections
 
