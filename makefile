@@ -9,7 +9,7 @@ data: .classes.data .sections.data
 .classes.data: parse.py webpages/USC_all_courses.html
 	./$< --catalog < webpages/USC_all_courses.html > $@
 
-.sections.data: parse.py webpages/USC_all_sections.html .exams.data
+.sections.data: parse.py webpages/USC_all_sections.html # .exams.data
 	./$< --sections < webpages/USC_all_sections.html > $@
 
 .exams.data: parse.py $(EXAMS)
