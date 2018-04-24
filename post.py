@@ -22,19 +22,24 @@ def login(username, password):
     return post(authsite, data=data).cookies
 
 
-def get_classes(subject, semester='201808', campus='COL', number='', title='',
+def get_sections(subject='%', semester='201808', campus='COL', number='', title='',
                 min_credits=1, max_credits='', level='%', term='30', times='%',
                 location='%', start_hour=0, start_minute=0, end_hour=0,
                 end_minute=0, days='dummy'):
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
     semester = parse_semester(semester)
+    if subject == '%':
+        print('choosing all', file=stderr)
+        subject = allowed['subject']
+
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
 
     for p in params:
         # if p not in allowed, assume arbitrary input acceptable
-        if params[p] != 'dummy' and p in allowed and params[p] not in allowed[p]:
+        # TODO: allow partial subsets
+        if params[p] != 'dummy' and p in allowed and params[p] not in allowed[p] and params[p] != allowed[p]:
             raise ValueError(str(p) + ' "' + params[p] + '" not in ' + str(allowed[p]))
 
     ampm = (divmod(start_hour, 12), divmod(end_hour, 12))
@@ -72,9 +77,41 @@ def get_bookstore(semester, department, number, section):
     return post(base_url, data=data).text
 
 
+def get_catalog(department='%'):
+    '''TODO: take more parameters'''
+    if department == '%':
+        department = allowed['subject']
+    else:
+        department = [department]
+
+    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_display_courses'
+    data = {"term_in": 201808,
+            'call_proc_in': 'bwckctlg.p_disp_dyn_ctlg',
+            'sel_subj': 'dummy',
+            'sel_levl': 'dummy',
+            'sel_schd': 'dummy',
+            'sel_coll': 'dummy',
+            'sel_divs': 'dummy',
+            'sel_dept': 'dummy',
+            'sel_attr': 'dummy',
+            'sel_subj': (*department,),
+            'sel_crse_strt': '',
+            'sel_crse_end': '',
+            'sel_title': '',
+            'sel_levl': '%',
+            'sel_schd': '%',
+            'sel_coll': '%',
+            'sel_dept': '%',
+            'sel_from_cred': '',
+            'sel_to_cred': '',
+            'sel_attr': '%'}
+    return post(base_url, data=data).text
+
+
 def get_calendar(year, season):
     '''str -> str (HTML)
-    Return content of calendar corresponding to given semester'''
+    Return content of calendar corresponding to given semester
+    Example: https://www.sc.edu/about/offices_and_divisions/registrar/final_exams/final-exams-spring-2018.php'''
     if season not in ('fall', 'summer', 'spring'):
         season = get_season(parse_semester(semester))
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
@@ -122,8 +159,12 @@ if __name__ == '__main__':
     sections.add_argument('--term', '-T', choices=allowed['term'])
     sections.add_argument('--times', choices=allowed['times'])
     sections.add_argument('--location', '-L', choices=allowed['location'])
-    sections.add_argument('subject', choices=allowed['subject'],
+    sections.add_argument('subject', choices=allowed['subject'] + ('%',),
                           type=str.upper, metavar='DEPARTMENT')
+
+    courses = subparsers.add_parser('courses')
+    courses.add_argument('department', nargs='?', choices=allowed['subject'] + ('%',),
+                         type=str.upper, metavar='DEPARTMENT')
 
     #help_info = subparsers.add_parser('help', help='extended help about commands')
     #help_info.add_argument('semester', nargs='?')
@@ -131,11 +172,13 @@ if __name__ == '__main__':
     #search = subparsers.add_parser('search', help='find sections of classes')
 
     args = parser.parse_args()
-    subparser = args.subparsers
-    args = {k: v for k, v in parser.parse_args().__dict__.items()
-            if v is not None and k != 'subparsers'}
+    subparser = args.__dict__.pop('subparsers')
+    args = {k: v for k, v in args.__dict__.items()
+            if v is not None}
 
     if subparser == 'exams':
         print(get_calendar(**args))
+    elif subparser == 'courses':
+        print(get_catalog(**args))
     else:
-        print(get_classes(**args))
+        print(get_sections(**args))
