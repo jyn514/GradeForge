@@ -5,13 +5,13 @@ Support is available for an SQL database.
 
 # Requirements
 - `python`
-- `lxml`
-- (optional) `cloudpickle`
-- (optional) `sqlite`
+- `lxml` (`pip install lxml`)
+- (optional) `cloudpickle` (`pip install pickle`)
+- (optional) `sqlite` (`apt install sqlite3`)
 
 # Usage
-- Parsing: `./parse.py [filename]` or simply `make`
-- Viewing: `./parse.py -l`
-- Parse and view: `./parse.py -v`
+- Parsing catalogs: `./parse.py -C < file` or simply `make`
+- Viewing: `./load.py < file`
+- Parse and view: `./parse.py | tee filename`
 - Help: `./parse.py -h`
 - SQL database: `make sql`
