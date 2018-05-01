@@ -6,6 +6,31 @@ sql: classes.sql
 .PHONY: data
 data: .classes.data .sections.data
 
+webpages:
+	mkdir webpages
+
+define clean =
+	sed -i 's/\s\+$$//' $1  # lxml has trouble with too much whitespace
+endef
+
+webpages/USC_all_courses.html: post.py webpages
+	./$< courses > $@
+	$(call clean,$@)
+
+webpages/USC_all_sections.html: post.py webpages
+	./$< sections % > $@
+	$(call clean,$@)
+
+webpages/%: webpages
+
+exams:
+	mkdir exams
+
+exams/%.html: post.py | exams
+	./$< exams `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
+	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
+	$(call clean $@)
+
 .classes.data: parse.py webpages/USC_all_courses.html
 	./$< --catalog < webpages/USC_all_courses.html > $@
 
@@ -14,14 +39,6 @@ data: .classes.data .sections.data
 
 .exams.data: parse.py $(EXAMS)
 	./$< --exams
-
-exams:
-	mkdir exams
-
-exams/%.html: post.py | exams
-	./$< exams `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
-	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
-	sed -i 's/\s\+$$//' $@  # lxml has trouble with too much whitespace
 
 classes.sql: sql_queries.py data
 	./$< | sqlite $@
