@@ -245,10 +245,10 @@
   </fieldset>
 
   <fieldset name="credits" id="credits"><legend>Credits</legend>
-    <input type="range" min="0" max="5" name="credit_from" value="0" oninput="updateMinValue()">
-    <p id="from">Min Credits: </p>
-    <input type="range" min="0" max="5" name="credit_to" value="5" oninput="updateMaxValue()">
-    <p id="to">Max Credits: </p>
+    <input type="range" min="0" max="5" name="credit_from" value="0" oninput="updateValue(this, fromText)">
+    <p id="from">Min Credits:  </p>
+    <input type="range" min="0" max="5" name="credit_to" value="5" oninput="updateValue(this, toText)">
+    <p id="to">Max Credits:  </p>
   </fieldset>
 
   <fieldset name="registration"><legend>Registration</legend>
@@ -260,19 +260,16 @@
   <input type="reset">
 </form>
 <script> // show numbers for credit min and max
-const fromNode = document.getElementsByName('credit_from')[0]
 const fromText = document.getElementById('from')
-const toNode = document.getElementsByName('credit_to')[0]
 const toText = document.getElementById('to')
 
-function updateMinValue() {
-  fromText.textContent = (fromText.textContent.substring(0, fromText.textContent.length - 1) + ' ' + fromNode.value)
 }
-function updateMaxValue() {
-  toText.textContent = (toText.textContent.substring(0, toText.textContent.length - 1) + ' ' + toNode.value)
+
+function updateValue(node, text) {
+  text.textContent = text.textContent.slice(0, -1) + node.value
 }
-updateMinValue()
-updateMaxValue()
+updateValue(document.getElementsByName('credit_to')[0], toText)
+updateValue(document.getElementsByName('credit_from')[0], fromText)
 </script>
 </body>
 </html>
