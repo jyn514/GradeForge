@@ -30,7 +30,50 @@
     <option value="201341">Fall 2013</option>
   </select>
 
-  Subject <select name="subject" multiple autofocus required>
+  <fieldset id="subjects" name="subjects"><legend>Subject</legend>
+    <input id="firstSubject" type="text" list="subject" oninput="addSubject(this)" autofocus required>
+  </fieldset>
+
+  <fieldset name="campus"><legend>Campus</legend>
+    <input name="campus" type="checkbox" value="Columbia" id="Columbia" checked><label for="Columbia">Columbia</label>
+    <input name="campus" type="checkbox" value="Aiken" id="Aiken"><label for="Aiken">Aiken</label>
+    <input name="campus" type="checkbox" value="Beaufort" id="Beaufort"><label for="Beaufort">Beaufort</label>
+    <input name="campus" type="checkbox" value="Lancaster" id="Lancaster"><label for="Lancaster">Lancaster</label>
+    <input name="campus" type="checkbox" value="Salkehatchie" id="Salkehatchie"><label for="Salkehatchie">Salkehatchie</label>
+    <input name="campus" type="checkbox" value="Sumter" id="Sumter"><label for="Sumter">Sumter</label>
+    <input name="campus" type="checkbox" value="Union" id="Union"><label for="Union">Union</label>
+    <input name="campus" type="checkbox" value="Upstate" id="Upstate"><label for="Upstate">Upstate</label>
+    <input name="campus" type="button" value="Toggle All" onclick="toggleCampuses()">
+  </fieldset><label for=""></label>
+
+  <fieldset name="level"><legend>Level</legend>
+    <input type="radio" value="Undergraduate" id="Undergraduate" name="level" checked><label for="Undergraduate">Undergraduate</label>
+    <input type="radio" value="Graduate" id="Graduate" name="level"><label for="Graduate">Graduate</label>
+    <input type="radio" value="Law" id="Law" name="level"><label for="Law">Law School</label>
+    <input type="radio" value="Medical" id="Medical" name="level"><label for="Medical">Medical School</label>
+  </fieldset><label for=""></label>
+
+  <fieldset name="course"><legend>Course</legend>
+    <input type="number" name="number" min="1" max="1000"> Number
+    <input name="title"> Title
+  </fieldset>
+
+  <fieldset name="credits" id="credits"><legend>Credits</legend>
+    <input type="range" min="0" max="5" name="credit_from" value="0" oninput="updateValue(this, fromText)">
+    <p id="from">Min Credits:  </p>
+    <input type="range" min="0" max="5" name="credit_to" value="5" oninput="updateValue(this, toText)">
+    <p id="to">Max Credits:  </p>
+  </fieldset>
+
+  <fieldset name="registration"><legend>Registration</legend>
+    <input type="date" name="registration_start"> Start Date<br />
+    <input type="date" name="registration_end"> End Date
+  </fieldset>
+
+  <input type="submit" value="Submit">
+  <input type="reset">
+
+  <datalist id="subject">
     <option value="ACCT">ACCT - Accounting</option>
     <option value="AERO">AERO - Aerospace Studies</option>
     <option value="AFAM">AFAM - African Amer Studies</option>
@@ -219,46 +262,18 @@
     <option value="UNIV">UNIV - University Experience</option>
     <option value="URBN">URBN - Urban &amp; Regional Studies</option>
     <option value="WGST">WGST - Women &amp; Gender Studies</option>
-  </select><br /><br />
-
-  <fieldset name="campus"><legend>Campus</legend>
-    <input name="campus" type="checkbox" value="Columbia" checked>Columbia
-    <input name="campus" type="checkbox" value="Aiken">Aiken
-    <input name="campus" type="checkbox" value="Beaufort">Beaufort
-    <input name="campus" type="checkbox" value="Lancaster">Lancaster
-    <input name="campus" type="checkbox" value="Salkehatchie">Salkehatchie
-    <input name="campus" type="checkbox" value="Sumter">Sumter
-    <input name="campus" type="checkbox" value="Union">Union
-    <input name="campus" type="checkbox" value="Upstate">Upstate
-  </fieldset>
-
-  <fieldset name="level"><legend>Level</legend>
-    <input type="radio" value="Undergraduate" name="level" checked>Undergraduate
-    <input type="radio" value="Graduate" name="level">Graduate
-    <input type="radio" value="Law" name="level">Law School
-    <input type="radio" value="Medical" name="level">Medical School
-  </fieldset>
-  
-  <fieldset name="course"><legend>Course</legend>
-    <input type="number" name="number" min="1" max="1000"> Number
-    <input name="title"> Title
-  </fieldset>
-
-  <fieldset name="credits" id="credits"><legend>Credits</legend>
-    <input type="range" min="0" max="5" name="credit_from" value="0" oninput="updateValue(this, fromText)">
-    <p id="from">Min Credits:  </p>
-    <input type="range" min="0" max="5" name="credit_to" value="5" oninput="updateValue(this, toText)">
-    <p id="to">Max Credits:  </p>
-  </fieldset>
-
-  <fieldset name="registration"><legend>Registration</legend>
-    <input type="date" name="registration_start"> Start Date<br />
-    <input type="date" name="registration_end"> End Date
-  </fieldset>
-
-  <input type="submit" value="Submit">
-  <input type="reset">
+  </datalist>
 </form>
+
+<!-- bookstore disallows iframes
+<iframe name="bookstore" id="bookstore" style="visibility: hidden;" src="about:blank" title="Books for requested course" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>
+
+<form action="https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView" id="postBookstore" target="bookstore" method="POST" style="display: none;">
+    <input type="hidden" name='storeId' value='10052'>
+    <input type="hidden" name='courseXml'>
+</form>
+
+
 <h2>Schedule Planner</h2>
 <div class="resizable left">
 <iframe name="planner" id="planner" src="https://sc.collegescheduler.com/entry" sandbox='allow-scripts allow-same-origin'>
@@ -270,7 +285,7 @@
 <iframe name="rating" id="rating" src="https://www.ratemyprofessors.com/search.jsp?queryBy=schoolId&schoolName=University+of+South+Carolina&schoolID=1309&queryoption=TEACHER" sandbox='allow-same-origin allow-scripts'>
   Your browser does not support iframes. Feel free to open <a href="https://www.ratemyprofessors.com/search.jsp?queryBy=schoolId&schoolName=University+of+South+Carolina&schoolID=1309&queryoption=TEACHER">the link</a> in a new tab.
 </iframe></div>
-
+-->
 <style>
 h1, h2 {
   display: flex;
@@ -288,25 +303,81 @@ iframe {
   resize: both;
   overflow-y: hidden;
 }
-.left {
-  align: left;
-}
-.right {
- align: right;
-}
 </style>
 
-<script> // show numbers for credit min and max
-const fromText = document.getElementById('from')
-const toText = document.getElementById('to')
+<script>
+NodeList.prototype.filter = Array.prototype.filter;
+HTMLFormControlsCollection.prototype.filter = Array.prototype.filter;
 
+// https://stackoverflow.com/a/18120786
+Element.prototype.remove = function () {
+  this.parentElement.removeChild(this);
 }
 
+// https://stackoverflow.com/a/4673436
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) {
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
+
+const fromText = document.getElementById('from');
+const toText = document.getElementById('to');
+const bookstore = document.getElementById('bookstore');
+const bookstoreForm = document.getElementById('postBookstore');
+const campuses = document.getElementsByName('campus').filter(e => e.tagName == "INPUT");
+const subjects = document.getElementById('subjects');
+const firstSubject = document.getElementById('firstSubject');
+
+const emptySubject = document.createElement("INPUT");
+emptySubject.type = "text";
+emptySubject.setAttribute('list', 'subject');
+emptySubject.setAttribute('oninput', 'addSubject(this)');
+
+function toggleCampuses() {
+  const check = !campuses.every(i => i.checked);
+  campuses.forEach(i => i.checked = check);
+}
+
+/* function updateBookstore(department, number, section, semester) {
+  bookstoreForm.children[1].value = "<textbookorder><courses><course dept='{0}' num='{1}' sect='{2}' term='{3}' /></courses></textbookorder>".format(department, number, section, semester)
+  console.log(bookstoreForm)
+  bookstoreForm.submit()
+  bookstore.style = undefined
+} */
+
+// show numbers for credit min and max
 function updateValue(node, text) {
   text.textContent = text.textContent.slice(0, -1) + node.value
 }
+
+// todo: acts funky with spaces
+// todo: don't special case the first subject
+function addSubject(input) {
+  const last = subjects.lastElementChild;
+  if (last.isSameNode(input) && last.value.trim() != '') {
+    subjects.appendChild(emptySubject.cloneNode());
+  } else if (!firstSubject.isSameNode(input) && input.value == '') {
+    last.remove();
+  }
+}
+
 updateValue(document.getElementsByName('credit_to')[0], toText)
 updateValue(document.getElementsByName('credit_from')[0], fromText)
+// updateBookstore('ACCT', '222', '001', 'F18')
+
+function disableEmpty(form) {
+  const empty = form.elements.filter(i => { i.tagName == "INPUT" && i.value == "" });
+  console.log("DEBUG: {}", empty);
+  empty.forEach(i => i.setAttribute('disabled', 'disabled'));
+  return true
+}
 </script>
 </body>
 </html>
