@@ -10,8 +10,9 @@
 </head>
 <body>
 <h1>Search for Classes</h1>
-<form>
-  Semester <select name="semester">
+<form action="/sections.html" method='get' id='form' onsubmit="disableEmpty(this)">
+  <fieldset name="semester"><legend>Semester</legend>
+  <select name="semester">
     <option value="201808">Fall 2018</option>
     <option value="201805">Summer 2018</option>
     <option value="201801">Spring 2018</option>
@@ -28,7 +29,7 @@
     <option value="201405">Summer 2014</option>
     <option value="201401">Spring 2014</option>
     <option value="201341">Fall 2013</option>
-  </select>
+  </select></fieldset>
 
   <fieldset id="subjects" name="subjects"><legend>Subject</legend>
     <input id="firstSubject" type="text" list="subject" oninput="addSubject(this)" autofocus required>
