@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
 '''Misc utils. Strictly functional, not state-based.'''
+from __future__ import print_function
 
 from datetime import date
 from argparse import HelpFormatter
-import cloudpickle
+from inspect import getargspec
+
+try:
+    import cloudpickle as pickle
+except ImportError:
+    import pickle
 
 allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "201505",
                          "201508", "201601", "201605", "201608", "201701", "201705",
@@ -118,13 +124,13 @@ def parse_semester(s):
 
 def load(stdin):
     with open(stdin, 'rb') as i:
-        return cloudpickle.load(i)
+        return pickle.load(i)
 
 
 def save(obj, stdout, binary=True):
     if binary:
         with open(stdout, 'wb') as i:
-            cloudpickle.dump(obj, i)
+            pickle.dump(obj, i)
     else:
         with open(stdout, 'w') as i:
             i.write(obj)
