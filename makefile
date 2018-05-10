@@ -5,7 +5,7 @@ EXAMS := $(addprefix exams/,$(addsuffix .html,Fall-2016 Fall-2017 Fall-2018 Summ
 sql: classes.sql
 
 .PHONY: data
-data: .classes.data .sections.data
+data: .courses.data .sections.data
 
 webpages:
 	mkdir webpages
@@ -33,7 +33,7 @@ exams/%.html: | post.py exams
 	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	$(call clean $@)
 
-.classes.data: webpages/USC_all_courses.html | parse.py
+.courses.data: webpages/USC_all_courses.html | parse.py
 	./$| --catalog < $< > $@
 
 .sections.data: webpages/USC_all_sections.html | parse.py # .exams.data
