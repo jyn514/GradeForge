@@ -8,7 +8,7 @@ from utils import load
 CLASSES, DEPARTMENTS = load('.courses.data')
 SECTIONS = load('.sections.data')
 
-TABLES = {'class': ["abbr char(4)",
+TABLES = {'class': ["department char(4)",
                     "code varchar(4)",
                     "title tinytext",
                     "description text",
@@ -27,7 +27,7 @@ TABLES = {'class': ["abbr char(4)",
                        "building tinytext",
                        "room smallint"],
           'section': ["uid tinyint(5)",
-                       "abbr char(4)",
+                       "department char(4)",
                        "section tinytext",
                        "code varchar(4)",
                        "semester char(6)",
@@ -47,7 +47,7 @@ base = '''CREATE TABLE %s(
           %s);'''
 tables_commands = '\n'.join(base % (key, ', '.join(TABLES[key])) for key in TABLES.keys())
 
-base = 'INSERT INTO class (abbr, code, title) VALUES ("%s", "%s", "%s");'
+base = 'INSERT INTO class (department, code, title) VALUES ("%s", "%s", "%s");'
 class_commands = '\n'.join(base % (c['abbr'], c['code'], c['title']) for c in CLASSES)
 
 base = 'INSERT INTO department (abbr, title) VALUES ("%s", "%s");'
@@ -59,7 +59,7 @@ instructor_commands = '\n'.join(base % (i[0], i[1])
                               for i in set((s.get('instructor', None), s.get('instructor_email', None))
                                             for s in SECTIONS))
 
-base = '''INSERT INTO section (uid, abbr, section,  code, semester, campus, startTime, endTime, days, registrationStart, instructor, location, finalExam, capacity, remaining) VALUES
+base = '''INSERT INTO section (uid, department, section, code, semester, campus, startTime, endTime, days, registrationStart, instructor, location, finalExam, capacity, remaining) VALUES
         ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s",
          "%s", "%s", "%s", "%s", "%s", "%s", "%s");'''
 
