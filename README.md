@@ -17,6 +17,7 @@ Support is available for an SQL database.
 ### Search Pages
 - Bookstore:	http://sc.bncollege.com/webapp/wcs/stores/servlet/TBWizardView?catalogId=10001&langId=-1&storeId=10052
 - Sections:	https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_dyn_sched
+- Sign up for sections: https://ssb.onecarolina.sc.edu/BANP/bwskfreg.P_AltPin
 
 ### Result Examples
 - Catalog:	https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210
