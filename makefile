@@ -34,10 +34,10 @@ exams/%.html: | post.py exams
 	$(call clean $@)
 
 .courses.data: webpages/USC_all_courses.html | parse.py
-	./$| --catalog < $< > $@
+	./$| --catalog < $< > $@ || { rm -f $@; exit 999; }
 
 .sections.data: webpages/USC_all_sections.html | parse.py # .exams.data
-	./$| --sections < $< > $@
+	./$| --sections < $< > $@ || { rm -f $@; exit 999; }
 
 .exams.data: $(EXAMS) | parse.py
 	./$| --exams
