@@ -372,8 +372,9 @@ updateValue(document.getElementsByName('credit_from')[0], fromText);
 // updateBookstore('ACCT', '222', '001', 'F18')
 
 function disableEmpty() {
-  const empty = form.elements.filter(i => i.tagName == "INPUT" && i.value == "" );
-  empty.forEach(i => i.setAttribute('disabled', 'disabled'));
+  form.elements
+      .filter(i => i.tagName == "INPUT" && i.value == "" )
+      .forEach(i => i.setAttribute('disabled', 'disabled'));
   return true;
 }
 
