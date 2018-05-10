@@ -1,0 +1,23 @@
+body{
+  background-image:url('bg.jpg');
+  background-size: cover;
+  min-height:100vh;
+	min-width:100vh;
+}
+
+.main {
+  padding: 5px;
+  text-align: center;
+  margin: 35vh auto;
+  max-width:400px;
+  color: white;
+  border-radius:5px;
+  background-color: rgba(0,0,0,0.5);
+}
+table{
+  margin:auto;
+}
+
+td{
+  content: inherit;
+}
