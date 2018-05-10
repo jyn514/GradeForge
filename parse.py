@@ -12,6 +12,8 @@ from lxml.etree import iterparse, XMLSyntaxError
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
 from post import  get_calendar, get_bookstore
 
+DEBUG = False  # WARNING: VERY verbose
+
 def parse_catalog(html):
     '''
     lxml.etree.iterparse -> (classes, departments)
@@ -23,11 +25,14 @@ def parse_catalog(html):
     departments = {}
     code = True
     for event, elem in html:
-        if event == 'end' and elem.text is not None and elem.text != '\n':
-            if elem.tag == 'th':
-                header = elem.text.split(' - ')
+        if elem.tag == 'td':
+            cls = elem.attrib.get('class', None)
+            if DEBUG:
+                print(elem, cls, elem.text, file=stderr)
+            if cls == 'nttitle':
+                header = elem.find('a').text.split(' - ')
                 departments[header[0]] = header[1]
-            elif elem.tag == 'td':
+            elif cls == 'ntdefault':
                 if code:
                     current = {'code': elem.text, 'abbr': header[0]}
                 else:
