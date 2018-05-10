@@ -7,7 +7,7 @@ from datetime import date
 
 from requests import get, post
 
-from utils import parse_semester, allowed, get_season_today, SingleMetavarFormatter, get_season, b_and_n_semester
+from utils import parse_semester, allowed, get_season_today, SingleMetavarFormatter, get_season, b_and_n_semester, arg_filter
 
 def login(username, password):
     '''(str, str) -> requests.RequestsCookieJar
@@ -173,8 +173,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     subparser = args.__dict__.pop('subparsers')
-    args = {k: v for k, v in args.__dict__.items()
-            if v is not None}
+    args = arg_filter(args)
 
     if subparser == 'exams':
         print(get_calendar(**args))
