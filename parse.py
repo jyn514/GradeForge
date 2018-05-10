@@ -114,7 +114,9 @@ def parse_sections(html):
                     course['registration_start'], course['registration_end'] = following.split(' to ')
                 elif elem.text == 'Levels: ':
                     course['level'] = following
-                    elem = elem.getnext().getnext()
+                    elem = elem.getnext()
+                    if elem is None: continue
+                    elem = elem.getnext()
                     if elem is None: continue
                     if elem.tag == 'span':
                         try:
@@ -225,7 +227,7 @@ def parse_exam(html):
                     meetings, time = row.findall('td')
                     # TODO: THIS IS BAD
                     if 'normal class meeting time' in time:  # Spring half-semester
-                        print('quitting')
+                        print('quitting', file=stderr)
                         break
                     if re.search(r'\s-\s', ''.join(meetings.itertext())) is not None:
                         for meeting in re.split(r'\s-\s', ''.join(meetings.itertext()))[1].split(', '):
@@ -235,15 +237,15 @@ def parse_exam(html):
                         tmp = ReturnSame(time)
                 d[parse_days(elem.text)] = tmp
             except:
-                print('tag:', elem.tag, 'text:', elem.text, 'row:', row)
+                print('tag:', elem.tag, 'text:', elem.text, 'row:', row, file=stderr)
                 if 'meetings' in locals():
-                    print('meetings:', list(meetings.itertext()), 'time:', time.text)
+                    print('meetings:', list(meetings.itertext()), 'time:', time.text, file=stderr)
                     if 'meeting' in locals():
-                        print('meeting:', meeting)
+                        print('meeting:', meeting, file=stderr)
                 table = elem.getparent().getnext().find('table')
                 print(elem.getparent().getnext().attrib['class'],
                       table.attrib['class'],
-                      list(table), 'row:', list(row), row[0].text)
+                      list(table), 'row:', list(row), row[0].text, file=stderr)
                 raise
     return d
     '''return {parse_days(elem.text): {row.find('td').text.split(' - ')[1]:
@@ -298,7 +300,7 @@ def parse_b_and_n(html):
     books = []
     for _, elem in html:
         if elem.tag == 'div':
-            print(elem.attrib['class'])
+            print(elem.attrib['class'], file=stderr)
 
 '''TODO: irrelevant
 Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001
