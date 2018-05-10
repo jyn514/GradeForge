@@ -371,12 +371,16 @@ updateValue(document.getElementsByName('credit_to')[0], toText);
 updateValue(document.getElementsByName('credit_from')[0], fromText);
 // updateBookstore('ACCT', '222', '001', 'F18')
 
-function disableEmpty(form) {
-  const empty = form.elements.filter(i => { i.tagName == "INPUT" && i.value == "" });
-  console.log("DEBUG: {}", empty);
+function disableEmpty() {
+  const empty = form.elements.filter(i => i.tagName == "INPUT" && i.value == "" );
   empty.forEach(i => i.setAttribute('disabled', 'disabled'));
   return true;
 }
+
+// undo disableEmpty on refresh
+form.elements
+    .filter(i => i.disabled)
+    .forEach(i => i.setAttribute('disabled', false));
 </script>
 </body>
 </html>
