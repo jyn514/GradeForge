@@ -135,7 +135,7 @@ def section_link(semester, CRN):
     return "%s?term_in=%s&crn_in=%s" % base_url, semester, CRN
 
 
-if __name__ == '__main__':
+def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SingleMetavarFormatter)
     subparsers = parser.add_subparsers(dest='subparsers')
     subparsers.required = True
@@ -159,19 +159,16 @@ if __name__ == '__main__':
     sections.add_argument('--term', '-T', choices=allowed['term'])
     sections.add_argument('--times', choices=allowed['times'])
     sections.add_argument('--location', '-L', choices=allowed['location'])
-    sections.add_argument('subject', choices=allowed['subject'] + ('%',),
-                          type=str.upper, metavar='DEPARTMENT')
+    sections.add_argument('subject', choices=allowed['subject'] + ('%',), nargs='?',
+                          type=str.upper, metavar='DEPARTMENT', default='%')
 
     courses = subparsers.add_parser('courses')
     courses.add_argument('department', nargs='?', choices=allowed['subject'] + ('%',),
-                         type=str.upper, metavar='DEPARTMENT')
+                         type=str.upper, metavar='DEPARTMENT', default='%')
+    return parser.parse_args()
 
-    #help_info = subparsers.add_parser('help', help='extended help about commands')
-    #help_info.add_argument('semester', nargs='?')
-
-    #search = subparsers.add_parser('search', help='find sections of classes')
-
-    args = parser.parse_args()
+if __name__ == '__main__':
+    args = parse_args()
     subparser = args.__dict__.pop('subparsers')
     args = arg_filter(args)
 
