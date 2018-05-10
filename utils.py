@@ -154,3 +154,8 @@ DAYS = {'Monday': 'M',
         'Thursday': 'R',
         'Friday': 'F',
         'Saturday': 'S'}
+
+
+def arg_filter(args):
+    return {k: v for k, v in args.__dict__.items()
+            if v is not None}
