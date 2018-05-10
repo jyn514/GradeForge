@@ -313,28 +313,26 @@ HTMLFormControlsCollection.prototype.filter = Array.prototype.filter;
 // https://stackoverflow.com/a/18120786
 Element.prototype.remove = function () {
   this.parentElement.removeChild(this);
-}
+};
 
 // https://stackoverflow.com/a/4673436
 if (!String.prototype.format) {
   String.prototype.format = function() {
     var args = arguments;
     return this.replace(/{(\d+)}/g, function(match, number) {
-      return typeof args[number] != 'undefined'
-        ? args[number]
-        : match
-      ;
+      return typeof args[number] != 'undefined' ? args[number] : match;
     });
   };
 }
 
 const fromText = document.getElementById('from');
 const toText = document.getElementById('to');
-const bookstore = document.getElementById('bookstore');
-const bookstoreForm = document.getElementById('postBookstore');
+// const bookstore = document.getElementById('bookstore');
+// const bookstoreForm = document.getElementById('postBookstore');
 const campuses = document.getElementsByName('campus').filter(e => e.tagName == "INPUT");
 const subjects = document.getElementById('subjects');
 const firstSubject = document.getElementById('firstSubject');
+const form = document.getElementById('form');
 
 const emptySubject = document.createElement("INPUT");
 emptySubject.type = "text";
@@ -342,7 +340,7 @@ emptySubject.setAttribute('list', 'subject');
 emptySubject.setAttribute('oninput', 'addSubject(this)');
 
 function toggleCampuses() {
-  const check = !campuses.every(i => i.checked);
+  const check = campuses.some(i => !i.checked);
   campuses.forEach(i => i.checked = check);
 }
 
@@ -355,7 +353,7 @@ function toggleCampuses() {
 
 // show numbers for credit min and max
 function updateValue(node, text) {
-  text.textContent = text.textContent.slice(0, -1) + node.value
+  text.textContent = text.textContent.slice(0, -1) + node.value;
 }
 
 // todo: acts funky with spaces
@@ -369,15 +367,15 @@ function addSubject(input) {
   }
 }
 
-updateValue(document.getElementsByName('credit_to')[0], toText)
-updateValue(document.getElementsByName('credit_from')[0], fromText)
+updateValue(document.getElementsByName('credit_to')[0], toText);
+updateValue(document.getElementsByName('credit_from')[0], fromText);
 // updateBookstore('ACCT', '222', '001', 'F18')
 
 function disableEmpty(form) {
   const empty = form.elements.filter(i => { i.tagName == "INPUT" && i.value == "" });
   console.log("DEBUG: {}", empty);
   empty.forEach(i => i.setAttribute('disabled', 'disabled'));
-  return true
+  return true;
 }
 </script>
 </body>
