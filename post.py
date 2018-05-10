@@ -29,8 +29,7 @@ def get_sections(subject='%', semester='201808', campus='COL', number='', title=
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
     semester = parse_semester(semester)
-    if subject == '%':
-        print('choosing all', file=stderr)
+    if subject == '%':  # all sections
         subject = allowed['subject']
 
     params = locals()
