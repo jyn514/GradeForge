@@ -56,7 +56,8 @@ allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "2015
 class SingleMetavarFormatter(HelpFormatter):
     '''For the picky among us.
     Turns the default: -s ARGS, --long ARGS
-              into:    -s, --long ARGS'''
+              into:    -s, --long ARGS
+    example: parser = ArgumentParser(formatter_class=SingleMetavarFormatter)'''
     def _format_action_invocation(self, action):
         if not action.option_strings:
             return self._metavar_formatter(action, action.dest)(1)[0]
