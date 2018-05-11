@@ -5,12 +5,13 @@
 from __future__ import print_function, generators
 from os.path import exists
 from sys import stderr, stdin, stdout
+from tempfile import mkstemp  # used ONLY for seats remaining
 import re  # used to treat non-breaking spaces as spaces
 
 from lxml.etree import iterparse, XMLSyntaxError
 
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
-from post import  get_calendar, get_bookstore
+from post import  get_calendar, get_bookstore, get
 
 DEBUG = False  # WARNING: VERY verbose
 
@@ -260,6 +261,15 @@ def parse_all_exams():
                     print(name)
                     raise
     return result
+
+
+def get_seats(section_link):
+    tmp = mkstemp()[1]
+    save(get(section_link).text, tmp, binary=False)
+    body = iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
+    table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
+    elements = list(list(table.iterdescendants('tr'))[1])[-3:]
+    return tuple(map(lambda x: x.text, elements))
 
 
 def clean_sections(sections):
