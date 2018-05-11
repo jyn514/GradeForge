@@ -93,7 +93,7 @@ def get_catalog(department='%'):
             'sel_divs': 'dummy',
             'sel_dept': 'dummy',
             'sel_attr': 'dummy',
-            'sel_subj': (*department,),
+            'sel_subj': tuple(department),
             'sel_crse_strt': '',
             'sel_crse_end': '',
             'sel_title': '',
