@@ -1,11 +1,9 @@
 SQL != which sqlite 2>/dev/null || which sqlite3
 EXAMS := $(addprefix exams/,$(addsuffix .html,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2016 Spring-2017 Spring-2018))
+DATA = .courses.data .sections.data
 
 .PHONY: sql
 sql: classes.sql
-
-.PHONY: data
-data: .courses.data .sections.data
 
 webpages:
 	mkdir webpages
@@ -42,10 +40,19 @@ exams/%.html: | post.py exams
 .exams.data: $(EXAMS) | parse.py
 	./$| --exams
 
-classes.sql: create_sql.py data
+classes.sql: create_sql.py $(DATA)
 	$(RM) $@
-	./$< | $(SQL) $@
+	PYTHONIOENCODING=utf-8 ./$< | $(SQL) $@
 
 .PHONY: clean
 clean:
 	$(RM) -r *.pyc __pycache__
+
+.PHONY: clobber
+clobber: clean
+	$(RM) -r webpages
+	$(RM) $(DATA) classes.sql
+
+.PHONY: dist-clean
+dist-clean: clobber
+	git clean -dfx
