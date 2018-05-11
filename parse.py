@@ -19,7 +19,7 @@ def parse_catalog(html):
     '''
     lxml.etree.iterparse -> (classes, departments)
         where classes = [c...]
-            where c.keys() = ('code', 'abbr', 'title')
+            where c.keys() = ('code', 'department', 'title')
         where departments = {short: long for header in html}
     '''
     classes = []
@@ -98,7 +98,7 @@ def parse_sections(html):
                     course['title'] = ' - '.join(a[:-3])
                 else:
                     course['title'], course['UID'], tmp, course['section'] = elem.text.split(' - ')
-                course['abbr'], course['code'] = tmp.split(' ')
+                course['department'], course['code'] = tmp.split(' ')
             elif elem.tag == 'span' and elem.attrib.get('class', None) == 'fieldlabeltext':
                 try:
                     following = elem.tail.strip()
