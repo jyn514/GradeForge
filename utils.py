@@ -6,11 +6,7 @@ from __future__ import print_function
 from datetime import date
 from argparse import HelpFormatter
 from inspect import getargspec
-
-try:
-    import cloudpickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "201505",
                          "201508", "201601", "201605", "201608", "201701", "201705",
