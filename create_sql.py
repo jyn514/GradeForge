@@ -48,7 +48,7 @@ base = '''CREATE TABLE %s(
 tables_commands = '\n'.join(base % (key, ', '.join(TABLES[key])) for key in TABLES.keys())
 
 base = 'INSERT INTO class (department, code, title) VALUES ("%s", "%s", "%s");'
-class_commands = '\n'.join(base % (c['abbr'], c['code'], c['title']) for c in CLASSES)
+class_commands = '\n'.join(base % (c['department'], c['code'], c['title']) for c in CLASSES)
 
 base = 'INSERT INTO department (abbr, title) VALUES ("%s", "%s");'
 department_commands = '\n'.join(base % d for d in DEPARTMENTS.items())
@@ -64,7 +64,7 @@ base = '''INSERT INTO section (uid, department, section, code, semester, campus,
          "%s", "%s", "%s", "%s", "%s", "%s", "%s");'''
 
 section_commands = '\n'.join(base % (course.get('UID', None),
-                                   course.get('abbr', None),
+                                   course.get('department', None),
                                    course.get('section', None),
                                    course.get('code', None),
                                    course.get('semester', None),

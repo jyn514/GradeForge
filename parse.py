@@ -23,22 +23,17 @@ def parse_catalog(html):
     '''
     classes = []
     departments = {}
-    code = True
     for event, elem in html:
         if elem.tag == 'td':
             cls = elem.attrib.get('class', None)
-            if DEBUG:
-                print(elem, cls, elem.text, file=stderr)
             if cls == 'nttitle':
-                header = elem.find('a').text.split(' - ')
+                header, title = elem.find('a').text.split(' - ', 1)
+                department, code = header.split(' ')
+                current = {'code': code, 'department': department, 'title': title}
                 departments[header[0]] = header[1]
-            elif cls == 'ntdefault':
-                if code:
-                    current = {'code': elem.text, 'abbr': header[0]}
-                else:
-                    current.update({'title': elem.text})
-                    classes.append(current)
-                code = not code
+            elif cls == 'ntdefault' and elem.text is not None:
+                current['description'] = elem.text.strip()
+                classes.append(current)
     return filter(None, classes), departments
 
 
