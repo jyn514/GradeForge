@@ -1,8 +1,7 @@
-#!/bin/python3
+#!/usr/bin/env python
 # HTTP server
 import http.server as httpsrv
 import os
-#import socketserver
 
 PORT = 8000
 
@@ -21,19 +20,19 @@ def processResponse(response):
 class RequestHandler(httpsrv.BaseHTTPRequestHandler):
   #rfile in input
   #wfile is output
-  
+
   # Do Normal Headers
   def _do_headers(self):
     self.send_response(200)
     self.send_header("Content-type", "text/html")
     self.end_headers()
-    
-  # Do Headers if File is Not Found  
+
+  # Do Headers if File is Not Found
   def _do_FileNotFound(self):
     self.send_response(404)
     self.send_header("Content-type", "text/html")
     self.end_headers()
-    
+
   #Override the GET Function for handling form submissions
   def do_GET(self):
     #print("Doing GET...")
@@ -67,7 +66,7 @@ class RequestHandler(httpsrv.BaseHTTPRequestHandler):
       self.wfile.write(toReturn)
     else:
       self.wfile.write(toReturn.encode("utf-8"))
-  
+
   # Handle a POST Request (After user fills in the form
   def do_POST(self):
     #self._do_headers()

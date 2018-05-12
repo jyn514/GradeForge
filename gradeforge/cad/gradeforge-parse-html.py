@@ -166,13 +166,13 @@ def extractEntries(htmlPath, max_records):
     ]
 
 
-    # uncomment to visualize table
-    visualize_transitions(transition_table)
 
     # every transition must also support the error transition
     for t in transition_table:
         t.append(err_trans)
 
+    # uncomment to visualize table
+    visualize_transitions(transition_table)
 
     verbose("Extracting entries from file '{}'".format(htmlPath))
 
