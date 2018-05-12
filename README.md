@@ -10,7 +10,7 @@ Support is available for an SQL database.
 
 ## Usage
 - SQL database: `make`
-- Web server: `make web` or `make server`
+- Web server: `make web` or `make server` (requires `flask`)
 - Dump of everything: `make dump`
 
 ## Relevant Links
