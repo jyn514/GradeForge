@@ -6,13 +6,12 @@ Support is available for an SQL database.
 ## Requirements
 - `python`
 - `sqlite`
-- Python modules from `requirements.txt`
+- `pip` and modules from `requirements.txt`
 
 ## Usage
-- Parsing: `make`
-- Viewing: `./load.py < <file>`
-- Help: `./parse.py -h`
-- SQL database: `make sql`
+SQL database: `make`
+Web server: `make web` or `make server`
+Dump of everything: `make dump`
 
 ## Relevant Links
 ### Search Pages
