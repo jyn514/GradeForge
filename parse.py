@@ -258,7 +258,7 @@ def parse_all_exams():
                 try:
                     result[name.replace('-', ' ')] = parse_exam(iterparse(stdin, html=True))
                 except:
-                    print(name)
+                    print(name, file=stderr)
                     raise
     return result
 
