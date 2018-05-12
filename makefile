@@ -5,8 +5,13 @@ DATA = .courses.data .sections.data
 .PHONY: sql
 sql: classes.sql
 
-webpages:
-	mkdir webpages
+.PHONY: web server website
+web server website: sql
+	./app.py
+
+.PHONY: dump
+dump: sql
+	$(SQL) classes.sql .dump
 
 # lxml has trouble with too much whitespace
 define clean =
@@ -17,11 +22,12 @@ endef
 .PHONY: courses sections
 courses sections: webpages/USC_all_$$@.html
 
+webpages:
+	mkdir webpages
+
 webpages/USC_all_%.html: | post.py webpages
 	./$(firstword $|) $(subst .html,,$(subst webpages/USC_all_,,$@)) > $@
 	$(call clean,$@)
-
-webpages/%: | webpages
 
 exams:
 	mkdir exams
@@ -42,6 +48,7 @@ exams/%.html: | post.py exams
 
 classes.sql: create_sql.py $(DATA)
 	$(RM) $@
+	# python2 compat
 	PYTHONIOENCODING=utf-8 ./$< | $(SQL) $@
 
 .PHONY: clean
