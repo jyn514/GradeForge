@@ -46,12 +46,12 @@ classes.sql: create_sql.py $(DATA)
 
 .PHONY: clean
 clean:
-	$(RM) -r *.pyc __pycache__
+	$(RM) -r __pycache__
+	$(RM) $(DATA) classes.sql *.pyc
 
 .PHONY: clobber
 clobber: clean
 	$(RM) -r webpages
-	$(RM) $(DATA) classes.sql
 
 .PHONY: dist-clean
 dist-clean: clobber
