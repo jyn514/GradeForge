@@ -56,7 +56,7 @@ department_commands = '\n'.join(base % d for d in DEPARTMENTS.items())
 
 base = 'INSERT INTO instructor (name, email) VALUES ("%s", "%s");'
 instructor_commands = '\n'.join(base % (i[0], i[1])
-                              for i in set((s.get('instructor', None), s.get('instructor_email', None))
+                              for i in set((s['instructor'], s['instructor_email'])
                                             for s in SECTIONS))
 
 base = '''INSERT INTO section (uid, department, section, code, semester, campus, startTime, endTime, days, registrationStart, instructor, location, finalExam, capacity, remaining) VALUES
