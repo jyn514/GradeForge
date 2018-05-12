@@ -276,6 +276,8 @@ def clean_sections(sections):
     #if 'exams' not in globals():
     #    exams = load('.exams.data')
     for s in sections:
+        # Takes about half an hour. The data goes out of date quickly. Not worth it.
+        #s['capacity'], s['actual'], s['remaining'] = get_seats(s['section_link'])
         try:
             if 'start_time' in s:
                 s['start_time'] = army_time(s['start_time'])
