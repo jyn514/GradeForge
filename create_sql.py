@@ -40,6 +40,7 @@ TABLES = {'class': ["department char(4)",
                        "location smallint",
                        "finalExam dateTime",
                        "capacity tinyint",
+                       "syllabus tinytext",
                        "remaining tinyint"]
        }
 
@@ -59,25 +60,26 @@ instructor_commands = '\n'.join(base % (i[0], i[1])
                               for i in set((s['instructor'], s['instructor_email'])
                                             for s in SECTIONS))
 
-base = '''INSERT INTO section (uid, department, section, code, semester, campus, startTime, endTime, days, registrationStart, instructor, location, finalExam, capacity, remaining) VALUES
+base = '''INSERT INTO section (uid, department, section, code, semester, campus, startTime, endTime, days, registrationStart, instructor, location, finalExam, capacity, syllabus, remaining) VALUES
         ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s",
-         "%s", "%s", "%s", "%s", "%s", "%s", "%s");'''
+         "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s");'''
 
-section_commands = '\n'.join(base % (course.get('UID', None),
-                                   course.get('department', None),
-                                   course.get('section', None),
-                                   course.get('code', None),
-                                   course.get('semester', None),
-                                   course.get('campus', None),
-                                   course.get('start_time', None),
-                                   course.get('end_time', None),
-                                   course.get('days', None),
-                                   course.get('registration_start', None),
-                                   course.get('instructor', None),
-                                   course.get('location', None),
-                                   course.get('final_exam', None),
-                                   course.get('capacity', None),
-                                   course.get('remaining', None))
+section_commands = '\n'.join(base % (course['UID'],
+                                     course['department'],
+                                     course['section'],
+                                     course['code'],
+                                     course['semester'],
+                                     course['campus'],
+                                     course['start_time'],
+                                     course['end_time'],
+                                     course['days'],
+                                     course['registration_start'],
+                                     course['instructor'],
+                                     course['location'],
+                                     course.get('final_exam', None),
+                                     course.get('capacity', None),
+                                     course.get('syllabus', None),
+                                     course.get('remaining', None))
                             for course in SECTIONS)
 
 if __name__ == "__main__":
