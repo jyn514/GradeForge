@@ -9,9 +9,9 @@ Support is available for an SQL database.
 - `pip` and modules from `requirements.txt`
 
 ## Usage
-SQL database: `make`
-Web server: `make web` or `make server`
-Dump of everything: `make dump`
+- SQL database: `make`
+- Web server: `make web` or `make server` (requires `flask`)
+- Dump of everything: `make dump`
 
 ## Relevant Links
 ### Search Pages
