@@ -88,7 +88,6 @@ def parse_sections(file_handle):
     sections = []
     doc = etree.parse(file_handle, etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
-    root_url = 'https://ssb.onecarolina.sc.edu'
     assert len(rows) % 2 == 0  # even
     HEADER = True
     for row in rows:
@@ -118,7 +117,10 @@ def parse_sections(file_handle):
             tmp = main.xpath('a/@href')
             course['catalog_link'], course['bookstore_link'] = tmp[-2:]
             if len(tmp) == 3:
-                course['syllabus'] = tmp[0]
+                syllabus = tmp[0]
+                if syllabus.startswith('/'):
+                    syllabus = base_url + syllabus
+                course['syllabus'] = syllabus
 
             tmp = main.xpath('table/tr[2]/td//text()')
             if len(tmp) == 9:  # instructor exists
