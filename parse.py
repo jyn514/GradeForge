@@ -38,6 +38,12 @@ def parse_catalog(html):
     return filter(None, classes), departments
 
 
+def course_debug(elem, course, error_name):
+    print("DEBUG: CRN %s: %s: No tail" % (course['UID'], error_name) +
+            " (elem: %s, elem.text: %s, elem.tail: %s, course: %s)" % (elem, elem.text, elem.tail, course),
+          file=stderr)
+
+
 def parse_sections(file_handle):
     '''Parses sections of a course
     Essentially a giant finite state autonoma
