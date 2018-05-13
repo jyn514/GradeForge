@@ -76,7 +76,7 @@ def parse_sections(file_handle):
         - other
     - direct bookstore link (should replace current redirect)
     - seat capacity: section_link
-    - seats remaining: section_link
+    - seats remaining: section_link (see also https://github.com/jyn514/GradeForge/issues/9)
     '''
     base_url = 'https://ssb.onecarolina.sc.edu'
     sections = []
@@ -208,20 +208,14 @@ def get_seats(section_link):
     return tuple(map(lambda x: x.text, elements))
 
 
-def clean_sections(sections):
-    #if 'exams' not in globals():
-    #    exams = load('.exams.data')
+def follow_links(sections):
+    exams = load('.exams.data')
     for s in sections:
         # Takes about half an hour. The data goes out of date quickly. Not worth it.
         #s['capacity'], s['actual'], s['remaining'] = get_seats(s['section_link'])
-        try:
-            if 'start_time' in s:
-                s['start_time'] = army_time(s['start_time'])
-                s['end_time'] = army_time(s['end_time'])
-            #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
-        except:
-            print(s, file=stderr)
-            raise
+        # Still crashing.
+        #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
+        pass
     return sections
 
 def parse_b_and_n(html):
@@ -278,7 +272,7 @@ if __name__ == '__main__':
     try:
         if args.sections:
             result = parse_sections(stdin.buffer)
-            # result = clean_sections(result)
+            # result = follow_links(result)
         elif args.catalog:
             result = parse_catalog(iterparse(stdin.buffer, html=True))
         else:
