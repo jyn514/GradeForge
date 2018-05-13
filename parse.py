@@ -8,7 +8,7 @@ from sys import stderr, stdin, stdout
 from tempfile import mkstemp  # used ONLY for seats remaining
 import re  # used to treat non-breaking spaces as spaces
 
-from lxml.etree import iterparse, XMLSyntaxError
+from lxml import etree
 
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
 from post import  get_calendar, get_bookstore, get
@@ -38,7 +38,7 @@ def parse_catalog(html):
     return filter(None, classes), departments
 
 
-def parse_sections(html):
+def parse_sections(file_handle):
     '''Parses sections of a course
     Essentially a giant finite state autonoma
 
@@ -50,9 +50,9 @@ def parse_sections(html):
     - level (UG, grad, etc.)
     - registration start
     - registration end
-    - abbr
+    - department
     - code
-    - UID (CCR code)
+    - UID (CRN code)
     - semester
     - instructor
     - email
@@ -62,18 +62,17 @@ def parse_sections(html):
     - start time
     - end time
     - days (of the week)
-    - credit hours
-    - campus
-    - schedule type (Dissertation, seminar, etc.)
+    - type (?? only seen this to be class)
 
     Not implemented:
-    - type (? only seen this to be class, discarding for now)
     - description (have to follow catalog link to get)
     - final exam (not always present; should ideally get from academic calendar)
     - restrictions (under detailed catalog link)
         - prerequisites
         - min grades
         - campus
+        - colleges
+        - classification (Freshman, etc.)
         - other
     - direct bookstore link (should replace current redirect)
     - seat capacity: section_link
@@ -81,127 +80,64 @@ def parse_sections(html):
     '''
     base_url = 'https://ssb.onecarolina.sc.edu'
     sections = []
-    for _, elem in html:
-        try:
-            if elem.tag == 'th' and elem.attrib.get('class', None) == 'ddtitle':
-                if ('course' in locals() and course != {}):  # this is old course
-                    sections.append(course)
-                elem = elem.find('a')
-                link = elem.attrib.get('href', None)
-                if link.startswith('/'):
-                    link = base_url + link
-                course = {'section_link': link}
-                # some courses have '-' in title
-                if elem.text.count(' - ') > 3:
-                    a = elem.text.split(' - ')
-                    course['UID'], tmp, course['section'] = a[-3:]
-                    course['title'] = ' - '.join(a[:-3])
+    doc = etree.parse(file_handle, etree.HTMLParser())
+    rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
+    root_url = 'https://ssb.onecarolina.sc.edu'
+    assert len(rows) % 2 == 0  # even
+    HEADER = True
+    for row in rows:
+        if HEADER:
+            anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
+            course = {'section_link': anchor.attrib.get('href')}
+            text = anchor.text.split(' - ')
+            # some courses have '-' in title
+            course['UID'], tmp, course['section'] = text[-3:]
+            course['title'] = ' - '.join(text[:-3])
+            course['department'], course['code'] = tmp.split(' ')
+        else:
+            main = row.xpath('td[1]')[0]
+
+            after = main.xpath('span/following-sibling::text()')
+            after = tuple(map(lambda x: x.strip(), filter(lambda x: x != '\n', after)))
+            course['semester'], registration, course['level'] = after[:3]
+            if len(after) == 8:
+                course['attributes'] = after[3]
+            campus, schedule_type, method, credits = after[-4:]
+            course['registration_start'], course['registration_end'] = registration.split(' to ')
+            course['campus'] = campus.split('USC ')[1].split(' Campus')[0]
+            course['type'] = schedule_type.split(' Schedule Type')[0]
+            course['method'] = method.split(' Instructional Method')[0]
+            course['credits'] = credits.split(' Credits')[0].replace('.000', '')
+
+            tmp = main.xpath('a/@href')
+            course['catalog_link'], course['bookstore_link'] = tmp[-2:]
+            if len(tmp) == 3:
+                course['syllabus'] = tmp[0]
+
+            tmp = main.xpath('table/tr[2]/td//text()')
+            if len(tmp) == 9:  # instructor exists
+                tmp = tmp[:-2]  # don't get junk at end
+            elif len(tmp) > 9:  # multiple instructors
+                tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]  # make all instructors last element in list
+            if len(tmp) == 0:  # independent study
+                course['type'], course['start_time'], course['end_time'], course['days'], course['location'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['Independent Study'] + [None] * 8  # this is handled on the frontend
+            else:
+                course['type'], times, course['days'], course['location'], dates, _, instructor = tmp
+                if times == 'TBA':
+                    course['start_time'], course['end_time'] = dates, dates
                 else:
-                    course['title'], course['UID'], tmp, course['section'] = elem.text.split(' - ')
-                course['department'], course['code'] = tmp.split(' ')
-            elif elem.tag == 'span' and elem.attrib.get('class', None) == 'fieldlabeltext':
-                try:
-                    following = elem.tail.strip()
-                except AttributeError:
-                    continue
-                if elem.text == 'Associated Term: ':
-                    course['semester'] = following
-                elif elem.text == 'Registration Dates: ':
-                    course['registration_start'], course['registration_end'] = following.split(' to ')
-                elif elem.text == 'Levels: ':
-                    course['level'] = following
-                    elem = elem.getnext()
-                    if elem is None: continue
-                    elem = elem.getnext()
-                    if elem is None: continue
-                    if elem.tag == 'span':
-                        try:
-                            course['attributes'] = elem.tail.strip()
-                            elem = elem.getnext().getnext()
-                        except AttributeError:
-                            continue
-                    try:
-                        course['campus'] = elem.tail.strip().split(' Campus')[0]
-                    except AttributeError:
-                        continue
-                    elem = elem.getnext()
-                    try:
-                        course['type'] = elem.tail.strip().split(' Schedule Type')[0]
-                    except AttributeError:
-                        continue
-                    elem = elem.getnext()
-                    try:
-                        course['method'] = elem.tail.strip().split(' Instructional Method')[0]
-                    except AttributeError:
-                        continue
-                    elem = elem.getnext()
-                    try:
-                        course['credits'] = int(elem.tail.strip().split('.000')[0])
-                    except AttributeError:
-                        continue
-            elif elem.tag == 'a':
-                if elem.text == 'View Catalog Entry':
-                    # TODO: get restrictions
-                    # TODO: get description
-                    # URL looks like this: base_url +
-                    #     /BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=ACCT&crse_numb_in=225
-                    # can also follow and parse link below
-                    link = elem.attrib.get('href', None)
-                    if link.startswith('/'):
-                        link = base_url + link
-                    course['catalog_link'] = link
-                elif elem.text == 'Bookstore':
-                    # TODO: link directly to bookstore
-                    # currently, looks like
-                    # /BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001
-                    # should be https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView
-                    # requires POST
-                    link = elem.attrib.get('href', None)
-                    if link.startswith('/'):
-                        link = link + base_url
-                    course['bookstore_link'] = link
-            elif elem.tag == 'table' and elem.attrib.get('class', None) == 'datadisplaytable' and elem.attrib.get('summary', None).endswith('this class..'):
-                elem = elem.getiterator('tr').__next__().getnext()
-                for i, column in enumerate(elem):
-                    if i == 0:
-                        if column.text != 'Class':
-                            print(column.text, file=stderr)
-                    elif i == 1:
-                        if column.text is None or column.text.strip() == '':
-                            course['start_time'] = 'TBA'
-                            course['end_time'] = 'TBA'
-                        else:
-                            course['start_time'], course['end_time'] = column.text.split(' - ')
-                    elif i == 2:
-                        if column.text.strip() != '':
-                            course['days'] = column.text
-                        else:
-                            course['days'] = 'TBD'
-                    elif i == 3:
-                        course['location'] = column.text  # can be 'TBD'
-                    elif i == 4:
-                        course['start_date'], course['end_date'] = column.text.split(' - ')
-                    elif i == 5:
-                        pass  # already covered earlier (schedule type)
-                    elif i == 6:
-                        if column.text is None:
-                            course['instructor'] = 'TBA'
-                        else:
-                            course['instructor'] = column.text.split(' (')[0].replace('   ', ' ')
-                            mail = column.find('a')
-                            if mail is not None:
-                                course['instructor_email'] = mail.attrib.get('href')
-        except:
-            print(elem, elem.text, elem.tail, elem.attrib, course, elem.getchildren(),
-                  elem.getnext(), elem.getprevious().tail,
-                  elem.getparent().itertext().__next__(), file=stderr)
-            if 'following' in locals():
-                print(following, file=stderr)
-            if 'i' in locals() or 'column' in locals():
-                print(i, column, column.text, file=stderr)
-            raise
-    sections.append(course)
-    return sections
+                    course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
+                course['start_date'], course['end_date'] = dates.split(' - ')
+                course['instructor'] = instructor.replace(' (', '').replace('   ', ' ')
+                tmp = tuple(main.xpath('table/tr[2]/td/a/@href'))
+                if len(tmp) == 1:
+                    course['instructor_email'] = tmp[0]
+                else:
+                    course['instructor_email'] = tmp
+            sections.append(course)
+            del course  # so we get an error instead of silently add wrong info when rows are out of order
+        HEADER = not HEADER
+    return tuple(sections)
 
 
 def parse_days(text):
@@ -341,11 +277,12 @@ if __name__ == '__main__':
 
     try:
         if args.sections:
-            result = clean_sections(parse_sections(iterparse(stdin.buffer, html=True)))
+            result = parse_sections(stdin.buffer)
+            # result = clean_sections(result)
         elif args.catalog:
             result = parse_catalog(iterparse(stdin.buffer, html=True))
         else:
             result = parse_all_exams()
         pickle.dump(result, stdout.buffer)
-    except (KeyboardInterrupt, XMLSyntaxError) as e:
+    except (KeyboardInterrupt, AssertionError) as e:
         pass
