@@ -27,6 +27,7 @@ Support is available for an SQL database.
 
 ### External Links
 - Login:	https://cas.auth.sc.edu/cas/login
+- Semester starts and ends: https://my.sc.edu/codes/partofterms/list
 - RateMyProfessor:	https://www.ratemyprofessors.com/search.jsp?queryBy=schoolId&schoolID=1309
 - Schedule Planner:	https://sc.collegescheduler.com/entry
 - Grade Spreads:	https://www.sc.edu/about/offices_and_divisions/registrar/toolbox/grade_processing/grade_spreads/index.php
