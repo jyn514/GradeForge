@@ -184,11 +184,12 @@ def parse_sections(file_handle):
                 course['instructor'] = re.sub(' +', ' ', instructor.replace(' (', ''))
                 tmp = main.xpath('table/tr[2]/td/a/@href')
                 if len(tmp) == 1:
-                    course['instructor_email'] = tmp[0]
+                    course['instructor_email'] = str(tmp[0])  # str is necessary, otherwise returns _ElementUnicodeResult
                 else:
-                    course['instructor_email'] = tmp
+                    course['instructor_email'] = 'None'
             sections.append(course)
-            del course  # so we get an error instead of silently add wrong info when rows are out of order
+            # error instead of silently addding wrong info when rows are out of order
+            del course
         HEADER = not HEADER
     return tuple(sections)
 
