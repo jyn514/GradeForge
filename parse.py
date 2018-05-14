@@ -135,16 +135,19 @@ def parse_sections(file_handle):
             anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
             course = {'section_link': BASE_URL + anchor.attrib.get('href')}
             text = anchor.text.split(' - ')
-            # some courses have '-' in title
+            # everything before last three is title
             course['UID'], tmp, course['section'] = text[-3:]
-            course['title'] = ' - '.join(text[:-3])
             course['department'], course['code'] = tmp.split(' ')
         else:
             main = row.xpath('td[1]')[0]
 
             after = main.xpath('span/following-sibling::text()')
             after = tuple(map(lambda x: x.strip(), filter(lambda x: x != '\n', after)))
-            course['semester'], registration, course['level'] = after[:3]
+
+            semester, registration = after[:2]  # third is level, which we know
+            course['registration_start'], course['registration_end'] = registration.split(' to ')
+
+            course['semester'] = parse_semester(*semester.split(' '))
             if len(after) == 8:
                 course['attributes'] = after[3]
             campus, schedule_type, method, credits = after[-4:]
