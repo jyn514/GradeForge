@@ -175,7 +175,7 @@ def parse_sections(file_handle):
             if len(tmp) == 0:  # independent study
                 course['type'], course['start_time'], course['end_time'], course['days'], course['location'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['Independent Study'] + [None] * 8  # this is handled on the frontend
             else:
-                course['type'], times, course['days'], course['location'], dates, _, instructor = tmp
+                _, times, course['days'], course['location'], dates, _, instructor = tmp
                 if times == 'TBA':
                     course['start_time'], course['end_time'] = dates, dates
                 else:
