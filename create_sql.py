@@ -80,7 +80,7 @@ if __name__ == '__main__':
     CURSOR.executemany('INSERT INTO instructor VALUES (?, ?)',
                        set((s.pop('instructor'), s['instructor_email'])
                            for s in SECTIONS))
-    CURSOR.executemany('INSERT INTO semester VALUES (?, ?, ?, ?)',
+    CURSOR.executemany('INSERT INTO semester VALUES (?, ?, ?, ?, ?)',
                        set((s['semester'], s.pop('start_date'), s.pop('end_date'),
                            s.pop('registration_start'), s.pop('registration_end'))
                            for s in SECTIONS))
