@@ -13,7 +13,6 @@ from lxml import etree
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
 from post import  get_calendar, get_bookstore, get
 
-DEBUG = False  # WARNING: VERY verbose
 
 def parse_catalog(html):
     '''
