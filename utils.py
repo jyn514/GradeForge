@@ -105,18 +105,18 @@ def get_season_today():
     #return 'spring' if m <
 
 
-def parse_semester(s):
-    if s in allowed['semester']:
-        return s
-    s = s.lower()
-    # TODO: check if this year or next year is spring
-    if s == 'fall':
-        return str(date.today().year) + '08'
-    elif s == 'spring':
-        return str(date.today().year) + '01'
-    elif s == 'summer':
-        return str(date.today().year) + '05'
-    raise ValueError(s)
+def parse_semester(season, year=str(date.today().year)):
+    if season in allowed['semester']:
+        return season
+    season = season.lower()
+    # TODO: check if this year or next year is spring (for default)
+    if season == 'fall':
+        return year + '08'
+    elif season == 'spring':
+        return year + '01'
+    elif season == 'summer':
+        return year + '05'
+    raise ValueError(season)
 
 
 def load(stdin):
