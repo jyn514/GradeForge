@@ -150,12 +150,12 @@ def parse_sections(file_handle):
             course['semester'] = parse_semester(*semester.split(' '))
             if len(after) == 8:
                 course['attributes'] = after[3]
-            campus, schedule_type, method, credits = after[-4:]
-            course['registration_start'], course['registration_end'] = registration.split(' to ')
-            course['campus'] = campus.split('USC ')[1].split(' Campus')[0]
-            course['type'] = schedule_type.split(' Schedule Type')[0]
-            course['method'] = method.split(' Instructional Method')[0]
-            course['credits'] = credits.split(' Credits')[0].replace('.000', '')
+            else:
+                course['attributes'] = 'None'
+            campus, schedule_type, method = after[-4:-1]  # last is credits
+            course['campus'] = campus.replace('USC ', '').replace(' Campus', '')
+            course['type'] = schedule_type.replace(' Schedule Type', '')
+            course['method'] = method.replace(' Instructional Method', '')
 
             tmp = main.xpath('a/@href')
             course['catalog_link'], course['bookstore_link'] = map(lambda s: BASE_URL + s, tmp[-2:])
@@ -164,6 +164,8 @@ def parse_sections(file_handle):
                 if syllabus.startswith('/'):
                     syllabus = BASE_URL + syllabus
                 course['syllabus'] = syllabus
+            else:
+                course['syllabus'] = 'None'
 
             tmp = main.xpath('table/tr[2]/td//text()')
             if len(tmp) == 9:  # instructor exists
