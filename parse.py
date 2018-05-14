@@ -13,34 +13,57 @@ from lxml import etree
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
 from post import  get_calendar, get_bookstore, get
 
+BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
-def parse_catalog(html):
+def parse_catalog(file_handle):
     '''
-    lxml.etree.iterparse -> (classes, departments)
+    file -> (classes, departments)
         where classes = [c...]
-            where c.keys() = ('code', 'department', 'title')
+            where c.keys() = ('course_link', 'title', 'department', 'code',
+                              'description', 'credits', 'attributes', 'level',
+                              'type', 'all_sections')
         where departments = {short: long for header in html}
     '''
     classes = []
     departments = {}
-    for event, elem in html:
-        if elem.tag == 'td':
-            cls = elem.attrib.get('class', None)
-            if cls == 'nttitle':
-                header, title = elem.find('a').text.split(' - ', 1)
-                department, code = header.split(' ')
-                current = {'code': code, 'department': department, 'title': title}
-                departments[header[0]] = header[1]
-            elif cls == 'ntdefault' and elem.text is not None:
-                current['description'] = elem.text.strip()
-                classes.append(current)
-    return filter(None, classes), departments
+    doc = etree.parse(file_handle, parser=etree.HTMLParser())
+    rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"]/tr')
+    HEADER = True
+    for row in rows:
+        if HEADER:
+            anchor = row.find('td').find('a')
+            course = {'course_link': BASE_URL + anchor.attrib['href']}
+            # some courses have '-' in title
+            tmp = anchor.text.split(' - ')
+            course_id, course['title'] = tmp[0], ' - '.join(tmp[1:])
+            course['department'], course['code'] = course_id.split(' ')
+        else:
+            td = row.xpath('td')[0]
+            course['description'] = td.text.strip()
+            credits = td.xpath('br[1]/following-sibling::text()')[0]
+            course['credits'] = credits.replace('Credit hours', '').replace('.000', '').replace(' TO     ', ' to ').strip()
+            tmp = td.xpath('span/following-sibling::text()')
+            tmp = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', tmp)))
+            if len(td.xpath('span')) == 3:  # has attributes
+                course['attributes'] = tmp[-1]
+                tmp = tmp[:-1]
+            else:
+                course['attributes'] = 'None'
+            # type can be multiple (since there might be anchor in middle)
+            course['level'], course['type'], department = tmp[0],  ''.join(tmp[1:-1]), tmp[-1]
+            departments[course['department']] = department
 
+            a = td.find('a')
+            if a is not None:
+                course['all_sections'] = BASE_URL + a.attrib['href']
+            else:
+                course['all_sections'] = 'None'
+            classes.append(course)
+            del course
 
-def course_debug(elem, course, error_name):
-    print("DEBUG: CRN %s: %s: No tail" % (course['UID'], error_name) +
-            " (elem: %s, elem.text: %s, elem.tail: %s, course: %s)" % (elem, elem.text, elem.tail, course),
-          file=stderr)
+        HEADER = not HEADER
+
+    return classes, departments
 
 
 def parse_sections(file_handle):
