@@ -5,8 +5,8 @@
 from __future__ import print_function, generators
 from os.path import exists
 from sys import stderr, stdin, stdout
-from tempfile import mkstemp  # used ONLY for seats remaining
-import re  # used to treat non-breaking spaces as spaces
+from tempfile import mkstemp  # used for downloading seats remaining
+import re  # used for only very basic stuff
 
 from lxml import etree
 
