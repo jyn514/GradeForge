@@ -173,7 +173,7 @@ def parse_sections(file_handle):
             elif len(tmp) > 9:  # multiple instructors
                 tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]  # make all instructors last element in list
             if len(tmp) == 0:  # independent study
-                course['type'], course['start_time'], course['end_time'], course['days'], course['location'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['Independent Study'] + [None] * 8  # this is handled on the frontend
+                course['days'], course['location'], course['start_time'], course['end_time'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['None'] * 8  # this is handled on the frontend
             else:
                 _, times, course['days'], course['location'], dates, _, instructor = tmp
                 if times == 'TBA':
