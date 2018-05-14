@@ -75,11 +75,16 @@ def parse_catalog(file_handle):
 
 
 def parse_sections(file_handle):
-    '''Parses sections of a course
+    '''file_handle -> tuple(c, ...)
+            where c is dictionary with keys (section_link, UID, section, department,
+            code, registration_start, registration_end, semester, attributes,
+            campus, type, method, catalog_link, bookstore_link, syllabus,
+            days, location, start_time, end_time, start_date, end_date,
+            instructor, instructor_email
+    Parses sections of a course
     Essentially a giant finite state autonoma
 
     Working:
-    - title
     - bookstore link
     - catalog link
     - section link
@@ -99,6 +104,7 @@ def parse_sections(file_handle):
     - end time
     - days (of the week)
     - type (?? only seen this to be class)
+    - attributes
 
     Not implemented:
     - description (have to follow catalog link to get)
@@ -113,8 +119,12 @@ def parse_sections(file_handle):
     - direct bookstore link (should replace current redirect)
     - seat capacity: section_link
     - seats remaining: section_link (see also https://github.com/jyn514/GradeForge/issues/9)
+    - title: already known from course
+
+    TODO:
+    - figure out why start_date and end_date are sometimes the same
+    - fix misc screwiness
     '''
-    base_url = 'https://ssb.onecarolina.sc.edu'
     sections = []
     doc = etree.parse(file_handle, etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
