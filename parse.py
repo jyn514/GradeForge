@@ -133,7 +133,7 @@ def parse_sections(file_handle):
     for row in rows:
         if HEADER:
             anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
-            course = {'section_link': anchor.attrib.get('href')}
+            course = {'section_link': BASE_URL + anchor.attrib.get('href')}
             text = anchor.text.split(' - ')
             # some courses have '-' in title
             course['UID'], tmp, course['section'] = text[-3:]
@@ -155,11 +155,11 @@ def parse_sections(file_handle):
             course['credits'] = credits.split(' Credits')[0].replace('.000', '')
 
             tmp = main.xpath('a/@href')
-            course['catalog_link'], course['bookstore_link'] = tmp[-2:]
+            course['catalog_link'], course['bookstore_link'] = map(lambda s: BASE_URL + s, tmp[-2:])
             if len(tmp) == 3:
                 syllabus = tmp[0]
                 if syllabus.startswith('/'):
-                    syllabus = base_url + syllabus
+                    syllabus = BASE_URL + syllabus
                 course['syllabus'] = syllabus
 
             tmp = main.xpath('table/tr[2]/td//text()')
