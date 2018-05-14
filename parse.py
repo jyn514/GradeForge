@@ -26,8 +26,6 @@ def parse_catalog(file_handle):
     TODO: lots
     - seperate prereqs from description
     - 'type' is not picked up if inside an anchor; the current mess doesn't do what I thought
-    - department is overwritten by last seen, so there's a lot of stuff specific to upstate
-    - remove 'Department' from departments
     - general screwy stuff
         - description
         - departments
@@ -123,6 +121,8 @@ def parse_sections(file_handle):
 
     TODO:
     - figure out why start_date and end_date are sometimes the same
+    - department is overwritten by last seen, so there's a lot of stuff specific to upstate
+    - remove 'Department' from departments
     - fix misc screwiness
     '''
     sections = []
