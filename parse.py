@@ -330,7 +330,7 @@ if __name__ == '__main__':
             result = parse_sections(stdin.buffer)
             # result = follow_links(result)
         elif args.catalog:
-            result = parse_catalog(iterparse(stdin.buffer, html=True))
+            result = parse_catalog(stdin.buffer)
         else:
             result = parse_all_exams()
         pickle.dump(result, stdout.buffer)
