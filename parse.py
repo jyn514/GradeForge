@@ -193,6 +193,7 @@ def parse_exam(html):
                                     for row in elem.getparent().getnext().find('table').find('tbody').findall('tr')}
             for _, elem in html if elem.tag == 'h5'}'''
 
+
 def parse_all_exams():
     result = {}
     for year in range(16, 19):
@@ -225,6 +226,7 @@ def follow_links(sections):
         #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
         pass
     return sections
+
 
 def parse_b_and_n(html):
     '''
