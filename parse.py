@@ -181,8 +181,8 @@ def parse_sections(file_handle):
                 else:
                     course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
                 course['start_date'], course['end_date'] = dates.split(' - ')
-                course['instructor'] = instructor.replace(' (', '').replace('   ', ' ')
-                tmp = tuple(main.xpath('table/tr[2]/td/a/@href'))
+                course['instructor'] = re.sub(' +', ' ', instructor.replace(' (', ''))
+                tmp = main.xpath('table/tr[2]/td/a/@href')
                 if len(tmp) == 1:
                     course['instructor_email'] = tmp[0]
                 else:
