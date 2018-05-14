@@ -23,6 +23,14 @@ def parse_catalog(file_handle):
                               'description', 'credits', 'attributes', 'level',
                               'type', 'all_sections')
         where departments = {short: long for header in html}
+    TODO: lots
+    - seperate prereqs from description
+    - 'type' is not picked up if inside an anchor; the current mess doesn't do what I thought
+    - department is overwritten by last seen, so there's a lot of stuff specific to upstate
+    - remove 'Department' from departments
+    - general screwy stuff
+        - description
+        - departments
     '''
     classes = []
     departments = {}
