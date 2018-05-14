@@ -5,7 +5,6 @@ Support is available for an SQL database.
 
 ## Requirements
 - `python`
-- `sqlite`
 - `pip` and modules from `requirements.txt`
 
 ## Usage

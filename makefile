@@ -1,4 +1,3 @@
-SQL != which sqlite 2>/dev/null || which sqlite3
 EXAMS := $(addprefix exams/,$(addsuffix .html,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2016 Spring-2017 Spring-2018))
 DATA = .courses.data .sections.data
 
@@ -11,7 +10,7 @@ web server website: sql
 
 .PHONY: dump
 dump: sql
-	$(SQL) classes.sql .dump
+	./dump.py
 
 # lxml has trouble with too much whitespace
 define clean =
@@ -49,7 +48,7 @@ exams/%.html: | post.py exams
 classes.sql: create_sql.py $(DATA)
 	$(RM) $@
 	# python2 compat
-	PYTHONIOENCODING=utf-8 ./$< | $(SQL) $@
+	PYTHONIOENCODING=utf-8 ./$<
 
 .PHONY: clean
 clean:
