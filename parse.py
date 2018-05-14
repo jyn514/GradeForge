@@ -177,7 +177,7 @@ def parse_sections(file_handle):
             else:
                 _, times, course['days'], course['location'], dates, _, instructor = tmp
                 if times == 'TBA':
-                    course['start_time'], course['end_time'] = dates, dates
+                    course['start_time'], course['end_time'] = 'TBA', 'TBA'
                 else:
                     course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
                 course['start_date'], course['end_date'] = dates.split(' - ')
