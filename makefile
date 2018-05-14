@@ -37,11 +37,11 @@ exams/%.html: | post.py exams
 	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	$(call clean $@)
 
-.courses.data: webpages/USC_all_courses.html | parse.py
-	./$| --catalog < $< > $@ || { rm -f $@; exit 999; }
+.courses.data: parse.py webpages/USC_all_courses.html
+	./$< --catalog < $(lastword $^) > $@
 
-.sections.data: webpages/USC_all_sections.html | parse.py # .exams.data
-	./$| --sections < $< > $@ || { rm -f $@; exit 999; }
+.sections.data: parse.py webpages/USC_all_sections.html # | .exams.data
+	./$< --sections < $(lastword $^) > $@
 
 .exams.data: $(EXAMS) | parse.py
 	./$| --exams
