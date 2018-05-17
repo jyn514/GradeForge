@@ -38,7 +38,7 @@ def parse_catalog(file_handle):
     for row in rows:
         if HEADER:
             anchor = row.find('td').find('a')
-            course = {'course_link': BASE_URL + anchor.attrib['href']}
+            course = {'course_link': anchor.attrib['href']}
             # some courses have '-' in title
             tmp = anchor.text.split(' - ')
             course_id, course['title'] = tmp[0], ' - '.join(tmp[1:])
@@ -46,24 +46,19 @@ def parse_catalog(file_handle):
         else:
             td = row.xpath('td')[0]
             course['description'] = td.text.strip()
-            credits = td.xpath('br[1]/following-sibling::text()')[0]
-            course['credits'] = credits.replace('Credit hours', '').replace('.000', '').replace(' TO     ', ' to ').strip()
+            course['credits'] = td.xpath('br[1]/following-sibling::text()')[0]
             tmp = td.xpath('span/following-sibling::text()')
             tmp = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', tmp)))
             if len(td.xpath('span')) == 3:  # has attributes
                 course['attributes'] = tmp[-1]
                 tmp = tmp[:-1]
-            else:
-                course['attributes'] = 'None'
             # type can be multiple (since there might be anchor in middle)
             course['level'], course['type'], course['department_long'] = tmp[0],  ''.join(tmp[1:-1]), tmp[-1]
 
             a = td.find('a')
             if a is not None:
-                course['all_sections'] = BASE_URL + a.attrib['href']
-            else:
-                course['all_sections'] = 'None'
-            classes.append(course)
+                course['all_sections'] = a.attrib['href']
+            classes.append(clean_catalog(course))
             del course
 
         HEADER = not HEADER
@@ -85,6 +80,26 @@ def infer_tables(iterable, classes=True):
                                s.pop('registration_end'))
                               for s in iterable))
         return instructors, semesters, iterable
+
+
+def clean_catalog(course):
+    if course['course_link'].startswith('/'):
+        course['course_link'] = BASE_URL + course['course_link']
+    # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
+    course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
+                               course['credits'].replace('Credit hours', '')
+                                                .replace('.000', '')
+                                                .strip())
+    try:
+        course['attributes']
+    except KeyError:
+        course['attributes'] = None
+    try:
+        if course['all_sections'].startswith('/'):
+            course['all_sections'] = BASE_URL + course['all_sections']
+    except KeyError:
+        course['all_sections'] = None
+    return course
 
 
 def parse_sections(file_handle):
@@ -147,7 +162,7 @@ def parse_sections(file_handle):
     for row in rows:
         if HEADER:
             anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
-            course = {'section_link': BASE_URL + anchor.attrib.get('href')}
+            course = {'section_link': anchor.attrib.get('href')}
             text = anchor.text.split(' - ')
             # everything before last three is title
             course['UID'], tmp, course['section'] = text[-3:]
@@ -164,22 +179,15 @@ def parse_sections(file_handle):
             course['semester'] = parse_semester(*semester.split(' '))
             if len(after) == 8:
                 course['attributes'] = after[3]
-            else:
-                course['attributes'] = 'None'
             campus, schedule_type, method = after[-4:-1]  # last is credits
             course['campus'] = campus.replace('USC ', '').replace(' Campus', '')
             course['type'] = schedule_type.replace(' Schedule Type', '')
             course['method'] = method.replace(' Instructional Method', '')
 
             tmp = main.xpath('a/@href')
-            course['catalog_link'], course['bookstore_link'] = map(lambda s: BASE_URL + s, tmp[-2:])
+            course['catalog_link'], course['bookstore_link'] = tmp[-2:]
             if len(tmp) == 3:
-                syllabus = tmp[0]
-                if syllabus.startswith('/'):
-                    syllabus = BASE_URL + syllabus
-                course['syllabus'] = syllabus
-            else:
-                course['syllabus'] = 'None'
+                course['syllabus'] = tmp[0]
 
             tmp = main.xpath('table/tr[2]/td//text()')
             if len(tmp) == 9:  # instructor exists
@@ -189,23 +197,43 @@ def parse_sections(file_handle):
             if len(tmp) == 0:  # independent study
                 course['days'], course['location'], course['start_time'], course['end_time'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['None'] * 8  # this is handled on the frontend
             else:
-                _, times, course['days'], course['location'], dates, _, instructor = tmp
+                _, times, course['days'], course['location'], dates, _, course['instructor'] = tmp
                 if times == 'TBA':
                     course['start_time'], course['end_time'] = 'TBA', 'TBA'
                 else:
                     course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
                 course['start_date'], course['end_date'] = dates.split(' - ')
-                course['instructor'] = re.sub(' +', ' ', instructor.replace(' (', ''))
                 tmp = main.xpath('table/tr[2]/td/a/@href')
                 if len(tmp) == 1:
                     course['instructor_email'] = str(tmp[0])  # str is necessary, otherwise returns _ElementUnicodeResult
-                else:
-                    course['instructor_email'] = 'None'
-            sections.append(course)
+            sections.append(clean_section(course))
             # error instead of silently addding wrong info when rows are out of order
             del course
         HEADER = not HEADER
     return infer_tables(sections, classes=False)
+
+
+def clean_section(course):
+    try:
+        if course['instructor_email'] == '':
+            course['instructor_email'] = None
+    except KeyError:
+        course['instructor_email'] = None
+    if course['instructor'] is not None:
+        course['instructor'] = re.sub(' +', ' ', course['instructor'].replace(' (', ''))
+    try:
+        if course['syllabus'].startswith('/'):
+            course['syllabus'] = BASE_URL + course['syllabus']
+    except KeyError:
+        course['syllabus'] = None
+    try:
+        course['attributes']
+    except KeyError:
+        course['attributes'] = None
+    for key in ('catalog_link', 'bookstore_link', 'section_link'):
+        if course[key].startswith('/'):
+            course[key] = BASE_URL + course[key]
+    return course
 
 
 def parse_days(text):
