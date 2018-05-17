@@ -56,8 +56,7 @@ def parse_catalog(file_handle):
             else:
                 course['attributes'] = 'None'
             # type can be multiple (since there might be anchor in middle)
-            course['level'], course['type'], department = tmp[0],  ''.join(tmp[1:-1]), tmp[-1]
-            departments[course['department']] = department
+            course['level'], course['type'], course['department_long'] = tmp[0],  ''.join(tmp[1:-1]), tmp[-1]
 
             a = td.find('a')
             if a is not None:
@@ -68,8 +67,24 @@ def parse_catalog(file_handle):
             del course
 
         HEADER = not HEADER
+    return infer_tables(classes)
 
-    return classes, departments
+
+def infer_tables(iterable, classes=True):
+    '''If classes, assume classes. Else, assume sections.'''
+    iterable = tuple(iterable)  # so generators aren't exhausted
+    if classes:
+        departments = dict(set((c['department'], c.pop('department_long'))
+                               for c in iterable))
+        return departments, iterable
+    else:
+        instructors = dict(set((s['instructor_email'], s.pop('instructor'))
+                               for s in iterable))
+        semesters = tuple(set((s['semester'], s.pop('start_date'), s.pop('end_date'),
+                               s.pop('registration_start'),
+                               s.pop('registration_end'))
+                              for s in iterable))
+        return instructors, semesters, iterable
 
 
 def parse_sections(file_handle):
@@ -105,7 +120,6 @@ def parse_sections(file_handle):
     - attributes
 
     Not implemented:
-    - description (have to follow catalog link to get)
     - final exam (not always present; should ideally get from academic calendar)
     - restrictions (under detailed catalog link)
         - prerequisites
@@ -191,7 +205,7 @@ def parse_sections(file_handle):
             # error instead of silently addding wrong info when rows are out of order
             del course
         HEADER = not HEADER
-    return tuple(sections)
+    return infer_tables(sections, classes=False)
 
 
 def parse_days(text):

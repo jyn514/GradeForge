@@ -62,8 +62,8 @@ if __name__ == '__main__':
     import sqlite3 as sql
     from utils import load
 
-    CLASSES, DEPARTMENTS = load('.courses.data')
-    SECTIONS = load('.sections.data')
+    DEPARTMENTS, CLASSES = load('.courses.data')
+    INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
 
     DATABASE = sql.connect('classes.sql')
     CURSOR = DATABASE.cursor()
@@ -78,15 +78,12 @@ if __name__ == '__main__':
     CURSOR.executemany('INSERT INTO department VALUES (?, ?)',
                        tuple(DEPARTMENTS.items()))
     CURSOR.executemany('INSERT INTO instructor VALUES (?, ?)',
-                       set((s.pop('instructor'), s['instructor_email'])
-                           for s in SECTIONS))
-    CURSOR.executemany('INSERT INTO semester VALUES (?, ?, ?, ?, ?)',
-                       set((s['semester'], s.pop('start_date'), s.pop('end_date'),
-                           s.pop('registration_start'), s.pop('registration_end'))
-                           for s in SECTIONS))
-    # didn't feel like typing
+                       tuple(INSTRUCTORS.items()))
+
+    CURSOR.executemany('INSERT INTO semester VALUES (?, ?, ?, ?, ?)', SEMESTERS)
+
     CURSOR.executemany('INSERT INTO section VALUES (%s)' %
-                       ', '.join('?' * len(TABLES['section'])),
+                       ', '.join('?' * len(TABLES['section'])), # didn't feel like typing
                         # final exam not done yet
                        (tuple(s.values()) + ('None',) for s in SECTIONS))
     DATABASE.commit()
