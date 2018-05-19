@@ -12,6 +12,10 @@ Support is available for an SQL database.
 - Web server: `make web` or `make server` (requires `flask`)
 - Dump of everything: `make dump`
 
+## Development
+### Notes
+- course['attributes'] is a tuple; this is what is (currently) crashing `create_sql.py`
+
 ## Relevant Links
 ### Search Pages
 - Bookstore:	http://sc.bncollege.com/webapp/wcs/stores/servlet/TBWizardView?catalogId=10001&langId=-1&storeId=10052
