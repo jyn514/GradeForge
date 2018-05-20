@@ -11,7 +11,7 @@ import re  # used for only very basic stuff
 from lxml import etree
 
 from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
-from post import  get_calendar, get_bookstore, get
+from post import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
@@ -31,7 +31,6 @@ def parse_catalog(file_handle):
         - departments
     '''
     classes = []
-    departments = {}
     doc = etree.parse(file_handle, parser=etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"]/tr')
     HEADER = True
@@ -245,41 +244,38 @@ def parse_days(text):
     return ''.join(DAYS[d] for d in text.split('/'))
 
 
-def parse_exam(html):
-    d = {}
-    for _, elem in html:
-        if elem.tag == 'h5':
-            tmp = {}
-            try:
-                for row in elem.getparent().getnext().find('table').find('tbody').findall('tr'):
-                    meetings, time = row.findall('td')
-                    # TODO: THIS IS BAD
-                    if 'normal class meeting time' in time:  # Spring half-semester
-                        print('quitting', file=stderr)
-                        break
-                    if re.search(r'\s-\s', ''.join(meetings.itertext())) is not None:
-                        for meeting in re.split(r'\s-\s', ''.join(meetings.itertext()))[1].split(', '):
-                            tmp[meeting] = time
-                    else:
-                        assert any('all sections' in text.lower() for text in meetings.itertext())
-                        tmp = ReturnSame(time)
-                d[parse_days(elem.text)] = tmp
-            except:
-                print('tag:', elem.tag, 'text:', elem.text, 'row:', row, file=stderr)
-                if 'meetings' in locals():
-                    print('meetings:', list(meetings.itertext()), 'time:', time.text, file=stderr)
-                    if 'meeting' in locals():
-                        print('meeting:', meeting, file=stderr)
-                table = elem.getparent().getnext().find('table')
-                print(elem.getparent().getnext().attrib['class'],
-                      table.attrib['class'],
-                      list(table), 'row:', list(row), row[0].text, file=stderr)
-                raise
-    return d
-    '''return {parse_days(elem.text): {row.find('td').text.split(' - ')[1]:
-                                    row.find('span').text
-                                    for row in elem.getparent().getnext().find('table').find('tbody').findall('tr')}
-            for _, elem in html if elem.tag == 'h5'}'''
+def parse_exam(file_handle):
+    '''Return {days_met: [(time_met, exam_datetime), ...], ...}
+    File can be either absolute/relative path or an actual file handle
+    Quite fast compared to parse_sections, but it's handling less data.'''
+    all_exams = {}
+    try:
+        doc = etree.parse(file_handle, etree.HTMLParser())
+        # Yeah. I know.
+        div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
+    except AssertionError:  # This was annoying
+        raise ValueError(f"'{file_handle}' is empty or not an HTML file")
+
+    assert len(div) == 1, str(len(div)) + " should be 1"
+    div = div[0]
+    headers = div.xpath('div[@class="accordion-summary"]/h5')
+    rows = div.xpath('div[@class="accordion-details"]/table/tbody/tr')
+    for i, header in enumerate(headers):
+        days_met = header.text.replace(' Meeting Times', '')
+        times = {}
+        # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
+        # school likes to put some as spans, some not
+        time_met, exam_datetime = map(lambda td: ''.join(td.itertext()), rows[i])
+        # TODO: subparse exam_datetime. Example: 'Friday, May 4 – 9:00 a.m.'
+        if 'all sections' in time_met.lower():
+            times = ReturnSame(exam_datetime)
+        else:
+            time_met = re.split(r'\s*[MTWRF]+\s+(-\s+)?', time_met)[-1]
+            # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
+            for time in re.split(', ?', time_met):
+                times[army_time(time)] = exam_datetime
+        all_exams[days_met] = times
+    return all_exams
 
 
 def parse_all_exams():
@@ -291,7 +287,7 @@ def parse_all_exams():
                 continue  # Removed from site, gives 404
             with open('exams/' + name + '.html') as stdin:
                 try:
-                    result[name.replace('-', ' ')] = parse_exam(iterparse(stdin, html=True))
+                    result[name.replace('-', ' ')] = parse_exam(stdin)
                 except:
                     print(name, file=stderr)
                     raise
