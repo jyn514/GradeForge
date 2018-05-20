@@ -52,7 +52,7 @@ def parse_catalog(file_handle):
                 course['attributes'] = tmp[-1]
                 tmp = tmp[:-1]
             # type can be multiple (since there might be anchor in middle)
-            course['level'], course['type'], course['department_long'] = tmp[0],  ''.join(tmp[1:-1]), tmp[-1]
+            course['level'], course['type'], course['department_long'] = tmp[0], ''.join(tmp[1:-1]), tmp[-1]
 
             a = td.find('a')
             if a is not None:
@@ -374,5 +374,5 @@ if __name__ == '__main__':
         else:
             result = parse_all_exams()
         pickle.dump(result, stdout.buffer)
-    except (KeyboardInterrupt, AssertionError) as e:
+    except KeyboardInterrupt as e:
         pass
