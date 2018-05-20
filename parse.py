@@ -287,7 +287,9 @@ def parse_all_exams():
     for year in range(16, 19):
         for semester in ('Spring', 'Summer', 'Fall'):
             name = semester + '-' + '20' + str(year)
-            with open('exams/' + name + '.html', 'rb') as stdin:
+            if name == 'Spring-2016':
+                continue  # Removed from site, gives 404
+            with open('exams/' + name + '.html') as stdin:
                 try:
                     result[name.replace('-', ' ')] = parse_exam(iterparse(stdin, html=True))
                 except:
