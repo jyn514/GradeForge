@@ -14,6 +14,11 @@ dump: sql
 
 # lxml has trouble with too much whitespace
 define clean =
+	if grep '404 page not found' $1; then \
+		echo file "'$1'" gave a 404 not found; \
+		rm $1; \
+		exit 999; \
+	fi
 	sed -i 's/\s\+$$//' $1
 endef
 
