@@ -39,16 +39,16 @@ exams:
 exams/%.html: | post.py exams
 	./$| `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
-	$(call clean $@)
+	$(call clean,$@)
 
 .courses.data: parse.py webpages/USC_all_courses.html
-	./$< --catalog < $(lastword $^) > $@
+	./$< --catalog < $(lastword $^) > $@ || { $(RM) $@; exit 999; }
 
-.sections.data: parse.py webpages/USC_all_sections.html # | .exams.data
-	./$< --sections < $(lastword $^) > $@
+.sections.data: parse.py webpages/USC_all_sections.html .exams.data
+	./$< --sections < $(word 2,$^) > $@ || { $(RM) $@; exit 999; }
 
-.exams.data: $(EXAMS) | parse.py
-	./$| --exams
+.exams.data: parse.py $(EXAMS)
+	./$< --exams > $@ || { $(RM) $@; exit 999; }
 
 classes.sql: create_sql.py $(DATA)
 	$(RM) $@
