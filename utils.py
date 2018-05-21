@@ -75,8 +75,8 @@ class ReturnSame(object):
     >>> d['some_value']
     4
     '''
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, *values):
+        self.value = values
 
     def __getitem__(self, item):
         return self.value
