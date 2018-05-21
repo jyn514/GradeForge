@@ -236,7 +236,7 @@ def clean_section(course):
 
 
 def parse_days(text):
-    text = text.split(' Meeting Times')[0]
+    text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
     if 'Session' in text:
         return text  # don't mess with this
     elif 'Only' in text:
@@ -261,11 +261,16 @@ def parse_exam(file_handle):
     headers = div.xpath('div[@class="accordion-summary"]/h5')
     rows = div.xpath('div[@class="accordion-details"]/table/tbody/tr')
     for i, header in enumerate(headers):
-        days_met = header.text.replace(' Meeting Times', '')
+        try:
+            days_met = parse_days(header.text)
+        # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
+        except KeyError:
+            days_met = None  # TODO
         times = {}
         # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
         # school likes to put some as spans, some not
-        time_met, exam_datetime = map(lambda td: ''.join(td.itertext()), rows[i])
+        time_met, exam_datetime = map(lambda td: ''.join(td.itertext()).strip().replace('\xa0', ' '),
+                                      rows[i])
         # TODO: subparse exam_datetime. Example: 'Friday, May 4 – 9:00 a.m.'
         if 'all sections' in time_met.lower():
             times = ReturnSame(exam_datetime)
