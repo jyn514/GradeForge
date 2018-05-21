@@ -138,7 +138,7 @@ def army_time(ampm):
         return ampm
     hours, minutes = ampm.split(':')
     minutes, ampm = minutes.split(' ')
-    if ampm == 'pm' and hours != '12':
+    if ampm.replace('.', '').strip() == 'pm' and hours.strip() != '12':
         hours = str((int(hours) + 12))  # midnight is 00:00
     elif hours == '12' and ampm == 'am':
         hours = '00'

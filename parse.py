@@ -309,7 +309,7 @@ def parse_all_exams():
                 continue  # Removed from site, gives 404
             with open('exams/' + name + '.html') as stdin:
                 try:
-                    result[name.replace('-', ' ')] = parse_exam(stdin)
+                    result[parse_semester(*name.split('-'))] = parse_exam(stdin)
                 except:
                     print(name, file=stderr)
                     raise
