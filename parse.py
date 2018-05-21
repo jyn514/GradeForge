@@ -271,6 +271,9 @@ def parse_exam(file_handle):
         # school likes to put some as spans, some not
         time_met, exam_datetime = map(lambda td: ''.join(td.itertext()).strip().replace('\xa0', ' '),
                                       rows[i])
+        if exam_datetime == 'TBA':  # this is frustrating
+            all_exams[days_met] = 'TBA'
+            continue
         # TODO: subparse exam_datetime. Example: 'Friday, May 4 – 9:00 a.m.'
         if 'all sections' in time_met.lower():
             times = ReturnSame(exam_datetime)
