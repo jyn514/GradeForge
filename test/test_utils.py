@@ -1,11 +1,16 @@
-from sys import path
 from datetime import date
+from sys import path
 
 import pytest
 
-path.append('../src')
+try:
+    path.append('.')
+    from src.utils import *
+except ImportError:
+    path.append('..')
+    from src.utils import *
+path = path[:-1]
 
-from utils import *
 
 def test_constants():
     assert len(DAYS) == 7
