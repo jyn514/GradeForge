@@ -6,11 +6,11 @@ from __future__ import print_function
 from datetime import date
 from argparse import HelpFormatter
 from inspect import getargspec
-import pickle
+import pickle  # PICKLE IS NOT AN API
 
-allowed = {'semester':  ("201341", "201401", "201405", "201408", "201501", "201505",
-                         "201508", "201601", "201605", "201608", "201701", "201705",
-                         "201708", "201801", "201805", "201808"),
+allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
+                        "201508", "201601", "201605", "201608", "201701", "201705",
+                        "201708", "201801", "201805", "201808"),
            'campus': ('AIK', 'BFT', 'COL', 'LAN', 'SAL', 'SMT', "UNI", "UPS"),
            'subject': ("ACCT", "AERO", "AFAM", "ANES", "ANTH", "ARAB", "ARMY",
                        "ARTE", "ARTH", "ARTS", "ASLG", "ASTR", "ATEP", "BADM",
@@ -76,7 +76,7 @@ class ReturnSame(object):
     4
     '''
     def __init__(self, *values):
-        self.value = values
+        self.value = values[0] if len(values) == 1 else values
 
     def __getitem__(self, item):
         return self.value
@@ -84,15 +84,26 @@ class ReturnSame(object):
 
 def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''
-    return parse_semester(semester)[0].upper() + semester[-2:]
+    semester = str(semester)
+    season = get_season(semester)
+    if season == 'Fall':
+        return 'F' + semester[2:4]
+    elif season == 'Summer':
+        return 'A' + semester[2:4]
+    return 'W' + semester[2:4]
 
 
 def get_season(semester='201808'):
-    if semester[-1] == '8':
-        return 'fall'
-    elif semester[-1] == '1':
-        return 'spring'
-    return 'summer'
+    semester = str(semester)
+    if not (len(semester) == 6 and semester.isnumeric()):
+        raise ValueError("Expected 6 digit semester; got " + semester)
+    if semester[-2:] == '08':
+        return 'Fall'
+    elif semester[-2:] == '01':
+        return 'Spring'
+    elif semester[-2:] == '05':
+        return 'Summer'
+    raise ValueError(f"Bad month {semester[-2:]} in {semester}")
 
 def get_season_today():
     pass
@@ -101,10 +112,13 @@ def get_season_today():
     #return 'spring' if m <
 
 
-def parse_semester(season, year=str(date.today().year)):
+def parse_semester(season, year=date.today().year):
     if season in allowed['semester']:
         return season
     season = season.lower()
+    year = str(year)
+    if len(year) != 4 or not year.isnumeric():
+        raise ValueError("expected four digit year; was given " + year)
     # TODO: check if this year or next year is spring (for default)
     if season == 'fall':
         return year + '08'
@@ -140,12 +154,23 @@ def army_time(ampm):
         hours = '00'
     return ':'.join((hours, minutes))
 
+
+def parse_days(text):
+    text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
+    if 'Session' in text:
+        return text  # don't mess with this
+    elif 'Only' in text:
+        return DAYS[text.split(' Only')[0]]
+    return ''.join(DAYS[d] for d in text.split('/'))
+
+
 DAYS = {'Monday': 'M',
         'Tuesday': 'T',
         'Wednesday': 'W',
         'Thursday': 'R',
         'Friday': 'F',
-        'Saturday': 'S'}
+        'Saturday': 'S',
+        'Sunday': 'U'}
 
 
 def arg_filter(args):

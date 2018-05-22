@@ -10,7 +10,7 @@ import re  # used for only very basic stuff
 
 from lxml import etree
 
-from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season
+from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
 from post import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
@@ -209,7 +209,7 @@ def parse_sections(file_handle):
             # error instead of silently addding wrong info when rows are out of order
             del course
         HEADER = not HEADER
-    return infer_tables(sections, classes=False)
+    return infer_tables(follow_links(sections), classes=False)
 
 
 def clean_section(course):
@@ -233,15 +233,6 @@ def clean_section(course):
         if course[key].startswith('/'):
             course[key] = BASE_URL + course[key]
     return course
-
-
-def parse_days(text):
-    text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
-    if 'Session' in text:
-        return text  # don't mess with this
-    elif 'Only' in text:
-        return DAYS[text.split(' Only')[0]]
-    return ''.join(DAYS[d] for d in text.split('/'))
 
 
 def parse_exam(file_handle):
@@ -292,7 +283,8 @@ def parse_exam(file_handle):
         if 'all sections' in time_met.lower():
             times = ReturnSame(exam_date, exam_time)
         else:
-            time_met = re.split(r'\s*[MTWRF]+\s+(-\s+)?', time_met)[-1]
+            split = re.split(r'\s*[MTWRF]+\s+(-\s+)?', time_met)
+            time_met = split[-1]
             # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
             for time in re.split(', ?', time_met):
                 times[army_time(time)] = exam_date, exam_time
@@ -330,9 +322,11 @@ def follow_links(sections):
     for s in sections:
         # Takes about half an hour. The data goes out of date quickly. Not worth it.
         #s['capacity'], s['actual'], s['remaining'] = get_seats(s['section_link'])
-        # Still crashing.
-        #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
-        pass
+        try:
+            s['exam_date'], s['exam_time'] = exams[s['semester']][s['days']][s['start_time']]
+        except:
+            print(s, file=stderr)
+            raise
     return sections
 
 
@@ -390,7 +384,6 @@ if __name__ == '__main__':
     try:
         if args.sections:
             result = parse_sections(stdin.buffer)
-            # result = follow_links(result)
         elif args.catalog:
             result = parse_catalog(stdin.buffer)
         else:
