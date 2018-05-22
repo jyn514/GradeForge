@@ -6,11 +6,16 @@ sql: classes.sql
 
 .PHONY: web server website
 web server website: sql
-	./app.py
+	flask/app.py
 
 .PHONY: dump
 dump: sql
-	./dump.py
+	src/dump.py
+
+.PHONY: test
+test:
+	pytest
+
 
 # lxml has trouble with too much whitespace
 define clean =
@@ -29,28 +34,28 @@ courses sections: webpages/USC_all_$$@.html
 webpages:
 	mkdir webpages
 
-webpages/USC_all_%.html: | post.py webpages
+webpages/USC_all_%.html: | src/post.py webpages
 	./$(firstword $|) $(subst .html,,$(subst webpages/USC_all_,,$@)) > $@
 	$(call clean,$@)
 
 exams:
 	mkdir exams
 
-exams/%.html: | post.py exams
+exams/%.html: | src/post.py exams
 	./$| `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	$(call clean,$@)
 
-.courses.data: parse.py webpages/USC_all_courses.html
+.courses.data: src/parse.py webpages/USC_all_courses.html
 	./$< --catalog < $(lastword $^) > $@ || { $(RM) $@; exit 999; }
 
-.sections.data: parse.py webpages/USC_all_sections.html .exams.data
+.sections.data: src/parse.py webpages/USC_all_sections.html .exams.data
 	./$< --sections < $(word 2,$^) > $@ || { $(RM) $@; exit 999; }
 
-.exams.data: parse.py $(EXAMS)
+.exams.data: src/parse.py $(EXAMS)
 	./$< --exams > $@ || { $(RM) $@; exit 999; }
 
-classes.sql: create_sql.py $(DATA)
+classes.sql: src/create_sql.py $(DATA)
 	$(RM) $@
 	# python2 compat
 	PYTHONIOENCODING=utf-8 ./$<
@@ -62,7 +67,7 @@ clean:
 
 .PHONY: clobber
 clobber: clean
-	$(RM) -r webpages
+	$(RM) -r webpages exams
 
 .PHONY: dist-clean
 dist-clean: clobber
