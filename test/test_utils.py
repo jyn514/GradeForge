@@ -45,10 +45,10 @@ def test_army_time():
     assert army_time('12:00 p.m') == '12:00'
     assert army_time('12:00am') == '0:00'
     assert army_time('14:00') == '14:00'
-    with pytest.raises(ValueError):
-        army_time('65:00 am')
-    with pytest.raises(ValueError):
-        army_time('-51:00 p.m')
+    assert army_time('00:00') == '0:00'
+    for t in ['65:00 am', '-51:00 p.m', '14:00 a.m', '0:00 am']:
+        with pytest.raises(ValueError):
+            army_time(t)
 
 
 def test_get_season():

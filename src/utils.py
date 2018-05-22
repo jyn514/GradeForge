@@ -7,6 +7,7 @@ from datetime import date
 from argparse import HelpFormatter
 from inspect import getargspec
 import pickle  # PICKLE IS NOT AN API
+import re
 
 allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
                         "201508", "201601", "201605", "201608", "201701", "201705",
@@ -143,16 +144,24 @@ def save(obj, stdout, binary=True):
             i.write(obj)
 
 
-def army_time(ampm):
-    if ampm == 'TBA':
-        return ampm
-    hours, minutes = ampm.split(':')
-    minutes, ampm = minutes.split(' ')
-    if ampm.replace('.', '').strip() == 'pm' and hours.strip() != '12':
-        hours = str((int(hours) + 12))  # midnight is 00:00
-    elif hours == '12' and ampm == 'am':
-        hours = '00'
-    return ':'.join((hours, minutes))
+def army_time(time):
+    if ':' not in time:
+        raise ValueError(f"Invalid time {time}")
+    hours, minutes = time.split(':')
+    hours = int(hours)
+    if hours > 24 or hours < 0:
+        raise ValueError(f"Invalid time {time}")
+
+    try:
+        minutes, ampm = re.split(' *([ap])\.? *m', minutes)[:2]
+    except ValueError:
+        ampm = None
+    if (hours > 12 or hours == 0) and ampm is not None:
+        raise ValueError(f"Conflicting time system used in {time}")
+
+    if not (ampm == 'p') ^ (hours != 12):
+        hours += 12
+    return ':'.join((str(hours % 24), minutes))
 
 
 def parse_days(text):
