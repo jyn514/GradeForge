@@ -1,9 +1,0 @@
-CREATE TABLE type(
-    type tinytext,
-    enum tinyint
-);
-
-INSERT INTO type VALUES ('other', 0);
-INSERT INTO type VALUES ('lecture', 1);
-INSERT INTO type VALUES ('lab', 2);
-INSERT INTO type VALUES ('seminar', 3);
