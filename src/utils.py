@@ -95,6 +95,7 @@ def b_and_n_semester(semester):
 
 
 def get_season(semester='201808'):
+    'Given a semester in USC format, return corresponding season'
     semester = str(semester)
     if not (len(semester) == 6 and semester.isnumeric()):
         raise ValueError("Expected 6 digit semester; got " + semester)
@@ -114,6 +115,8 @@ def get_season_today():
 
 
 def parse_semester(season, year=date.today().year):
+    '''The opposite of get_season.
+    Given a season and an optional year, return a semester in USC format.'''
     if season in allowed['semester']:
         return season
     season = season.lower()
@@ -131,6 +134,7 @@ def parse_semester(season, year=date.today().year):
 
 
 def load(stdin):
+    'Opposite of save. Given a file path, return the (binary) contents of the file.'
     with open(stdin, 'rb') as i:
         return pickle.load(i)
 
@@ -153,7 +157,7 @@ def army_time(time):
         raise ValueError(f"Invalid time {time}")
 
     try:
-        minutes, ampm = re.split(' *([ap])\.? *m', minutes)[:2]
+        minutes, ampm = re.split(r' *([ap])\.? *m', minutes)[:2]
     except ValueError:
         ampm = None
     if (hours > 12 or hours == 0) and ampm is not None:

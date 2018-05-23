@@ -11,7 +11,7 @@ TODO:
 '''
 
 # dictionaries are insertion ordered; see https://stackoverflow.com/q/39980323
-# therefore, PLEASE do not change this order without also modifying parse.py (or mucking around in main)
+# do not change order without also modifying parse.py
 # (this happened because I was lazy in the main portion) - JN
 TABLES = {'class': ["course_link tinytext",
                     "title tinytext",
@@ -54,9 +54,9 @@ TABLES = {'class': ["course_link tinytext",
                       "endTime time",
                       "instructor tinytext",  # this is by email, not name (since email is unique)
                       "finalExam dateTime"]
-                      # always out of date; requires parsing different page
-                      #"capacity tinyint", "remaining tinyint"
-       }
+                     # always out of date; requires parsing different page
+                     #"capacity tinyint", "remaining tinyint"
+         }
 
 if __name__ == '__main__':
     import sqlite3 as sql
@@ -68,12 +68,11 @@ if __name__ == '__main__':
     DATABASE = sql.connect('classes.sql')
     CURSOR = DATABASE.cursor()
 
-    base = 'CREATE TABLE %s(%s);'
-    CURSOR.executescript(''.join(base % (key, ', '.join(TABLES[key]))
-                                 for key in TABLES.keys()))
+    CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
+                                 for key, value in TABLES.items()))
 
     CURSOR.executemany('INSERT INTO class VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                      (tuple(c.values()) for c in CLASSES))
+                       (tuple(c.values()) for c in CLASSES))
 
     CURSOR.executemany('INSERT INTO department VALUES (?, ?)',
                        tuple(DEPARTMENTS.items()))
@@ -84,7 +83,7 @@ if __name__ == '__main__':
 
     CURSOR.executemany('INSERT INTO section VALUES (%s)' %
                        ', '.join('?' * len(TABLES['section'])), # didn't feel like typing
-                        # final exam not done yet
+                       # final exam not done yet
                        (tuple(s.values()) + ('None',) for s in SECTIONS))
     DATABASE.commit()
     DATABASE.close()

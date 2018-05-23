@@ -7,10 +7,11 @@ from os.path import exists
 from sys import stderr, stdin, stdout
 from tempfile import mkstemp  # used for downloading seats remaining
 import re  # used for only very basic stuff
+from datetime import date
 
 from lxml import etree
 
-from utils import DAYS, save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
+from utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
 from post import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
@@ -71,24 +72,25 @@ def infer_tables(iterable, classes=True):
         departments = dict(set((c['department'], c.pop('department_long'))
                                for c in iterable))
         return departments, iterable
-    else:
-        instructors = dict(set((s['instructor_email'], s.pop('instructor'))
-                               for s in iterable))
-        semesters = tuple(set((s['semester'], s.pop('start_date'), s.pop('end_date'),
-                               s.pop('registration_start'),
-                               s.pop('registration_end'))
-                              for s in iterable))
-        return instructors, semesters, iterable
+
+    instructors = dict(set((s['instructor_email'], s.pop('instructor'))
+                           for s in iterable))
+    semesters = tuple(set((s['semester'], s.pop('start_date'), s.pop('end_date'),
+                           s.pop('registration_start'),
+                           s.pop('registration_end'))
+                          for s in iterable))
+    return instructors, semesters, iterable
 
 
 def clean_catalog(course):
+    '''Make elements of dict predictable'''
     if course['course_link'].startswith('/'):
         course['course_link'] = BASE_URL + course['course_link']
     # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
     course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
                                course['credits'].replace('Credit hours', '')
-                                                .replace('.000', '')
-                                                .strip())
+                               .replace('.000', '')
+                               .strip())
     try:
         course['attributes']
     except KeyError:
@@ -192,9 +194,12 @@ def parse_sections(file_handle):
             if len(tmp) == 9:  # instructor exists
                 tmp = tmp[:-2]  # don't get junk at end
             elif len(tmp) > 9:  # multiple instructors
-                tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]  # make all instructors last element in list
-            if len(tmp) == 0:  # independent study
-                course['days'], course['location'], course['start_time'], course['end_time'], course['start_date'], course['end_date'], course['instructor'], course['instructor_email'] = ['None'] * 8  # this is handled on the frontend
+                # combine instructors into one element
+                tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]
+            if not tmp:  # independent study
+                for key in ['days', 'location', 'start_time', 'end_time',
+                            'start_date', 'end_date', 'instructor', 'instructor_email']:
+                    course[key] = None  # this is handled on the frontend
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = tmp
                 if times == 'TBA':
@@ -204,7 +209,8 @@ def parse_sections(file_handle):
                 course['start_date'], course['end_date'] = dates.split(' - ')
                 tmp = main.xpath('table/tr[2]/td/a/@href')
                 if len(tmp) == 1:
-                    course['instructor_email'] = str(tmp[0])  # str is necessary, otherwise returns _ElementUnicodeResult
+                    # str is necessary, otherwise returns _ElementUnicodeResult
+                    course['instructor_email'] = str(tmp[0])
             sections.append(clean_section(course))
             # error instead of silently addding wrong info when rows are out of order
             del course
@@ -213,6 +219,7 @@ def parse_sections(file_handle):
 
 
 def clean_section(course):
+    '''Make course elements more predictable'''
     try:
         if course['instructor_email'] == '':
             course['instructor_email'] = None
@@ -260,7 +267,9 @@ def parse_exam(file_handle):
         times = {}
         # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
         # school likes to put some as spans, some not
-        time_met, exam_datetime = map(lambda td: ''.join(td.itertext()).strip().replace('\xa0', ' '),
+        time_met, exam_datetime = map(lambda td: ''.join(td.itertext())
+                                                 .strip()
+                                                 .replace('\xa0', ' '),
                                       rows[i])
         if exam_datetime == 'TBA':  # this is frustrating
             all_exams[days_met] = 'TBA'
@@ -274,7 +283,7 @@ def parse_exam(file_handle):
             except IndexError:
                 assert exam_time == 'Regular Class Meeting Time', exam_time
         else:
-            exam_date, exam_time = re.split('\s+[–-]\s+', split[1])
+            exam_date, exam_time = re.split(r'\s+[–-]\s+', split[1])
         exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
         try:
             exam_time = army_time(exam_time)
@@ -293,8 +302,9 @@ def parse_exam(file_handle):
 
 
 def parse_all_exams():
+    '''Repeat parse_exam for each semester between Summer 2016 and the present'''
     result = {}
-    for year in range(16, 19):
+    for year in range(16, date.today().year):
         for semester in ('Spring', 'Summer', 'Fall'):
             name = semester + '-' + '20' + str(year)
             if name == 'Spring-2016':
@@ -309,6 +319,8 @@ def parse_all_exams():
 
 
 def get_seats(section_link):
+    'str -> (capacity, taken, remaining)'
+    from lxml.etree import iterparse
     tmp = mkstemp()[1]
     save(get(section_link).text, tmp, binary=False)
     body = iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
@@ -397,5 +409,5 @@ if __name__ == '__main__':
         else:
             result = parse_all_exams()
         pickle.dump(result, stdout.buffer)
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         pass

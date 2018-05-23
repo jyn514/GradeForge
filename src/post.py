@@ -7,7 +7,7 @@ from datetime import date
 
 from requests import get, post
 
-from utils import parse_semester, allowed, get_season_today, SingleMetavarFormatter, get_season, b_and_n_semester, arg_filter
+import utils
 
 def login(username, password):
     '''(str, str) -> requests.RequestsCookieJar
@@ -23,14 +23,14 @@ def login(username, password):
 
 
 def get_sections(subject='%', semester='201808', campus='COL', number='', title='',
-                min_credits=1, max_credits='', level='%', term='30', times='%',
-                location='%', start_hour=0, start_minute=0, end_hour=0,
-                end_minute=0, days='dummy'):
+                 min_credits=1, max_credits='', level='%', term='30', times='%',
+                 location='%', start_hour=0, start_minute=0, end_hour=0,
+                 end_minute=0, days='dummy'):
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
-    semester = parse_semester(semester)
+    semester = utils.parse_semester(semester)
     if subject == '%':  # all sections
-        subject = allowed['subject']
+        subject = utils.allowed['subject']
 
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
@@ -38,8 +38,9 @@ def get_sections(subject='%', semester='201808', campus='COL', number='', title=
     for p in params:
         # if p not in allowed, assume arbitrary input acceptable
         # TODO: allow partial subsets
-        if params[p] != 'dummy' and p in allowed and params[p] not in allowed[p] and params[p] != allowed[p]:
-            raise ValueError(str(p) + ' "' + params[p] + '" not in ' + str(allowed[p]))
+        if (params[p] != 'dummy' and p in utils.allowed and params[p] not in utils.allowed[p]
+                and params[p] != utils.allowed[p]):
+            raise ValueError(str(p) + ' "' + params[p] + '" not in ' + str(utils.allowed[p]))
 
     ampm = (divmod(start_hour, 12), divmod(end_hour, 12))
     data = {"BEGIN_AP": ('p' if ampm[0][0] else 'a'),
@@ -71,8 +72,8 @@ def get_bookstore(semester, department, number, section):
     Note that this cannot be a link in utils because it requires a POST'''
     base_url = 'https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView'
     data = {'storeId': '10052',
-            'courseXml': "<textbookorder><courses><course dept='%s' num='%s' sect='%s' term='%s' /></courses></textbookorder>" % (
-                department, number, section, b_and_n_semester(semester))}
+            'courseXml': "<textbookorder><courses><course dept='%s' num='%s' sect='%s' term='%s' /></courses></textbookorder>"
+                         % (department, number, section, utils.b_and_n_semester(semester))}
     return post(base_url, data=data).text
 
 
@@ -105,48 +106,43 @@ def get_bookstore_selenium(semester, department, number, section):
 def get_catalog(department='%'):
     '''TODO: take more parameters'''
     if department == '%':
-        department = allowed['subject']
+        department = utils.allowed['subject']
     else:
         department = [department]
 
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_display_courses'
     data = {"term_in": 201808,
             'call_proc_in': 'bwckctlg.p_disp_dyn_ctlg',
-            'sel_subj': 'dummy',
-            'sel_levl': 'dummy',
-            'sel_schd': 'dummy',
-            'sel_coll': 'dummy',
+            'sel_subj': ('dummy', tuple(department)),
+            'sel_levl': ('dummy', '%'),
+            'sel_schd': ('dummy', '%'),
+            'sel_coll': ('dummy', '%'),
             'sel_divs': 'dummy',
-            'sel_dept': 'dummy',
-            'sel_attr': 'dummy',
-            'sel_subj': tuple(department),
+            'sel_dept': ('dummy', '%'),
+            'sel_attr': ('dummy', '%'),
             'sel_crse_strt': '',
             'sel_crse_end': '',
             'sel_title': '',
-            'sel_levl': '%',
-            'sel_schd': '%',
-            'sel_coll': '%',
-            'sel_dept': '%',
             'sel_from_cred': '',
-            'sel_to_cred': '',
-            'sel_attr': '%'}
+            'sel_to_cred': ''}
     return post(base_url, data=data).text
 
 
 def get_calendar(year, season):
     '''str -> str (HTML)
-    Return content of calendar corresponding to given semester
-    Example: https://www.sc.edu/about/offices_and_divisions/registrar/final_exams/final-exams-spring-2018.php'''
+    Return content of calendar corresponding to given semester. Example:
+    https://www.sc.edu/about/offices_and_divisions/registrar/final_exams/final-exams-spring-2018.php'''
     if season not in ('fall', 'summer', 'spring'):
-        season = get_season(parse_semester(semester))
+        season = utils.get_season(utils.parse_semester(season)).lower()
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
     return get('%s/final-exams-%s-%s.php' % (base_url, season, year)).text
 
 
 def catalog_link(semester, department, code):
-    '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
-    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % base_url, semester, department, code
+    return f"{base_url}?cat_term_in={semester}&subj_code_in={department}&crse_numb_in={code}"
 
 
 def bulletin_link():
@@ -155,13 +151,14 @@ def bulletin_link():
 
 
 def section_link(semester, CRN):
-    '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
-    return "%s?term_in=%s&crn_in=%s" % base_url, semester, CRN
+    return f"{base_url}?term_in={semester}&crn_in={CRN}"
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SingleMetavarFormatter)
+    parser = argparse.ArgumentParser(formatter_class=utils.SingleMetavarFormatter)
     subparsers = parser.add_subparsers(dest='subparsers')
     subparsers.required = True
 
@@ -173,29 +170,29 @@ def parse_args():
 
     sections = subparsers.add_parser('sections')
     sections.add_argument('--semester', '-s', type=str.lower,
-                          default=get_season_today(),
-                          choices=(allowed['semester'] + ('fall', 'summer', 'spring')))
-    sections.add_argument('--campus', '-c', choices=allowed['campus'])
+                          default=utils.get_season_today(),
+                          choices=(utils.allowed['semester'] + ('fall', 'summer', 'spring')))
+    sections.add_argument('--campus', '-c', choices=utils.allowed['campus'])
     sections.add_argument('--number', '-n', help='course code', type=int, nargs='?')
     sections.add_argument('--title', '-t', help='name of course')
     sections.add_argument('--min_credits', '--min', '-m', type=int)
     sections.add_argument('--max_credits', '--max', '-M', type=int)
-    sections.add_argument('--level', '-l', choices=allowed['level'])
-    sections.add_argument('--term', '-T', choices=allowed['term'])
-    sections.add_argument('--times', choices=allowed['times'])
-    sections.add_argument('--location', '-L', choices=allowed['location'])
-    sections.add_argument('subject', choices=allowed['subject'] + ('%',), nargs='?',
+    sections.add_argument('--level', '-l', choices=utils.allowed['level'])
+    sections.add_argument('--term', '-T', choices=utils.allowed['term'])
+    sections.add_argument('--times', choices=utils.allowed['times'])
+    sections.add_argument('--location', '-L', choices=utils.allowed['location'])
+    sections.add_argument('subject', choices=utils.allowed['subject'] + ('%',), nargs='?',
                           type=str.upper, metavar='DEPARTMENT', default='%')
 
     courses = subparsers.add_parser('courses')
-    courses.add_argument('department', nargs='?', choices=allowed['subject'] + ('%',),
+    courses.add_argument('department', nargs='?', choices=utils.allowed['subject'] + ('%',),
                          type=str.upper, metavar='DEPARTMENT', default='%')
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
     subparser = args.__dict__.pop('subparsers')
-    args = arg_filter(args)
+    args = utils.arg_filter(args)
 
     if subparser == 'exams':
         print(get_calendar(**args))

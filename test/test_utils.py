@@ -5,10 +5,10 @@ import pytest
 
 try:
     path.append('.')
-    from src.utils import *
+    from src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
 except ImportError:
     path.append('..')
-    from src.utils import *
+    from src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
 path = path[:-1]
 
 
@@ -23,9 +23,9 @@ def test_parse_semester():
     assert parse_semester('sPrINg', 2015) == '201501'
     with pytest.raises(ValueError):
         parse_semester('winter')
-    for e in ('spring', 1), ('Fall', -107), ('summer', 10000):
-        with pytest.raises(ValueError, message=str(e)):
-            parse_semester(*e)
+    for error in ('spring', 1), ('Fall', -107), ('summer', 10000):
+        with pytest.raises(ValueError, message=str(error)):
+            parse_semester(*error)
 
 
 def test_ReturnSame():
@@ -46,9 +46,9 @@ def test_army_time():
     assert army_time('12:00am') == '0:00'
     assert army_time('14:00') == '14:00'
     assert army_time('00:00') == '0:00'
-    for t in ['65:00 am', '-51:00 p.m', '14:00 a.m', '0:00 am']:
+    for time in ['65:00 am', '-51:00 p.m', '14:00 a.m', '0:00 am']:
         with pytest.raises(ValueError):
-            army_time(t)
+            army_time(time)
 
 
 def test_get_season():
