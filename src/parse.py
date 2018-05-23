@@ -30,6 +30,13 @@ def parse_catalog(file_handle):
     - general screwy stuff
         - description
         - departments
+    - restrictions need to be subparsed, I think they're currently in attributes -JN
+        - prerequisites
+        - min grades
+        - campus
+        - colleges
+        - classification (Freshman, etc.)
+        - other
     '''
     classes = []
     doc = etree.parse(file_handle, parser=etree.HTMLParser())
@@ -137,17 +144,9 @@ def parse_sections(file_handle):
 
     Not implemented:
     - final exam (not always present; should ideally get from academic calendar)
-    - restrictions (under detailed catalog link)
-        - prerequisites
-        - min grades
-        - campus
-        - colleges
-        - classification (Freshman, etc.)
-        - other
-    - direct bookstore link (should replace current redirect)
+    - books (this is implemented, just not called in follow_links)
     - seat capacity: section_link
     - seats remaining: section_link (see also https://github.com/jyn514/GradeForge/issues/9)
-    - title: already known from course
 
     TODO:
     - figure out why start_date and end_date are sometimes the same
