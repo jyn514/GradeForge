@@ -330,7 +330,7 @@ def follow_links(sections):
     return sections
 
 
-def parse_b_and_n(html):
+def parse_b_and_n(file_handle):
     '''
     Not implemented:
     - name
@@ -346,28 +346,36 @@ def parse_b_and_n(html):
     - edition
     - required/recommended/optional
     '''
-    books = []
-    for _, elem in html:
-        if elem.tag == 'div':
-            print(elem.attrib['class'], file=stderr)
+    doc = etree.parse(file_handle, etree.HTMLParser())
+    form = doc.xpath('/html/body/header/section/div[@class="courseMaterialsList"]/div/form[@id="courseListForm"]')[0]
+    books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
-'''TODO: irrelevant
-Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001
-        base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
-        redirect = "%s?p_term_in=%s&p_subj_in=%s&p_crse_numb_in=%s&p_seq_in=%s" % (base_url, semester, department, number, section)'''
+    all_books = []
+    for book in books:
+        info = {}
+        info['image'] = book.xpath('div[2]/a/img/@src')[0]
+        anchor = book.xpath('div[3]/h1/a')[0]
+        info['link'] = anchor.attrib['href']
+        info['title'] = anchor.attrib['title']
+        info['required'] = book.xpath('div[3]/h2/span[@class="recommendBookType"]/text()')[0].strip().lower()
+        info['author'] = book.xpath('div[3]/h2/span/i/text()')[0].replace('By ', '')
+        # ok but actually wtf
+        info['edition'], info['publisher'], info['isbn'] = map(lambda s: s.tail.replace('\xa0', '').replace('Â', '').strip(),
+                                                               book.xpath('div[3]/ul/li/strong'))
+        prices = book.xpath('div[4]/div[@class="selectBookCont"]/div/ul/li[2]/ul/li')
+        for p in prices:
+            info[p.attrib['title'].lower().strip().replace(' ', '-')] = p.find('span').text.strip()
+        all_books.append(info)
+    return all_books
+
 
 def get_books(semester, department, number, section):
     html = 'books/%s-%s-%s-%s-%s.html' % (get_season(semester), semester[:4],
                                           department, number, section)
-    if not exists(html):
-        save(get_bookstore(semester, department, number, section), html, binary=False)
+    if not exists(html):  # TODO: move this to makefile
+        save(get_bookstore_selenium(semester, department, number, section), html, binary=False)
 
-    course = parse_b_and_n(iterparse(open(html, 'rb'), html=True))
-    course['semester'] = semester
-    course['department'] = department
-    course['number'] = number
-    course['section'] = section
-    return course
+    return parse_b_and_n(html)
 
 
 if __name__ == '__main__':
