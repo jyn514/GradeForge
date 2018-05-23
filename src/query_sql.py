@@ -54,7 +54,8 @@ def headers(schema):
     Corresponding output: ['uid', 'abbr', ..., 'remaining']
     Preserves order
     TODO: return all schemas, not just first'''
-    return [column.split(' ')[0] for column in in_parentheses(schema)[-1].strip().split(', ')]
+    return [column.split(' ')[0]
+            for column in in_parentheses(schema)[-1].strip().split(', ')]
 
 
 def to_json(data, headers):
