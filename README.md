@@ -4,6 +4,7 @@ This is a repository to download courses for viewing offline.
 Support is available for an SQL database.
 
 ## Requirements
+- `make`
 - `python`
 - `pip` and modules from `requirements.txt`
 
