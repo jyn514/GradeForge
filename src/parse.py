@@ -304,7 +304,7 @@ def parse_exam(file_handle):
 def parse_all_exams():
     '''Repeat parse_exam for each semester between Summer 2016 and the present'''
     result = {}
-    for year in range(16, date.today().year - 2000):
+    for year in range(16, date.today().year + 1 - 2000):
         for semester in ('Spring', 'Summer', 'Fall'):
             name = semester + '-' + '20' + str(year)
             if name == 'Spring-2016':
