@@ -139,12 +139,12 @@ def load(stdin):
         return pickle.load(i)
 
 
-def save(obj, stdout, binary=True):
+def save(obj, output, binary=True):
     if binary:
-        with open(stdout, 'wb') as i:
+        with open(output, 'wb') as i:
             pickle.dump(obj, i)
     else:
-        with open(stdout, 'w') as i:
+        with open(output, 'w') as i:
             i.write(obj)
 
 
