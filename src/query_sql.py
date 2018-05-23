@@ -2,6 +2,8 @@
 from __future__ import print_function
 from subprocess import run, PIPE
 from argparse import ArgumentParser
+from sqlite3 import connect
+
 from utils import arg_filter, allowed, SingleMetavarFormatter
 from create_sql import TABLES
 
@@ -15,17 +17,17 @@ def filter_out(iterable):
 def query(table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
     Fails noisily if args are incorrect.'''
-    sql = 'sqlite3'
-    database = 'classes.sql'
+    DATABASE = connect('../classes.sql')
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN ' + str(value)[1:-1].replace("'", '"')
                                  for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
-    args = [sql, database, command]
     if DEBUG:
-        print(args, filters)
-    return run(args, stdout=PIPE, encoding='utf-8').stdout
+        print(command, filters)
+    stdout = DATABASE.execute(command)
+    DATABASE.close()
+    return stdout
 
 
 def in_parentheses(string):
