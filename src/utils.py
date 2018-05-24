@@ -13,7 +13,7 @@ allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "20150
                         "201508", "201601", "201605", "201608", "201701", "201705",
                         "201708", "201801", "201805", "201808"),
            'campus': ('AIK', 'BFT', 'COL', 'LAN', 'SAL', 'SMT', "UNI", "UPS"),
-           'subject': ("ACCT", "AERO", "AFAM", "ANES", "ANTH", "ARAB", "ARMY",
+           'department': ("ACCT", "AERO", "AFAM", "ANES", "ANTH", "ARAB", "ARMY",
                        "ARTE", "ARTH", "ARTS", "ASLG", "ASTR", "ATEP", "BADM",
                        "BIOL", "BIOS", "BMEN", "BMSC", "CHEM", "CHIN", "CLAS",
                        "COLA", "COMD", "CPLT", "CRJU", "CSCE", "DANC", "DMED",

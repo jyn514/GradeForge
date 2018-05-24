@@ -30,7 +30,7 @@ def get_sections(subject='%', semester='201808', campus='COL', number='', title=
     Return the unparsed webpage corresponding to the courses selected'''
     semester = utils.parse_semester(semester)
     if subject == '%':  # all sections
-        subject = utils.allowed['subject']
+        subject = utils.allowed['department']
 
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
@@ -106,7 +106,7 @@ def get_bookstore_selenium(semester, department, number, section):
 def get_catalog(department='%'):
     '''TODO: take more parameters'''
     if department == '%':
-        department = utils.allowed['subject']
+        department = utils.allowed['department']
     else:
         department = [department]
 
@@ -181,7 +181,7 @@ def parse_args():
     sections.add_argument('--term', '-T', choices=utils.allowed['term'])
     sections.add_argument('--times', choices=utils.allowed['times'])
     sections.add_argument('--location', '-L', choices=utils.allowed['location'])
-    sections.add_argument('subject', choices=utils.allowed['subject'] + ('%',), nargs='?',
+    sections.add_argument('department', choices=utils.allowed['department'] + ('%',), nargs='?',
                           type=str.upper, metavar='DEPARTMENT', default='%')
 
     courses = subparsers.add_parser('courses')

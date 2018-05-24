@@ -81,9 +81,8 @@ if __name__ == '__main__':
     parser.add_argument('--term', '-T', choices=allowed['term'], nargs='*')
     parser.add_argument('--times', choices=filter_out(allowed['times']), nargs='*')
     parser.add_argument('--location', '-L', choices=filter_out(allowed['location']), nargs='*')
-    parser.add_argument('--department', choices=allowed['subject'] + ([],),
-                        type=str.upper,  # TODO: switch allowed to use 'department'
-                        nargs='*', metavar='DEPARTMENT')
+    parser.add_argument('--department', choices=allowed['department'] + ([],),
+                        type=str.upper, nargs='*', metavar='DEPARTMENT')
     parser.add_argument('columns', choices=tuple(TABLES.keys()) + ('*',), type=str.lower, nargs='*',
                         metavar='COLUMNS', default='*')
     args = arg_filter(parser.parse_args())
