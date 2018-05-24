@@ -8,11 +8,6 @@ from create_sql import TABLES
 
 DEBUG = True
 
-def filter_out(iterable):
-    'remove the string "%" from an iterable'
-    return tuple(filter(lambda x: x != '%', iterable))
-
-
 def query(table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
     Fails noisily if args are incorrect.'''
@@ -29,42 +24,8 @@ def query(table='section', columns='*', **filters):
     return stdout
 
 
-def in_parentheses(string):
-    # https://stackoverflow.com/a/38464181
-    stack, result = [[]], []
-    for char in string:
-        if char == '(':
-            stack.append([])
-        elif char == ')':
-            result.append(''.join(stack.pop()))
-        else:
-            stack[-1].append(char)
-    return result
 
 
-def headers(schema):
-    '''Example input:
-    CREATE TABLE sections(
-          uid tinyint(5), abbr char(4), section tinytext, code varchar(4),
-          semester char(6), campus tinytext default 'Columbia', startTime time,
-          endTime time, days varchar(7), registrationStart date, instructor smallint,
-          location smallint, finalExam dateTime, capacity tinyint, remaining tinyint
-    );
-    Corresponding output: ['uid', 'abbr', ..., 'remaining']
-    Preserves order
-    TODO: return all schemas, not just first'''
-    return [column.split(' ')[0]
-            for column in in_parentheses(schema)[-1].strip().split(', ')]
-
-
-def to_json(data, headers):
-    '''I don't remember making this and it looks dubious -JN'''
-    if isinstance(data, str):
-        raise TypeError("Must be iterable of strings")
-    return repr([
-        {list(headers)[i]: data for i, data in enumerate(row.split('|'))}
-        for row in data
-        ])
 
 
 if __name__ == '__main__':
