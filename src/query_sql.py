@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import print_function
-from subprocess import run, PIPE
 from argparse import ArgumentParser
 from sqlite3 import connect
 
