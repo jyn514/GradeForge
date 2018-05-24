@@ -10,7 +10,7 @@ web server website: sql
 
 .PHONY: dump
 dump: sql
-	src/dump.py
+	src/query_sql.py
 
 .PHONY: test
 test:
