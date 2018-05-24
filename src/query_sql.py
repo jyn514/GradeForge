@@ -13,7 +13,7 @@ def query(table='section', columns='*', **filters):
     Fails noisily if args are incorrect.'''
     DATABASE = connect('classes.sql')
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
-    query_filter = ' AND '.join([key + ' IN ' + str(value)[1:-1].replace("'", '"')
+    query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
                                  for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
