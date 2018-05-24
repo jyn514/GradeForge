@@ -8,10 +8,10 @@ from create_sql import TABLES
 
 DEBUG = True
 
-def query(table='section', columns='*', **filters):
+def limited_query(database='../classes.sql', table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
-    Fails noisily if args are incorrect.'''
-    DATABASE = connect('classes.sql')
+    Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
+    DATABASE = connect(database)
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
                                  for key, value in filters.items()])
