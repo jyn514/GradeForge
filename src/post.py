@@ -185,7 +185,7 @@ def parse_args():
                           type=str.upper, metavar='DEPARTMENT', default='%')
 
     courses = subparsers.add_parser('courses')
-    courses.add_argument('department', nargs='?', choices=utils.allowed['subject'] + ('%',),
+    courses.add_argument('department', nargs='?', choices=utils.allowed['department'] + ('%',),
                          type=str.upper, metavar='DEPARTMENT', default='%')
     return parser.parse_args()
 
