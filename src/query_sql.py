@@ -17,7 +17,7 @@ def filter_out(iterable):
 def query(table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
     Fails noisily if args are incorrect.'''
-    DATABASE = connect('../classes.sql')
+    DATABASE = connect('classes.sql')
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN ' + str(value)[1:-1].replace("'", '"')
                                  for key, value in filters.items()])
@@ -25,7 +25,7 @@ def query(table='section', columns='*', **filters):
                                         ' WHERE ' + query_filter if query_filter != '' else '')
     if DEBUG:
         print(command, filters)
-    stdout = DATABASE.execute(command)
+    stdout = DATABASE.execute(command).fetchall()
     DATABASE.close()
     return stdout
 
