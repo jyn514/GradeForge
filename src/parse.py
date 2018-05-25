@@ -333,11 +333,9 @@ def follow_links(sections):
     for s in sections:
         # Takes about half an hour. The data goes out of date quickly. Not worth it.
         #s['capacity'], s['actual'], s['remaining'] = get_seats(s['section_link'])
-        try:
-            s['exam_date'], s['exam_time'] = exams[s['semester']][s['days']][s['start_time']]
-        except:
-            print(s, file=stderr)
-            raise
+        # Still crashing.
+        #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
+        pass
     return sections
 
 
