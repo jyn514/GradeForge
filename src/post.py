@@ -142,7 +142,7 @@ def catalog_link(semester, department, code):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
-    return f"{base_url}?cat_term_in={semester}&subj_code_in={department}&crse_numb_in={code}"
+    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % (semester, department, code)
 
 
 def bulletin_link():
@@ -154,7 +154,7 @@ def section_link(semester, CRN):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
-    return f"{base_url}?term_in={semester}&crn_in={CRN}"
+    return "%s?term_in=%s&crn_in=%s" % (base_url, semester, CRN)
 
 
 def parse_args():

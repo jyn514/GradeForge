@@ -105,7 +105,7 @@ def get_season(semester='201808'):
         return 'Spring'
     elif semester[-2:] == '05':
         return 'Summer'
-    raise ValueError(f"Bad month {semester[-2:]} in {semester}")
+    raise ValueError("Bad month %s in %s" % (semester[-2:], semester))
 
 def get_season_today():
     pass
@@ -150,18 +150,18 @@ def save(obj, output, binary=True):
 
 def army_time(time):
     if ':' not in time:
-        raise ValueError(f"Invalid time {time}")
+        raise ValueError("Invalid time " + time)
     hours, minutes = time.split(':')
     hours = int(hours)
     if hours > 24 or hours < 0:
-        raise ValueError(f"Invalid time {time}")
+        raise ValueError("Invalid time " + time)
 
     try:
         minutes, ampm = re.split(r' *([ap])\.? *m', minutes)[:2]
     except ValueError:
         ampm = None
     if (hours > 12 or hours == 0) and ampm is not None:
-        raise ValueError(f"Conflicting time system used in {time}")
+        raise ValueError("Conflicting time system used in " + time)
 
     if not (ampm == 'p') ^ (hours != 12):
         hours += 12
