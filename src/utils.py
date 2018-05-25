@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''Misc utils. Strictly functional, not state-based.'''
 from __future__ import print_function

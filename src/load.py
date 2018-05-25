@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 'Take the pickled contents of a file from stdin and output it to stdout'
 
