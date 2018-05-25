@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''HTML parsing. Generally, works only on files, not on strings'''
 
