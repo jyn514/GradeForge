@@ -232,7 +232,7 @@ def clean_section(course):
     except KeyError:
         course['syllabus'] = None
     try:
-        course['attributes'] = tuple(course['attributes'].split(', '))
+        course['attributes']
     except KeyError:
         course['attributes'] = None
     for key in ('catalog_link', 'bookstore_link', 'section_link'):
