@@ -251,7 +251,7 @@ def parse_exam(file_handle):
         # Yeah. I know.
         div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
     except AssertionError:  # This was annoying
-        raise ValueError(f"'{file_handle}' is empty or not an HTML file")
+        raise ValueError("'%s' is empty or not an HTML file" % file_handle)
 
     assert len(div) == 1, str(len(div)) + " should be 1"
     div = div[0]
