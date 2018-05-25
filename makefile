@@ -13,7 +13,7 @@ dump: sql
 	src/query_sql.py
 
 .PHONY: test
-test:
+test: sql
 	pytest
 
 
