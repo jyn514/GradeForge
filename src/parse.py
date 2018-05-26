@@ -256,7 +256,7 @@ def parse_exam(file_handle):
     assert len(div) == 1, str(len(div)) + " should be 1"
     div = div[0]
     headers = div.xpath('div[@class="accordion-summary"]/h5')
-    rows = div.xpath('div[@class="accordion-details"]/table/tbody/tr')
+    bodies = div.xpath('div[@class="accordion-details"]/table/tbody')
     for i, header in enumerate(headers):
         try:
             days_met = parse_days(header.text)
@@ -264,38 +264,39 @@ def parse_exam(file_handle):
         except KeyError:
             days_met = None  # TODO
         times = {}
-        # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
-        # school likes to put some as spans, some not
-        time_met, exam_datetime = map(lambda td: ''.join(td.itertext())
-                                                 .strip()
-                                                 .replace('\xa0', ' '),
-                                      rows[i])
-        if exam_datetime == 'TBA':  # this is frustrating
-            all_exams[days_met] = 'TBA'
-            continue
-        split = exam_datetime.split(', ')
-        regex = r'\s*[–-]\s+'
-        if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
-            exam_date, exam_time = split[0], split[-1]  # commma after Friday
+        for row in bodies[i].findall('tr'):
+            # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
+            # school likes to put some as spans, some not
+            time_met, exam_datetime = map(lambda td: ''.join(td.itertext())
+                                                     .strip()
+                                                     .replace('\xa0', ' '),
+                                          row.findall('td'))
+            if exam_datetime == 'TBA':  # this is frustrating
+                all_exams[days_met] = 'TBA'
+                continue
+            split = exam_datetime.split(', ')
+            regex = r'\s*[–-]\s*'
+            if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
+                exam_date, exam_time = split[0], split[-1]  # commma after Friday
+                try:
+                    exam_time = re.split(regex, exam_time)[1]
+                except IndexError:
+                    assert 'class meeting time' in exam_time.lower(), exam_time
+            else:  # Friday, May 4 - 8:30 p.m.
+                exam_date, exam_time = re.split(r'\s*[–-]\s*', split[1])
+            exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
             try:
-                exam_time = re.split(regex, exam_time)[1]
-            except IndexError:
-                assert exam_time == 'Regular Class Meeting Time', exam_time
-        else:
-            exam_date, exam_time = re.split(r'\s+[–-]\s+', split[1])
-        exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
-        try:
-            exam_time = army_time(exam_time)
-        except ValueError:  # TODO: DRY
-            assert exam_time == 'Regular Class Meeting Time', exam_time
-        if 'all sections' in time_met.lower():
-            times = ReturnSame(exam_date, exam_time)
-        else:
-            split = re.split(r'\s*[MTWRF]+\s+(-\s+)?', time_met)
-            time_met = split[-1]
-            # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
-            for time in re.split(', ?', time_met):
-                times[army_time(time)] = exam_date, exam_time
+                exam_time = army_time(exam_time)
+            except ValueError:  # TODO: DRY
+                assert 'class meeting time' in exam_time.lower(), exam_time
+            if 'all sections' in time_met.lower():
+                times = ReturnSame(exam_date, exam_time)
+            else:
+                split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
+                time_met = split[-1]
+                # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
+                for time in re.split(', ?', time_met):
+                    times[army_time(time)] = exam_date, exam_time
         all_exams[days_met] = times
     return all_exams
 
