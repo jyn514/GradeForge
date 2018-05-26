@@ -40,7 +40,7 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
         # TODO: allow partial subsets
         if (params[p] != 'dummy' and p in utils.allowed and params[p] not in utils.allowed[p]
                 and params[p] != utils.allowed[p]):
-            raise ValueError(str(p) + ' "' + params[p] + '" not in ' + str(utils.allowed[p]))
+            raise ValueError("%s '%s' not in %s" % (p, params[p], utils.allowed[p]))
 
     ampm = (divmod(start_hour, 12), divmod(end_hour, 12))
     data = {"BEGIN_AP": ('p' if ampm[0][0] else 'a'),
