@@ -1,3 +1,4 @@
+sudo: false
 language: python
 python:
     - "2.7"
@@ -10,6 +11,7 @@ install:
 cache:
     directories:
         - webpages
+        - exams
 
 script:
     - make test
