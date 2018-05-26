@@ -3,3 +3,6 @@
 exams/
 secrets.py
 classes.sql
+build
+dist
+*.egg-info
