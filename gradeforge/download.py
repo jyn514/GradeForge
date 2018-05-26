@@ -2,12 +2,11 @@
 
 '''Network-based querires; GETs and POSTs'''
 
-import argparse
 from datetime import date
 
 from requests import get, post
 
-import utils
+import gradeforge.utils
 
 def login(username, password):
     '''(str, str) -> requests.RequestsCookieJar
@@ -136,36 +135,3 @@ def get_exam(year, season):
         season = utils.get_season(utils.parse_semester(season)).lower()
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
     return get('%s/final-exams-%s-%s.php' % (base_url, season, year)).text
-
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=utils.SingleMetavarFormatter)
-    subparsers = parser.add_subparsers(dest='subparsers')
-    subparsers.required = True
-
-    exams = subparsers.add_parser('exams')
-    exams.add_argument('season', choices=('fall', 'summer', 'spring'),
-                       type=str.lower)
-    exams.add_argument('year', type=int,
-                       choices=range(2013, date.today().year + 1))
-
-    sections = subparsers.add_parser('sections')
-
-
-    courses = subparsers.add_parser('courses')
-    courses.add_argument('department', nargs='?', choices=utils.allowed['department'] + ('%',),
-                         type=str.upper, metavar='DEPARTMENT', default='%')
-    return parser.parse_args()
-
-if __name__ == '__main__':
-    args = parse_args()
-    subparser = args.__dict__.pop('subparsers')
-    args = utils.arg_filter(args)
-
-    if subparser == 'exams':
-        print(get_exams(**args))
-    elif subparser == 'courses':
-        print(get_catalog(**args))
-    else:
-        print(get_sections(**args))

@@ -34,6 +34,3 @@ def sections():
 @app.route('/favicon.png', methods=['GET'])
 def favicon():
     return flask.send_from_directory('.', 'favicon.png')
-
-if __name__ == '__main__':
-    app.run(debug=True)  # TODO: shouldn't be debug in prod

@@ -386,26 +386,3 @@ def get_books(semester, department, number, section):
         save(get_bookstore_selenium(semester, department, number, section), html, binary=False)
 
     return parse_bookstore(html)
-
-
-if __name__ == '__main__':
-    import argparse
-    import pickle
-
-    parser = argparse.ArgumentParser()
-    data = parser.add_mutually_exclusive_group(required=True)
-    data.add_argument('--sections', '-S', action='store_true')
-    data.add_argument('--catalog', '--classes', '-C', action='store_true')
-    data.add_argument('--exams', '-e', action='store_true')
-    args = parser.parse_args()
-
-    try:
-        if args.sections:
-            result = parse_sections(stdin.buffer)
-        elif args.catalog:
-            result = parse_catalog(stdin.buffer)
-        else:
-            result = parse_all_exams()
-        pickle.dump(result, stdout.buffer)
-    except KeyboardInterrupt:
-        pass
