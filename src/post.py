@@ -22,15 +22,15 @@ def login(username, password):
     return post(authsite, data=data).cookies
 
 
-def get_sections(subject='%', semester='201808', campus='COL', number='', title='',
+def get_sections(department='%', semester='201808', campus='COL', number='', title='',
                  min_credits=1, max_credits='', level='%', term='30', times='%',
                  location='%', start_hour=0, start_minute=0, end_hour=0,
                  end_minute=0, days='dummy'):
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
     semester = utils.parse_semester(semester)
-    if subject == '%':  # all sections
-        subject = utils.allowed['department']
+    if department == '%':  # all sections
+        department = utils.allowed['department']
 
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
@@ -59,7 +59,7 @@ def get_sections(subject='%', semester='201808', campus='COL', number='', title=
             "SEL_LEVL": ('dummy', level),
             "SEL_PTRM": ('dummy', term),
             "SEL_SESS": ('dummy', times),
-            "SEL_SUBJ": ('dummy', subject),
+            "SEL_SUBJ": ('dummy', department),
             "SEL_TITLE": title,
             "TERM_IN": ('dummy', semester)}
 
