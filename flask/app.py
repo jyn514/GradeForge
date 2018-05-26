@@ -13,7 +13,7 @@ def main():
 
 @app.route('/sections.html', methods=['GET', 'POST'])
 def submit():
-    params = (request.args if request.method == 'GET' else request.form)
+    params = (flask.request.args if flask.request.method == 'GET' else flask.request.form)
     print(params) # TODO
     return flask.redirect('/') # also TODO
 
