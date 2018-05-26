@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import flask
-from query_sql import query
+from src.query_sql import query
 
 app = flask.Flask(__name__, template_folder='.', static_url_path='/')
 
