@@ -34,7 +34,7 @@ allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "20150
                        "RELG", "RETL", "RHAB", "RUSS", "SAEL", "SCCP", "SCHC",
                        "SLIS", "SMED", "SOCY", "SOST", "SOWK", "SPAN", "SPCH",
                        "SPTE", "STAT", "SURG", "THEA", "UNIV", "WGST"),
-           'number': range(1, 1000),
+           'number': ('',) + tuple(range(1, 1000)),
            'level': ('%', 'GR', 'LW', 'MD', 'UG'),
            'term': ("1A", "1B", "10", "2A", "2B", "20", "3A", "3B", "30", "4A", "4B",
                     "40", "50", "6A", "6B", "60", "7A", "7B", "70", "8A", "8B", "80"),
