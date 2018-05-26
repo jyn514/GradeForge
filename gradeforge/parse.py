@@ -12,7 +12,7 @@ from datetime import date
 from lxml import etree
 
 from utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
-from post import get_bookstore, get
+from download import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
@@ -340,7 +340,7 @@ def follow_links(sections):
     return sections
 
 
-def parse_b_and_n(file_handle):
+def parse_bookstore(file_handle):
     '''
     Not implemented:
     - name
@@ -385,7 +385,7 @@ def get_books(semester, department, number, section):
     if not exists(html):  # TODO: move this to makefile
         save(get_bookstore_selenium(semester, department, number, section), html, binary=False)
 
-    return parse_b_and_n(html)
+    return parse_bookstore(html)
 
 
 if __name__ == '__main__':

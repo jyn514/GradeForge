@@ -9,6 +9,7 @@ from inspect import getargspec
 import pickle  # PICKLE IS NOT AN API
 import re
 
+# first semester is not a typo, this is how it is really accepted on the USC side
 allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
                         "201508", "201601", "201605", "201608", "201701", "201705",
                         "201708", "201801", "201805", "201808"),
@@ -82,6 +83,16 @@ class ReturnSame(object):
     def __getitem__(self, item):
         return self.value
 
+    def __str__(self):
+        try:
+            return "gradeforge.ReturnSame(%s)" % str(self.value)  # str is necessary in case value is a tuple
+        except:
+            print(self.value)
+            raise
+
+    def __repr__(self):
+        return self.__str__()
+
 
 def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''
@@ -108,7 +119,7 @@ def get_season(semester='201808'):
     raise ValueError("Bad month %s in %s" % (semester[-2:], semester))
 
 def get_season_today():
-    pass
+    return 'Fall'
     # TODO
     #m = date.today().month
     #return 'spring' if m <
@@ -134,9 +145,17 @@ def parse_semester(season, year=date.today().year):
 
 
 def load(stdin):
-    'Opposite of save. Given a file path, return the (binary) contents of the file.'
-    with open(stdin, 'rb') as i:
-        return pickle.load(i)
+    'Opposite of save. Given a file or file path, return the (binary) contents of the file.'
+    try:
+        return pickle.load(stdin)
+    except TypeError:
+        with open(stdin, 'rb') as i:
+            return pickle.load(i)
+
+
+def load_stdin():
+    'Return the contents of stdin, assuming that stdin is a pickled file'
+    return load(sys.stdin.buffer)
 
 
 def save(obj, output, binary=True):
@@ -189,3 +208,21 @@ DAYS = {'Monday': 'M',
 def arg_filter(args):
     return {k: v for k, v in args.__dict__.items()
             if v is not None}
+
+def catalog_link(semester, department, code):
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
+    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
+    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % (semester, department, code)
+
+
+def bulletin_link():
+    '''Example: http://bulletin.sc.edu/preview_course.php?catoid=70&coid=85439'''
+    raise BaseException("NOPE NOPE NOPE")
+
+
+def section_link(semester, CRN):
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
+    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
+    return "%s?term_in=%s&crn_in=%s" % (base_url, semester, CRN)

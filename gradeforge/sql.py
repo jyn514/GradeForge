@@ -10,6 +10,8 @@ TODO:
 - ask brady if we care about registration start
 '''
 
+import sqlite3
+
 # dictionaries are insertion ordered; see https://stackoverflow.com/q/39980323
 # do not change order without also modifying parse.py
 # (this happened because I was lazy in the main portion) - JN
@@ -58,14 +60,8 @@ TABLES = {'class': ["course_link tinytext",
                      #"capacity tinyint", "remaining tinyint"
          }
 
-if __name__ == '__main__':
-    import sqlite3 as sql
-    from utils import load
-
-    DEPARTMENTS, CLASSES = load('.courses.data')
-    INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
-
-    DATABASE = sql.connect('classes.sql')
+def create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, SECTIONS, database='../classes.sql'):
+    DATABASE = sqlite3.connect(database)
     CURSOR = DATABASE.cursor()
 
     CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
@@ -87,3 +83,25 @@ if __name__ == '__main__':
                        (tuple(s.values()) + ('None',) for s in SECTIONS))
     DATABASE.commit()
     DATABASE.close()
+
+
+def limited_query(database='classes.sql', table='section', columns='*', **filters):
+    '''NOTE: Does NOT validate input, that is the responsibility of calling code.
+    Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
+    DATABASE = sqlite3.connect(database)
+    # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
+    query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
+                                 for key, value in filters.items()])
+    command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
+                                        ' WHERE ' + query_filter if query_filter != '' else '')
+    if DEBUG:
+        print(command, filters)
+    stdout = DATABASE.execute(command).fetchall()
+    DATABASE.close()
+    return stdout
+
+
+def query(query, database='classes.sql'):
+    '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
+    return '\n'.join('|'.join(str(s) for s in t)
+                     for t in connect(database).execute(query).fetchall())
