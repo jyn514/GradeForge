@@ -11,8 +11,8 @@ from datetime import date
 
 from lxml import etree
 
-from utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
-from download import get_bookstore, get
+from gradeforge.utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
+from gradeforge.download import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
