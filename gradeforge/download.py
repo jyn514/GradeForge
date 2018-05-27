@@ -65,18 +65,19 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
 
     return post(coursesite, data=data).text
 
-
+'''This doesn't work because of the malicious javascript.
 def get_bookstore(semester, department, number, section):
-    '''(str, str, str, str) -> str (HTML)
+    '(str, str, int, str) -> str (HTML)
     Return content of bookstore page corresponding to class
-    Note that this cannot be a link in utils because it requires a POST'''
+    Note that this cannot be a link in utils because it requires a POST'
     base_url = 'https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView'
     data = {'storeId': '10052',
             'courseXml': "<textbookorder><courses><course dept='%s' num='%s' sect='%s' term='%s' /></courses></textbookorder>"
                          % (department, number, section, utils.b_and_n_semester(semester))}
     return post(base_url, data=data).text
+'''
 
-def get_bookstore_selenium(semester, department, number, section, driver=None):
+def get_bookstore(semester, department, number, section, driver=None):
     '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001'''
     from time import sleep
 
