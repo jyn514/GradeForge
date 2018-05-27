@@ -76,31 +76,28 @@ def get_bookstore(semester, department, number, section):
                          % (department, number, section, utils.b_and_n_semester(semester))}
     return post(base_url, data=data).text
 
-
-def get_bookstore_selenium(semester, department, number, section):
+def get_bookstore_selenium(semester, department, number, section, driver=None):
     '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001'''
-    from selenium.webdriver import Chrome
-    from selenium.webdriver.chrome.options import Options
     from time import sleep
+
+    if driver is None:
+        from selenium.webdriver import Chrome
+        from selenium.webdriver.chrome.options import Options
+        # https://stackoverflow.com/a/49582462
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        driver = Chrome(chrome_options=options)
+        driver.implicitly_wait(10)  # timeout for page to be deobfuscated
 
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
     link = "%s?p_term_in=%s&p_subj_in=%s&p_crse_numb_in=%s&p_seq_in=%s" % (base_url, semester, department, number, section)
 
-    # https://stackoverflow.com/a/49582462
-    options = Options()
-    try:
-        options.set_headless(headless=True)
-    except AttributeError:
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-    driver = Chrome(chrome_options=options)
     driver.get(link)
     driver.execute_script('document.forms["BOOK"].submit()')
     driver.switch_to.window(driver.window_handles[1])
-    sleep(3)  # parse the javascript nightmare
-    txt = driver.page_source
-    driver.quit()
-    return txt
+    driver.find_element_by_id('courseListForm')  # this is the implicit wait
+    return driver.page_source
 
 
 def get_catalog(department='%', semester=201808):
