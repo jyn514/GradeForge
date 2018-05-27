@@ -363,15 +363,19 @@ def parse_bookstore(file_handle):
     all_books = []
     for book in books:
         info = {}
+
         info['image'] = book.xpath('div[2]/a/img/@src')[0]
-        anchor = book.xpath('div[3]/h1/a')[0]
+
+        main = book.find('div[3]')
+
+        anchor = main.xpath('h1/a')[0]
         info['link'] = anchor.attrib['href']
         info['title'] = anchor.attrib['title']
-        info['required'] = book.xpath('div[3]/h2/span[@class="recommendBookType"]/text()')[0].strip().lower()
-        info['author'] = book.xpath('div[3]/h2/span/i/text()')[0].replace('By ', '')
-        # ok but actually wtf
+
+        info['required'] = main.xpath('h2/span[@class="recommendBookType"]/text()')[0].strip().lower()
+        info['author'] = main.xpath('h2/span/i/text()')[0].replace('By ', '')
         info['edition'], info['publisher'], info['isbn'] = map(lambda s: s.tail.replace('\xa0', '').replace('Â', '').strip(),
-                                                               book.xpath('div[3]/ul/li/strong'))
+                                                               main.xpath('ul/li/strong'))
         prices = book.xpath('div[4]/div[@class="selectBookCont"]/div/ul/li[2]/ul/li')
         for p in prices:
             info[p.attrib['title'].lower().strip().replace(' ', '-')] = p.find('span').text.strip()
