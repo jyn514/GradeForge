@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from gradeforge.src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
+from gradeforge.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
 
 def test_constants():
     assert len(DAYS) == 7
