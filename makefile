@@ -27,7 +27,7 @@ classes.sql: gradeforge/sql.py $(DATA)
 catalog sections: webpages/$$@.html
 
 .DELETE_ON_ERROR:
-webpages/%.html: | .gradeforge_installed gradeforge/download.py webpages
+webpages/%.html: | gradeforge/download.py webpages
 	$(GRADEFORGE) download $(subst .html,,$(subst webpages/,,$@)) > $@
 	$(call clean,$@)
 
@@ -60,10 +60,6 @@ export command
 .exams.data: $(EXAMS)
 	echo "$$command"  # so you can see what's going on :)
 	python -c "$$command" > $@
-
-.gradeforge_installed: gradeforge
-	pip install --user -e .
-	touch $@
 
 webpages:
 	mkdir webpages
