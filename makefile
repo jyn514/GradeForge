@@ -29,15 +29,15 @@ define clean =
 endef
 
 .SECONDEXPANSION:
-.PHONY: courses sections
-courses sections: webpages/USC_all_$$@.html
+.PHONY: catalog sections
+catalog sections: webpages/$$@.html
 
 webpages:
 	mkdir webpages
 .DELETE_ON_ERROR:
 
-webpages/USC_all_%.html: | src/post.py webpages
-	./$(firstword $|) $(subst .html,,$(subst webpages/USC_all_,,$@)) > $@
+webpages/%.html: | src/post.py webpages
+	./$(firstword $|) $(subst .html,,$(subst webpages/,,$@)) > $@
 	$(call clean,$@)
 
 exams:
