@@ -42,6 +42,8 @@ create.add_argument('--source', default=None, nargs='+',
                     help='one or more files containing data. must be valid python using built-in datastructures. '
                          + 'must contain the variables DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, and SECTIONS.')
 
+dump = command.add_parser('dump', help='show everything in a database')
+
 # begin download parser
 download = subparsers.add_parser('download', description='download files from sc.edu',
                              parents=[verbosity_parser])
@@ -85,6 +87,9 @@ elif args.subparser == 'sql':
     if args.command == 'query':
         from gradeforge.sql import query
         print(query(args.sql_query, database=args.database))
+    elif args.command == 'dump':
+        from gradeforge.sql import dump
+        print(dump(database=args.database))
     else:
         from gradeforge.sql import create_sql
         DEPARTMENTS, CLASSES = load('.courses.data')

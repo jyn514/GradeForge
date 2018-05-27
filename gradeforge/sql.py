@@ -105,3 +105,7 @@ def query(query, database='classes.sql'):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
     return '\n'.join('|'.join(str(s) for s in t)
                      for t in sqlite3.connect(database).execute(query).fetchall())
+
+
+def dump(database='classes.sql'):
+    print('\n'.join(query("SELECT * FROM " + table) for table in TABLES))
