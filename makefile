@@ -34,6 +34,7 @@ courses sections: webpages/USC_all_$$@.html
 
 webpages:
 	mkdir webpages
+.DELETE_ON_ERROR:
 
 webpages/USC_all_%.html: | src/post.py webpages
 	./$(firstword $|) $(subst .html,,$(subst webpages/USC_all_,,$@)) > $@
@@ -48,13 +49,13 @@ exams/%.html: | src/post.py exams
 	$(call clean,$@)
 
 .courses.data: src/parse.py webpages/USC_all_courses.html
-	./$< --catalog < $(lastword $^) > $@ || { $(RM) $@; exit 999; }
+	./$< --catalog < $(lastword $^) > $@
 
 .sections.data: src/parse.py webpages/USC_all_sections.html .exams.data
-	./$< --sections < $(word 2,$^) > $@ || { $(RM) $@; exit 999; }
+	./$< --sections < $(word 2,$^) > $@
 
 .exams.data: src/parse.py $(EXAMS)
-	./$< --exams > $@ || { $(RM) $@; exit 999; }
+	./$< --exams > $@
 
 classes.sql: src/create_sql.py $(DATA)
 	$(RM) $@
