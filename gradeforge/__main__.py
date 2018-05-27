@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from datetime import date
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
-from gradeforge.utils import SingleMetavarFormatter, arg_filter, allowed, get_season_today, parse_semester
+from gradeforge.utils import SingleMetavarFormatter, arg_filter, allowed, get_season_today, parse_semester, load
 
 verbosity_parser = ArgumentParser(add_help=False)
 verbosity_parser.add_argument('--verbose', '--debug', '-v', action='count', default=0)
@@ -82,6 +82,12 @@ if args.subparser == 'web':
     app.config['ENV'] = ('development' if args.verbose else 'production')
     app.run(debug=args.verbose > 0, port=args.port, use_debugger=args.verbose > 0)
 elif args.subparser == 'sql':
+    if args.command == 'create':
+        from gradeforge.sql import create_sql
+        # TODO: do this in a sane way
+        DEPARTMENTS, CLASSES = load('.courses.data')
+        INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
+        quit(create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, SECTIONS, database=args.database))
     if not path.exists(args.database):
         raise ValueError("database '%s' does not exist or is invalid" % args.database)
     if args.command == 'query':
@@ -90,11 +96,6 @@ elif args.subparser == 'sql':
     elif args.command == 'dump':
         from gradeforge.sql import dump
         print(dump(database=args.database))
-    else:
-        from gradeforge.sql import create_sql
-        DEPARTMENTS, CLASSES = load('.courses.data')
-        INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
-        create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, SECTIONS, database=args.database)
 elif args.subparser == 'parse':
     # I love the smell of meta-programming in the morning.
     exec('from gradeforge.parse import parse_' + args.info + ' as parse')
