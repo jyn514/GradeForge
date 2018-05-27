@@ -1,3 +1,7 @@
+'''Command line parsing. Note that this module is decidedly harder to use than the
+makefile; if you want to run SQL queries I recommend running `make` then
+`gradeforge sql query <your_query>`.'''
+
 from argparse import ArgumentParser
 from datetime import date
 from os import path
