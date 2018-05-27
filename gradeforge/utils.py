@@ -118,6 +118,7 @@ def get_season(semester='201808'):
         return 'Summer'
     raise ValueError("Bad month %s in %s" % (semester[-2:], semester))
 
+
 def get_season_today():
     return 'Fall'
     # TODO
