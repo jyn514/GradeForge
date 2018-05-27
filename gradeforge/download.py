@@ -6,7 +6,7 @@ from datetime import date
 
 from requests import get, post
 
-import gradeforge.utils
+from gradeforge import utils
 
 def login(username, password):
     '''(str, str) -> requests.RequestsCookieJar
