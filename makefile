@@ -1,5 +1,5 @@
 EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
-DATA = .courses.data .sections.data
+DATA = .courses.data .sections.data .exams.data
 MAKEFLAGS += -j4
 GRADEFORGE = python -m gradeforge
 
