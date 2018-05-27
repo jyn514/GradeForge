@@ -1,16 +1,8 @@
 from datetime import date
-from sys import path
 
 import pytest
 
-try:
-    path.append('.')
-    from src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
-except ImportError:
-    path.append('..')
-    from src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
-path = path[:-1]
-
+from gradeforge.src.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
 
 def test_constants():
     assert len(DAYS) == 7
