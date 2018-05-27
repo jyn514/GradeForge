@@ -65,8 +65,10 @@ sections.add_argument('--campus', '-c', choices=allowed['campus'], default='COL'
 sections.add_argument('--term', '-T', choices=allowed['term'], default='30')
 
 bookstore = info.add_parser('bookstore', description='textbooks for a given section')
-bookstore.add_argument('department', choices=allowed['department'], metavar='DEPARTMENT')
-bookstore.add_argument('number', choices=range(1000), metavar='CODE')
+bookstore.add_argument('department', choices=allowed['department'],
+                       metavar='DEPARTMENT', type=str.upper)
+bookstore.add_argument('number', choices=range(1000), type=int, metavar='CODE')
+
 bookstore.add_argument('section')
 
 catalog = info.add_parser('catalog', description='courses offered')
