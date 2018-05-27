@@ -1,22 +1,22 @@
-EXAMS := $(addprefix exams/,$(addsuffix .html,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
+EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
 DATA = .courses.data .sections.data
 MAKEFLAGS += -j4
+GRADEFORGE = python -m gradeforge
 
 .PHONY: sql
 sql: classes.sql
 
 .PHONY: web server website
 web server website: sql
-	flask/app.py
+	$(GRADEFORGE) web
 
 .PHONY: dump
 dump: sql
-	src/query_sql.py
+	$(GRADEFORGE) sql dump
 
 .PHONY: test
 test: sql
 	pytest
-
 
 # lxml has trouble with too much whitespace
 define clean =
@@ -28,6 +28,10 @@ define clean =
 	sed -i 's/\s\+$$//' $1
 endef
 
+classes.sql: gradeforge/sql.py $(DATA)
+	$(RM) $@
+	PYTHONIOENCODING=utf-8 $(GRADEFORGE) sql create
+
 .SECONDEXPANSION:
 .PHONY: catalog sections
 catalog sections: webpages/$$@.html
@@ -35,37 +39,52 @@ catalog sections: webpages/$$@.html
 webpages:
 	mkdir webpages
 .DELETE_ON_ERROR:
+webpages/%.html: | .gradeforge_installed gradeforge/download.py webpages
+	$(GRADEFORGE) download $(subst .html,,$(subst webpages/,,$@)) > $@
+	$(call clean,$@)
 
-webpages/%.html: | src/post.py webpages
-	./$(firstword $|) $(subst .html,,$(subst webpages/,,$@)) > $@
+exams/%.html: | gradeforge/download.py exams
+	$(GRADEFORGE) download \
+	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
+	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	$(call clean,$@)
 
 exams:
 	mkdir exams
 
-exams/%.html: | src/post.py exams
-	./$| `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
-	     `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
-	$(call clean,$@)
+exams/%.py: exams/%.html
+	$(GRADEFORGE) parse exam $^ > $@
 
-.courses.data: src/parse.py webpages/USC_all_courses.html
-	./$< --catalog < $(lastword $^) > $@
+.courses.data: gradeforge/parse.py webpages/catalog.html
+	$(GRADEFORGE) parse catalog $(lastword $^) > $@
 
-.sections.data: src/parse.py webpages/USC_all_sections.html .exams.data
-	./$< --sections < $(word 2,$^) > $@
+.sections.data: gradeforge/parse.py webpages/sections.html .exams.data
+	$(GRADEFORGE) parse sections $(word 2,$^) > $@
 
-.exams.data: src/parse.py $(EXAMS)
-	./$< --exams > $@
+# multiline variable: https://stackoverflow.com/a/649462
+define command
+import gradeforge
+result = {}
+for exam in '$(EXAMS)'.split(' '):
+	key = gradeforge.utils.parse_semester(*exam.replace('exams/', '').replace('.py', '').split('-'))
+	with open(exam) as f:
+		result[key] = eval(f.read())
+print(result)
+endef
+export command
+.exams.data: $(EXAMS)
+	echo "$$command"  # so you can see what's going on :)
+	python -c "$$command" > $@
 
-classes.sql: src/create_sql.py $(DATA)
-	$(RM) $@
-	# python2 compat
-	PYTHONIOENCODING=utf-8 ./$<
+.gradeforge_installed: gradeforge
+	pip install --user -e .
+	touch $@
+
 
 .PHONY: clean
 clean:
 	$(RM) -r __pycache__
-	$(RM) $(DATA) classes.sql *.pyc
+	$(RM) $(DATA) $(EXAMS) classes.sql *.pyc
 
 .PHONY: clobber
 clobber: clean
