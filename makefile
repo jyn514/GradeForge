@@ -16,7 +16,7 @@ dump: sql
 
 .PHONY: test
 test: sql
-	pytest
+	pytest --pyargs gradeforge
 
 classes.sql: gradeforge/sql.py $(DATA)
 	$(RM) $@
