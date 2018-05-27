@@ -146,12 +146,16 @@ def parse_semester(season, year=date.today().year):
 
 
 def load(stdin):
-    'Opposite of save. Given a file or file path, return the (binary) contents of the file.'
+    '''Opposite of save. Given a file or file path, return the contents of the file.
+    Must be either a pickled file or a valid python script.'''
+    if not hasattr(stdin, 'read'):
+        with open(stdin, 'rb') as stdin:
+            return load(stdin)
     try:
         return pickle.load(stdin)
-    except TypeError:
-        with open(stdin, 'rb') as i:
-            return pickle.load(i)
+    except pickle.UnpicklingError:  # was saved as text
+        import gradeforge
+        return eval(stdin.read())
 
 
 def load_stdin():
