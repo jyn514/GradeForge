@@ -9,7 +9,7 @@ setup(name='gradeforge', version='0.0.1',
       author="Joshua Nelson, Brady O'Leary, Charles Daniels, and James Coman",
       author_email='jyn514@gmail.com',
       install_requires=['flask', 'lxml', 'requests'],
-      packages=['gradeforge', 'gradeforge.src', 'gradeforge.flask'],
+      packages=['gradeforge', 'gradeforge.web'],
       long_description=long_description,
       url='https://github.com/jyn514/GradeForge'  # TODO: make a website
 )
