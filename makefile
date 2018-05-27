@@ -18,16 +18,6 @@ dump: sql
 test: sql
 	pytest
 
-# lxml has trouble with too much whitespace
-define clean =
-	if grep '404 page not found' $1; then \
-		echo file "'$1'" gave a 404 not found; \
-		rm $1; \
-		exit 999; \
-	fi
-	sed -i 's/\s\+$$//' $1
-endef
-
 classes.sql: gradeforge/sql.py $(DATA)
 	$(RM) $@
 	PYTHONIOENCODING=utf-8 $(GRADEFORGE) sql create
@@ -36,8 +26,6 @@ classes.sql: gradeforge/sql.py $(DATA)
 .PHONY: catalog sections
 catalog sections: webpages/$$@.html
 
-webpages:
-	mkdir webpages
 .DELETE_ON_ERROR:
 webpages/%.html: | .gradeforge_installed gradeforge/download.py webpages
 	$(GRADEFORGE) download $(subst .html,,$(subst webpages/,,$@)) > $@
@@ -48,9 +36,6 @@ exams/%.html: | gradeforge/download.py exams
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` > $@
 	$(call clean,$@)
-
-exams:
-	mkdir exams
 
 exams/%.py: exams/%.html
 	$(GRADEFORGE) parse exam $^ > $@
@@ -80,6 +65,21 @@ export command
 	pip install --user -e .
 	touch $@
 
+webpages:
+	mkdir webpages
+
+exams:
+	mkdir exams
+
+# lxml has trouble with too much whitespace
+define clean =
+	if grep '404 page not found' $1; then \
+		echo file "'$1'" gave a 404 not found; \
+		rm $1; \
+		exit 999; \
+	fi
+	sed -i 's/\s\+$$//' $1
+endef
 
 .PHONY: clean
 clean:
