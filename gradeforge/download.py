@@ -6,8 +6,7 @@ from datetime import date
 
 from requests import get, post
 
-from gradeforge import utils
-
+from gradeforge.utils import allowed, parse_semester, get_season
 
 def get_sections(department='%', semester='201808', campus='COL', number='', title='',
                  min_credits=0, max_credits='', level='%', term='30', times='%',
@@ -18,7 +17,7 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
     # TODO: term is a nightmare, replace it with [first_half, second_half, all]
     semester = utils.parse_semester(semester)
     if department == '%':  # all sections
-        department = utils.allowed['department']
+        department = allowed['department']
 
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
@@ -26,9 +25,9 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
     for p in params:
         # if p not in allowed, assume arbitrary input acceptable
         # TODO: allow partial subsets
-        if (params[p] != 'dummy' and p in utils.allowed and params[p] not in utils.allowed[p]
-                and params[p] != utils.allowed[p]):
-            raise ValueError("%s '%s' not in %s" % (p, params[p], utils.allowed[p]))
+        if (params[p] != 'dummy' and p in allowed and params[p] not in allowed[p]
+                and params[p] != allowed[p]):
+            raise ValueError("%s '%s' not in %s" % (p, params[p], allowed[p]))
 
     ampm = (divmod(start_hour, 12), divmod(end_hour, 12))
     data = {"BEGIN_AP": ('p' if ampm[0][0] else 'a'),
@@ -91,7 +90,7 @@ def get_bookstore(semester, department, number, section, driver=None):
 
 def get_catalog(department='%', semester=201808):
     if department == '%':
-        department = utils.allowed['department']
+        department = allowed['department']
     else:
         department = [department]
 
@@ -118,6 +117,6 @@ def get_exam(year, season):
     Return content of calendar corresponding to given semester. Example:
     https://www.sc.edu/about/offices_and_divisions/registrar/final_exams/final-exams-spring-2018.php'''
     if season not in ('fall', 'summer', 'spring'):
-        season = utils.get_season(utils.parse_semester(season)).lower()
+        season = get_season(parse_semester(season)).lower()
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
     return get('%s/final-exams-%s-%s.php' % (base_url, season, year)).text
