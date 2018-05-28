@@ -3,6 +3,7 @@
 '''Network-based querires; GETs and POSTs'''
 
 from datetime import date
+from sys import stderr
 
 from requests import get, post
 
@@ -120,3 +121,32 @@ def get_exam(year, season):
         season = get_season(parse_semester(season)).lower()
     base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/final_exams'
     return get('%s/final-exams-%s-%s.php' % (base_url, season, year)).text
+
+
+def get_grades(year, season, campus=None):
+    campus = str(campus).lower()
+    semester = parse_semester(season, year)
+    base_url = 'https://www.sc.edu/about/offices_and_divisions/registrar/documents/grade_spreads'
+
+    too_soon = "Ha. Ha ha. You think the university is that fast."
+    if year == date.today().year:
+        if int(semester[-1]) >= date.today().month:
+            raise ValueError("Can't download grades from the future")
+        elif int(semester[-1]) + 5 >= date.today().month:
+            raise ValueError(too_soon)
+    elif year == date.today().year - 1 and semester[-1] == '8' and date.today().month < 2:  # TODO: check when this actually is
+        raise ValueError(too_soon)
+
+    if year >= 2014 or (year == 2013 and season == 'Fall'):
+        ext = 'xlsx'
+    elif campus is None:
+        raise ValueError("grade spreads prior to fall 2013 are seperated by campus")
+    elif campus not in ('fall', 'spring'):
+        raise ValueError("No data for summer prior to 2014 (given %s)" % campus)
+    elif year < 2008:
+        raise ValueError("No data for year " + year)
+    else:
+        ext = 'pdf'
+        semester += '_' + campus
+    url = '%s/%s_grade_spread_report.%s' % (base_url, semester, ext)
+    return get(url).content  # NOTE: content is binary; text is encoded

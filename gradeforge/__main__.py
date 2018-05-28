@@ -4,6 +4,7 @@ makefile; if you want to run SQL queries I recommend running `make` then
 
 from argparse import ArgumentParser
 from datetime import date
+from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
 from gradeforge.utils import SingleMetavarFormatter, arg_filter, allowed, get_season_today, parse_semester, load
@@ -77,7 +78,7 @@ bookstore.add_argument('section')
 
 catalog = info.add_parser('catalog', description='courses offered')
 exam = info.add_parser('exam', description='final exam times')
-
+grades = info.add_parser('grades', description='grade spreads for past semester')
 
 args = parser.parse_args()
 if 'verbose' in args.__dict__:
@@ -109,12 +110,13 @@ elif args.subparser == 'parse':
         print(parse(f))
 else:  # download
     exec('from gradeforge.download import get_' + args.info + ' as get')
-    semester = parse_semester(args.season, year=args.year)
     if args.info == 'exam':
         print(get(args.year, args.season))
     elif args.info == 'sections':
-        print(get(semester=semester, campus=args.campus, term=args.term))
+        print(get(semester=parse_semester(args.season, year=args.year), campus=args.campus, term=args.term))
     elif args.info == 'catalog':
-        print(get(semester))
+        print(get(parse_semester(args.season, year=args.year)))
+    elif args.info == 'bookstore':
+        print(get(parse_semester(args.season, year=args.year), args.department, args.number, args.section))
     else:
-        print(get(semester, args.department, args.number, args.section))
+        stdout.buffer.write(get(args.year, args.season))
