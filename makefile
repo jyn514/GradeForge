@@ -1,4 +1,6 @@
 EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
+OLD_GRADES := $(addsuffix .pdf,$(addprefix grades/,Fall-2008 Fall-2009 Fall-2010 Fall-2011 Fall-2012 Spring-2008 Spring-2009 Spring-2010 Spring-2011 Spring-2012 Spring-2013))
+NEW_GRADES := $(addsuffix .xlsx,$(addprefix grades/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
 DATA = .courses.data .sections.data .exams.data
 MAKEFLAGS += -j4
 GRADEFORGE = python -m gradeforge
@@ -41,6 +43,12 @@ exams/%.html: | gradeforge/download.py exams
 exams/%.py: exams/%.html
 	$(GRADEFORGE) parse exam $^ > $@
 
+$(OLD_GRADES) $(NEW_GRADES): | gradeforge/download.py grades
+	$(GRADEFORGE) download \
+	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
+	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
+	  grades > $@
+
 .courses.data: gradeforge/parse.py webpages/catalog.html
 	$(GRADEFORGE) parse catalog $(lastword $^) > $@
 
@@ -62,11 +70,8 @@ export command
 	echo "$$command"  # so you can see what's going on :)
 	python -c "$$command" > $@
 
-webpages:
-	mkdir webpages
-
-exams:
-	mkdir exams
+webpages exams grades:
+	mkdir $@
 
 # lxml has trouble with too much whitespace
 define clean =
