@@ -135,13 +135,18 @@ def parse_semester(season, year=date.today().year):
     year = str(year)
     if len(year) != 4 or not year.isnumeric():
         raise ValueError("expected four digit year; was given " + year)
-    # TODO: check if this year or next year is spring (for default)
-    if season == 'fall':
-        return year + '08'
-    elif season == 'spring':
-        return year + '01'
-    elif season == 'summer':
-        return year + '05'
+    if int(year) >= 2014:
+        if season == 'fall':
+            return year + '08'
+        elif season == 'spring':
+            return year + '01'
+        elif season == 'summer':
+            return year + '05'
+    else:
+        if season == 'fall':
+            return year + '41'
+        elif season == 'spring':
+            return year + '11'
     raise ValueError(season)
 
 
