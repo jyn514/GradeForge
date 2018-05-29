@@ -7,7 +7,7 @@ from sys import stderr
 
 from requests import get, post
 
-from gradeforge.utils import allowed, parse_semester, get_season
+from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
 
 def get_sections(department='%', semester='201808', campus='COL', number='', title='',
                  min_credits=0, max_credits='', level='%', term='30', times='%',
@@ -79,9 +79,32 @@ def make_driver():
 
 
 def get_bookstore(semester, department, number, section, driver=None):
-    '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001'''
-    from time import sleep
+    if driver is None:
+        driver = make_driver()
+    '''This is a mess.'''
+    if len(semester) != 3:
+        semester = b_and_n_semester(semester)
 
+    xml = r'''<textbookorder><courses>\
+                <course dept=\'%s\' num=\'%s\' sect=\'%s\' term=\'%s\' />\
+              </courses></textbookorder>'''
+    xml %= department, number, section, semester
+
+    js = '''
+    document.body.innerHTML += '\
+        <form id="form" action="https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView" method="post">\
+          <input name="storeId" value="10052">\
+          <input name="courseXml" value="%s">\
+        </form>';
+    document.getElementById("form").submit();
+    ''' % xml
+
+    driver.execute_script(js)
+    driver.find_element_by_id('courseListForm')  # this is the implicit wait
+    return driver.page_source
+
+
+def get_bookstore_indirect(semester, department, number, section, driver=None):
     if driver is None:
         driver = make_driver()
     '''The bookstore page is a hot mess of obfuscated javascript.
