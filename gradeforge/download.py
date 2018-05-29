@@ -79,9 +79,10 @@ def make_driver():
 
 
 def get_bookstore(semester, department, number, section, driver=None):
+    '''The bookstore page is a hot mess of obfuscated javascript.
+    We use selenium to deobfuscate the javascript, then parse the resulting HTML'''
     if driver is None:
         driver = make_driver()
-    '''This is a mess.'''
     if len(semester) != 3:
         semester = b_and_n_semester(semester)
 
@@ -100,23 +101,6 @@ def get_bookstore(semester, department, number, section, driver=None):
     ''' % xml
 
     driver.execute_script(js)
-    driver.find_element_by_id('courseListForm')  # this is the implicit wait
-    return driver.page_source
-
-
-def get_bookstore_indirect(semester, department, number, section, driver=None):
-    if driver is None:
-        driver = make_driver()
-    '''The bookstore page is a hot mess of obfuscated javascript.
-    We use selenium to deobfuscate the javascript, then parse the resulting HTML
-    TODO: POST directly to relevant page'''
-
-    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
-    link = "%s?p_term_in=%s&p_subj_in=%s&p_crse_numb_in=%s&p_seq_in=%s" % (base_url, semester, department, number, section)
-
-    driver.get(link)
-    driver.execute_script('document.forms["BOOK"].submit()')
-    driver.switch_to.window(driver.window_handles[1])
     driver.find_element_by_id('courseListForm')  # this is the implicit wait
     return driver.page_source
 
