@@ -1,4 +1,6 @@
 # USC-scraping
+[![Build Status](https://travis-ci.org/jyn514/GradeForge.svg?branch=dev)](https://travis-ci.org/jyn514/GradeForge)
+
 [my.sc.edu](https://ssb.onecarolina.sc.edu/BANP/bwskfcls.P_GetCrse) has an
 absolutely terrible web interface. This is a repository to download courses for
 viewing offline. Support is available for an SQL database. Work on a web
