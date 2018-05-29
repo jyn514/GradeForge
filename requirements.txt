@@ -2,3 +2,4 @@ lxml
 requests
 flask
 selenium
+xlsx2csv

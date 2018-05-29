@@ -49,6 +49,9 @@ $(OLD_GRADES) $(NEW_GRADES): | gradeforge/download.py grades
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades > $@
 
+$(subst .xlsx,.csv,$(NEW_GRADES)): $(subst .csv,.xlsx,$$@)
+	xlsx2csv $^ > $@
+
 .courses.data: gradeforge/parse.py webpages/catalog.html
 	$(GRADEFORGE) parse catalog $(lastword $^) > $@
 
