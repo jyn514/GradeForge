@@ -33,7 +33,7 @@ webpages/%.html: | webpages
 	$(GRADEFORGE) download $* > $@
 	$(call clean,$@)
 
-exams/%.html: | gradeforge/download.py exams
+exams/%.html: | exams
 	$(GRADEFORGE) download \
 	  --season `echo $* | cut -d- -f1` \
 	  --year   `echo $* | cut -d- -f2`\
