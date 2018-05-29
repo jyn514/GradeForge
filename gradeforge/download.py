@@ -65,19 +65,28 @@ def get_bookstore(semester, department, number, section):
     return post(base_url, data=data).text
 '''
 
+
+def make_driver():
+    from selenium.webdriver import Chrome
+    from selenium.webdriver.chrome.options import Options
+    # https://stackoverflow.com/a/49582462
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    driver = Chrome(chrome_options=options)
+    driver.implicitly_wait(10)  # timeout for page to be deobfuscated
+    return driver
+
+
 def get_bookstore(semester, department, number, section, driver=None):
     '''Example: https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=ACCT&p_crse_numb_in=222&p_seq_in=001'''
     from time import sleep
 
     if driver is None:
-        from selenium.webdriver import Chrome
-        from selenium.webdriver.chrome.options import Options
-        # https://stackoverflow.com/a/49582462
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        driver = Chrome(chrome_options=options)
-        driver.implicitly_wait(10)  # timeout for page to be deobfuscated
+        driver = make_driver()
+    '''The bookstore page is a hot mess of obfuscated javascript.
+    We use selenium to deobfuscate the javascript, then parse the resulting HTML
+    TODO: POST directly to relevant page'''
 
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
     link = "%s?p_term_in=%s&p_subj_in=%s&p_crse_numb_in=%s&p_seq_in=%s" % (base_url, semester, department, number, section)
