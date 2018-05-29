@@ -79,6 +79,8 @@ bookstore.add_argument('section')
 catalog = info.add_parser('catalog', description='courses offered')
 exam = info.add_parser('exam', description='final exam times')
 grades = info.add_parser('grades', description='grade spreads for past semester')
+grades.add_argument('campus', nargs='?', default=None, type=str.lower,
+                    choices=('columbia', 'aiken', 'upstate'))
 
 args = parser.parse_args()
 if 'verbose' in args.__dict__:
@@ -119,4 +121,4 @@ else:  # download
     elif args.info == 'bookstore':
         print(get(parse_semester(args.season, year=args.year), args.department, args.number, args.section))
     else:
-        stdout.buffer.write(get(args.year, args.season))
+        stdout.buffer.write(get(args.year, args.season, args.campus))
