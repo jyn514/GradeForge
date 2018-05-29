@@ -29,14 +29,14 @@ classes.sql: gradeforge/sql.py $(DATA)
 catalog sections: webpages/$$@.html
 
 .DELETE_ON_ERROR:
-webpages/%.html: | gradeforge/download.py webpages
-	$(GRADEFORGE) download $(subst .html,,$(subst webpages/,,$@)) > $@
+webpages/%.html: | webpages
+	$(GRADEFORGE) download $* > $@
 	$(call clean,$@)
 
 exams/%.html: | gradeforge/download.py exams
 	$(GRADEFORGE) download \
-	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
-	  --year `echo $@ | cut -d. -f1 | cut -d- -f2`\
+	  --season `echo $* | cut -d- -f1` \
+	  --year   `echo $* | cut -d- -f2`\
 	  exam > $@
 	$(call clean,$@)
 
