@@ -3,7 +3,6 @@
 '''Network-based querires; GETs and POSTs'''
 
 from datetime import date
-from sys import stderr
 
 from requests import get, post
 
@@ -16,7 +15,7 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
     # TODO: term is a nightmare, replace it with [first_half, second_half, all]
-    semester = utils.parse_semester(semester)
+    semester = parse_semester(semester)
     if department == '%':  # all sections
         department = allowed['department']
 
@@ -52,18 +51,6 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
             "TERM_IN": ('dummy', semester)}
 
     return post(coursesite, data=data).text
-
-'''This doesn't work because of the malicious javascript.
-def get_bookstore(semester, department, number, section):
-    '(str, str, int, str) -> str (HTML)
-    Return content of bookstore page corresponding to class
-    Note that this cannot be a link in utils because it requires a POST'
-    base_url = 'https://secure.bncollege.com/webapp/wcs/stores/servlet/TBListView'
-    data = {'storeId': '10052',
-            'courseXml': "<textbookorder><courses><course dept='%s' num='%s' sect='%s' term='%s' /></courses></textbookorder>"
-                         % (department, number, section, utils.b_and_n_semester(semester))}
-    return post(base_url, data=data).text
-'''
 
 
 def make_driver():
@@ -106,6 +93,7 @@ def get_bookstore(semester, department, number, section, driver=None):
 
 
 def get_catalog(department='%', semester=201808):
+    '''Return catalog courses from the given semester'''
     if department == '%':
         department = allowed['department']
     else:
@@ -150,7 +138,8 @@ def get_grades(year, season, campus=None):
             raise ValueError("Can't download grades from the future")
         elif int(semester[-1]) + 5 >= date.today().month:
             raise ValueError(too_soon)
-    elif year == date.today().year - 1 and semester[-1] == '8' and date.today().month < 2:  # TODO: check when this actually is
+    # TODO: check when this actually is
+    elif year == date.today().year - 1 and semester[-1] == '8' and date.today().month < 2:
         raise ValueError(too_soon)
 
     if year >= 2014 or (year == 2013 and season == 'Fall'):

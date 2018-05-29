@@ -94,18 +94,16 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
                                  for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
-    if DEBUG:
-        print(command, filters)
     stdout = DATABASE.execute(command).fetchall()
     DATABASE.close()
     return stdout
 
 
-def query(query, database='classes.sql'):
+def query(sql_query, database='classes.sql'):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
     return '\n'.join('|'.join(str(s) for s in t)
-                     for t in sqlite3.connect(database).execute(query).fetchall())
+                     for t in sqlite3.connect(database).execute(sql_query).fetchall())
 
 
-def dump(database='classes.sql'):
+def dump():
     print('\n'.join(query("SELECT * FROM " + table) for table in TABLES))

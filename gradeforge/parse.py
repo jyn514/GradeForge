@@ -4,15 +4,12 @@
 
 from __future__ import print_function, generators
 from os.path import exists
-from sys import stderr, stdin, stdout
 from tempfile import mkstemp  # used for downloading seats remaining
 import re  # used for only very basic stuff
-from datetime import date
 
 from lxml import etree
 
 from gradeforge.utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
-from gradeforge.download import get_bookstore, get
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
@@ -268,8 +265,8 @@ def parse_exam(file_handle):
             # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
             # school likes to put some as spans, some not
             time_met, exam_datetime = map(lambda td: ''.join(td.itertext())
-                                                     .strip()
-                                                     .replace('\xa0', ' '),
+                                          .strip()
+                                          .replace('\xa0', ' '),
                                           row.findall('td'))
             if exam_datetime == 'TBA':  # this is frustrating
                 all_exams[days_met] = 'TBA'
@@ -299,23 +296,6 @@ def parse_exam(file_handle):
                     times[army_time(time)] = exam_date, exam_time
         all_exams[days_met] = times
     return all_exams
-
-
-def parse_all_exams():
-    '''Repeat parse_exam for each semester between Summer 2016 and the present'''
-    result = {}
-    for year in range(16, date.today().year + 1 - 2000):
-        for semester in ('Spring', 'Summer', 'Fall'):
-            name = semester + '-' + '20' + str(year)
-            if name == 'Spring-2016':
-                continue  # Removed from site, gives 404
-            with open('exams/' + name + '.html') as stdin:
-                try:
-                    result[parse_semester(*name.split('-'))] = parse_exam(stdin)
-                except:
-                    print(name, file=stderr)
-                    raise
-    return result
 
 
 def get_seats(section_link):

@@ -2,6 +2,8 @@
 have a web interface because it is meant only for personal use. See the section
 'Non-Goals' of the README for more info.'''
 
+from requests import post
+
 def login(username, password):
     '''(str, str) -> requests.RequestsCookieJar
     Note that username and password should NOT be url-encoded'''

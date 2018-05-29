@@ -5,8 +5,8 @@ from __future__ import print_function
 
 from datetime import date
 from argparse import HelpFormatter
-from inspect import getargspec
 import pickle  # PICKLE IS NOT AN API
+import sys
 import re
 
 # first semester is not a typo, this is how it is really accepted on the USC side
@@ -15,26 +15,26 @@ allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "20150
                         "201708", "201801", "201805", "201808"),
            'campus': ('AIK', 'BFT', 'COL', 'LAN', 'SAL', 'SMT', "UNI", "UPS"),
            'department': ("ACCT", "AERO", "AFAM", "ANES", "ANTH", "ARAB", "ARMY",
-                       "ARTE", "ARTH", "ARTS", "ASLG", "ASTR", "ATEP", "BADM",
-                       "BIOL", "BIOS", "BMEN", "BMSC", "CHEM", "CHIN", "CLAS",
-                       "COLA", "COMD", "CPLT", "CRJU", "CSCE", "DANC", "DMED",
-                       "DMSB", "ECHE", "ECIV", "ECON", "EDCE", "EDCS", "EDEC",
-                       "EDEL", "EDET", "EDEX", "EDFI", "EDHE", "EDLP", "EDML",
-                       "EDPY", "EDRD", "EDRM", "EDSE", "EDTE", "ELCT", "EMCH",
-                       "EMED", "ENCP", "ENFS", "ENGL", "ENHS", "ENVR", "EPID",
-                       "EXSC", "FAMS", "FINA", "FORL", "FPMD", "FREN", "GENE",
-                       "GEOG", "GEOL", "GERM", "GLST", "GMED", "GRAD", "GREK",
-                       "HGEN", "HIST", "HPEB", "HRSM", "HRTM", "HSPM", "IBUS",
-                       "IDST", "INTL", "ITAL", "ITEC", "JAPA", "JOUR", "LASP",
-                       "LATN", "LAWS", "LIBR", "LING", "MART", "MATH", "MBAD",
-                       "MBIM", "MCBA", "MEDI", "MGMT", "MGSC", "MKTG", "MSCI",
-                       "MUED", "MUSC", "MUSM", "NAVY", "NEUR", "NPSY", "NURS",
-                       "OBGY", "OPTH", "ORSU", "PALM", "PAMB", "PATH", "PEDI",
-                       "PEDU", "PHAR", "PHIL", "PHMY", "PHPH", "PHYS", "PHYT",
-                       "PMDR", "POLI", "PORT", "PSYC", "PUBH", "RADI", "RCON",
-                       "RELG", "RETL", "RHAB", "RUSS", "SAEL", "SCCP", "SCHC",
-                       "SLIS", "SMED", "SOCY", "SOST", "SOWK", "SPAN", "SPCH",
-                       "SPTE", "STAT", "SURG", "THEA", "UNIV", "WGST"),
+                          "ARTE", "ARTH", "ARTS", "ASLG", "ASTR", "ATEP", "BADM",
+                          "BIOL", "BIOS", "BMEN", "BMSC", "CHEM", "CHIN", "CLAS",
+                          "COLA", "COMD", "CPLT", "CRJU", "CSCE", "DANC", "DMED",
+                          "DMSB", "ECHE", "ECIV", "ECON", "EDCE", "EDCS", "EDEC",
+                          "EDEL", "EDET", "EDEX", "EDFI", "EDHE", "EDLP", "EDML",
+                          "EDPY", "EDRD", "EDRM", "EDSE", "EDTE", "ELCT", "EMCH",
+                          "EMED", "ENCP", "ENFS", "ENGL", "ENHS", "ENVR", "EPID",
+                          "EXSC", "FAMS", "FINA", "FORL", "FPMD", "FREN", "GENE",
+                          "GEOG", "GEOL", "GERM", "GLST", "GMED", "GRAD", "GREK",
+                          "HGEN", "HIST", "HPEB", "HRSM", "HRTM", "HSPM", "IBUS",
+                          "IDST", "INTL", "ITAL", "ITEC", "JAPA", "JOUR", "LASP",
+                          "LATN", "LAWS", "LIBR", "LING", "MART", "MATH", "MBAD",
+                          "MBIM", "MCBA", "MEDI", "MGMT", "MGSC", "MKTG", "MSCI",
+                          "MUED", "MUSC", "MUSM", "NAVY", "NEUR", "NPSY", "NURS",
+                          "OBGY", "OPTH", "ORSU", "PALM", "PAMB", "PATH", "PEDI",
+                          "PEDU", "PHAR", "PHIL", "PHMY", "PHPH", "PHYS", "PHYT",
+                          "PMDR", "POLI", "PORT", "PSYC", "PUBH", "RADI", "RCON",
+                          "RELG", "RETL", "RHAB", "RUSS", "SAEL", "SCCP", "SCHC",
+                          "SLIS", "SMED", "SOCY", "SOST", "SOWK", "SPAN", "SPCH",
+                          "SPTE", "STAT", "SURG", "THEA", "UNIV", "WGST"),
            'number': ('',) + tuple(range(1, 1000)),
            'level': ('%', 'GR', 'LW', 'MD', 'UG'),
            'term': ("1A", "1B", "10", "2A", "2B", "20", "3A", "3B", "30", "4A", "4B",
@@ -84,11 +84,8 @@ class ReturnSame(object):
         return self.value
 
     def __str__(self):
-        try:
-            return "gradeforge.ReturnSame(%s)" % str(self.value)  # str is necessary in case value is a tuple
-        except:
-            print(self.value)
-            raise
+        # str is necessary in case value is a tuple
+        return "gradeforge.ReturnSame(%s)" % str(self.value)
 
     def __repr__(self):
         return self.__str__()
@@ -120,10 +117,12 @@ def get_season(semester='201808'):
 
 
 def get_season_today():
+    month = date.today().month
+    if month < 5:
+        return 'Spring'
+    if month < 8:
+        return 'Summer'
     return 'Fall'
-    # TODO
-    #m = date.today().month
-    #return 'spring' if m <
 
 
 def parse_semester(season, year=date.today().year):
@@ -150,22 +149,17 @@ def parse_semester(season, year=date.today().year):
     raise ValueError(season)
 
 
-def load(stdin):
+def load(stdin=sys.stdin.buffer):
     '''Opposite of save. Given a file or file path, return the contents of the file.
     Must be either a pickled file or a valid python script.'''
     if not hasattr(stdin, 'read'):
-        with open(stdin, 'rb') as stdin:
-            return load(stdin)
+        with open(stdin, 'rb') as f:
+            return load(f)
     try:
         return pickle.load(stdin)
     except pickle.UnpicklingError:  # was saved as text
-        import gradeforge
+        import gradeforge  # for gradeforge.ReturnSame
         return eval(stdin.read())
-
-
-def load_stdin():
-    'Return the contents of stdin, assuming that stdin is a pickled file'
-    return load(sys.stdin.buffer)
 
 
 def save(obj, output, binary=True):
@@ -223,7 +217,7 @@ def catalog_link(semester, department, code):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
-    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % (semester, department, code)
+    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % (base_url, semester, department, code)
 
 
 def bulletin_link():

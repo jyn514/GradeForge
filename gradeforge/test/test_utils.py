@@ -1,3 +1,5 @@
+'''Unit tests for gradeforge.utils'''
+
 from datetime import date
 
 import pytest
@@ -5,6 +7,7 @@ import pytest
 from gradeforge.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
 
 def test_constants():
+    '''TODO: test `allowed`'''
     assert len(DAYS) == 7
     assert len(set(DAYS)) == 7
 

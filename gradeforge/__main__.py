@@ -7,7 +7,7 @@ from datetime import date
 from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
-from gradeforge.utils import SingleMetavarFormatter, arg_filter, allowed, get_season_today, parse_semester, load
+from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester, load
 
 verbosity_parser = ArgumentParser(add_help=False)
 verbosity_parser.add_argument('--verbose', '--debug', '-v', action='count', default=0)
@@ -29,7 +29,7 @@ web.add_argument('--port', '-p', type=int, default=5000)
 parse = subparsers.add_parser('parse', description='parse downloaded files',
                               parents=[verbosity_parser])
 parse.add_argument('info', help='type of info to parse',
-             choices=('sections', 'catalog', 'exam', 'bookstore', 'grades'))
+                   choices=('sections', 'catalog', 'exam', 'bookstore', 'grades'))
 parse.add_argument('file', help='file to parse')
 
 # begin sql parser
@@ -43,15 +43,16 @@ query.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='
                    help='query to run. must be valid SQLite3 syntax, but ending semicolon is optional.')
 
 create = command.add_parser('create', help='create a new database')
+# TODO: implement this
 create.add_argument('--source', default=None, nargs='+',
                     help='one or more files containing data. must be valid python using built-in datastructures. '
-                         + 'must contain the variables DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, and SECTIONS.')
+                    + 'must contain the variables DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, and SECTIONS.')
 
 dump = command.add_parser('dump', help='show everything in a database')
 
 # begin download parser
 download = subparsers.add_parser('download', description='download files from sc.edu',
-                             parents=[verbosity_parser])
+                                 parents=[verbosity_parser])
 download.required = True
 
 download.add_argument('--season', '-s', type=str.lower,
@@ -96,7 +97,8 @@ elif args.subparser == 'sql':
         # TODO: do this in a sane way
         DEPARTMENTS, CLASSES = load('.courses.data')
         INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
-        quit(create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, SECTIONS, database=args.database))
+        quit(create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS,
+                        SEMESTERS, SECTIONS, database=args.database))
     if not path.exists(args.database):
         raise ValueError("database '%s' does not exist or is invalid" % args.database)
     if args.command == 'query':
@@ -115,10 +117,12 @@ else:  # download
     if args.info == 'exam':
         print(get(args.year, args.season))
     elif args.info == 'sections':
-        print(get(semester=parse_semester(args.season, year=args.year), campus=args.campus, term=args.term))
+        print(get(semester=parse_semester(args.season, year=args.year),
+                  campus=args.campus, term=args.term))
     elif args.info == 'catalog':
         print(get(parse_semester(args.season, year=args.year)))
     elif args.info == 'bookstore':
-        print(get(parse_semester(args.season, year=args.year), args.department, args.number, args.section))
+        print(get(parse_semester(args.season, year=args.year),
+                  args.department, args.number, args.section))
     else:
         stdout.buffer.write(get(args.year, args.season, args.campus))

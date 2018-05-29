@@ -25,10 +25,10 @@ def sections():
     params = (flask.request.args if flask.request.method == 'GET' else flask.request.form)
     response = flask.make_response(query(**params))  # TODO
     # don't cache anything: https://stackoverflow.com/a/2068407
-    flask.response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    flask.flask.response.headers['Pragma'] = 'no-cache'
-    flask.response.headers['Expires'] = '0'
-    return flask.response
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 
 @app.route('/favicon.png', methods=['GET'])
