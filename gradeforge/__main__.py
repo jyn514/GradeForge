@@ -58,7 +58,7 @@ download.add_argument('--season', '-s', type=str.lower,
                       default=get_season_today(),
                       choices=('fall', 'summer', 'spring'))
 download.add_argument('--year', '-y', type=int, default=date.today().year,
-                      choices=range(2013, date.today().year + 1))
+                      choices=range(2008, date.today().year + 1))
 
 info = download.add_subparsers(dest='info')
 info.required = True
