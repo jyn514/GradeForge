@@ -390,3 +390,11 @@ def get_books(semester, department, number, section):
         save(get_bookstore_selenium(semester, department, number, section), html, binary=False)
 
     return parse_bookstore(html)
+
+
+def parse_grades(file_handle):
+    lines = tuple(re.split(' +', line.strip())
+                  for line in file_handle.readlines()
+                  if line.strip() != '')
+    useful_lines = tuple(lines[1]) + tuple(filter(lambda l: len(l) == len(lines[-1]), lines))
+    return '\n'.join(','.join(row) for row in useful_lines)

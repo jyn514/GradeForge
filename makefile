@@ -43,14 +43,26 @@ exams/%.html: | gradeforge/download.py exams
 exams/%.py: exams/%.html
 	$(GRADEFORGE) parse exam $^ > $@
 
-$(OLD_GRADES) $(NEW_GRADES): | gradeforge/download.py grades
+$(NEW_GRADES): | grades
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades > $@
 
-$(subst .xlsx,.csv,$(NEW_GRADES)): $(subst .csv,.xlsx,$$@)
+$(OLD_GRADES): | grades
+	$(GRADEFORGE) download \
+	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
+	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
+	  grades `echo $@ | cut -d. -f1 | cut -d- -f3` > $@
+
+$(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
 	xlsx2csv $^ > $@
+
+$(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
+	pdftotext -layout $^
+
+$(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
+	$(GRADEFORGE) parse grades $^ > $@
 
 .courses.data: gradeforge/parse.py webpages/catalog.html
 	$(GRADEFORGE) parse catalog $(lastword $^) > $@

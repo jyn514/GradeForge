@@ -14,6 +14,7 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 	- the `python-dev` library
 	- `libxml2-dev`
 	- `libxslt-dev`
+- `pdftotext` (usually found in `poppler-utils`)
 - `chromedriver`
 
 ## Goals

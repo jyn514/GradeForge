@@ -29,7 +29,7 @@ web.add_argument('--port', '-p', type=int, default=5000)
 parse = subparsers.add_parser('parse', description='parse downloaded files',
                               parents=[verbosity_parser])
 parse.add_argument('info', help='type of info to parse',
-             choices=('sections', 'catalog', 'exam', 'bookstore'))
+             choices=('sections', 'catalog', 'exam', 'bookstore', 'grades'))
 parse.add_argument('file', help='file to parse')
 
 # begin sql parser
