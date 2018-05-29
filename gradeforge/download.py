@@ -139,10 +139,10 @@ def get_grades(year, season, campus=None):
 
     if year >= 2014 or (year == 2013 and season == 'Fall'):
         ext = 'xlsx'
-    elif campus is None:
+    elif campus == 'none':
         raise ValueError("grade spreads prior to fall 2013 are seperated by campus")
-    elif campus not in ('fall', 'spring'):
-        raise ValueError("No data for summer prior to 2014 (given %s)" % campus)
+    elif season not in ('fall', 'spring'):
+        raise ValueError("No data for summer prior to 2014 (given '%s')" % season)
     elif year < 2008:
         raise ValueError("No data for year " + year)
     else:
