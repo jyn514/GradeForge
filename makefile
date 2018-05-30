@@ -100,11 +100,7 @@ webpages exams grades books:
 
 # lxml has trouble with too much whitespace
 define clean =
-	if grep '404 page not found' $1; then \
-		echo file "'$1'" gave a 404 not found; \
-		rm $1; \
-		exit 999; \
-	fi
+	grep '404 page not found' $1 > /dev/null && exit 999
 	sed -i 's/\s\+$$//' $1
 endef
 
