@@ -8,6 +8,7 @@ from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
 from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester, load
+from gradeforge.parse import parse_exam, parse_sections, parse_bookstore, parse_catalog, parse_grades
 from gradeforge.download import get_exam, get_sections, get_bookstore, get_catalog, get_grades
 from gradeforge.sql import create_sql, dump, query
 from gradeforge.web import app
@@ -107,8 +108,11 @@ elif ARGS.subparser == 'sql':
     elif ARGS.command == 'dump':
         print(dump())
 elif ARGS.subparser == 'parse':
-    # I love the smell of meta-programming in the morning.
-    exec('from gradeforge.parse import parse_' + ARGS.info + ' as parse')
+    parse = (parse_exam if ARGS.info == 'exam' else
+             parse_sections if ARGS.info == 'sections' else
+             parse_catalog  if ARGS.info == 'catalog' else
+             parse_bookstore if ARGS.info == 'bookstore' else
+             parse_grades)
     with open(ARGS.file) as f:
         print(parse(f))
 else:  # download
