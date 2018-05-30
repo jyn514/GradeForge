@@ -8,6 +8,7 @@ from tempfile import mkstemp  # used for downloading seats remaining
 import re  # used for only very basic stuff
 
 from lxml import etree
+from requests import get
 
 from gradeforge.utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
 
