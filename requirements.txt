@@ -3,3 +3,4 @@ requests
 flask
 selenium
 xlsx2csv
+pylint
