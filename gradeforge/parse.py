@@ -3,14 +3,13 @@
 '''HTML parsing. Generally, works only on files, not on strings'''
 
 from __future__ import print_function, generators
-from os.path import exists
 from tempfile import mkstemp  # used for downloading seats remaining
 import re  # used for only very basic stuff
 
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester, ReturnSame, get_season, load, parse_days
+from gradeforge.utils import save, army_time, parse_semester, ReturnSame, load, parse_days
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
