@@ -8,6 +8,9 @@ from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
 from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester, load
+from gradeforge.download import get_exam, get_sections, get_bookstore, get_catalog, get_grades
+from gradeforge.sql import create_sql, dump, query
+from gradeforge.web import app
 
 verbosity_parser = ArgumentParser(add_help=False)
 verbosity_parser.add_argument('--verbose', '--debug', '-v', action='count', default=0)
@@ -102,10 +105,8 @@ elif args.subparser == 'sql':
     if not path.exists(args.database):
         raise ValueError("database '%s' does not exist or is invalid" % args.database)
     if args.command == 'query':
-        from gradeforge.sql import query
         print(query(args.sql_query, database=args.database))
     elif args.command == 'dump':
-        from gradeforge.sql import dump
         print(dump(database=args.database))
 elif args.subparser == 'parse':
     # I love the smell of meta-programming in the morning.
@@ -113,16 +114,15 @@ elif args.subparser == 'parse':
     with open(args.file) as f:
         print(parse(f))
 else:  # download
-    exec('from gradeforge.download import get_' + args.info + ' as get')
     if args.info == 'exam':
-        print(get(args.year, args.season))
+        print(get_exam(args.year, args.season))
     elif args.info == 'sections':
-        print(get(semester=parse_semester(args.season, year=args.year),
+        print(get_sections(semester=parse_semester(args.season, year=args.year),
                   campus=args.campus, term=args.term))
     elif args.info == 'catalog':
-        print(get(parse_semester(args.season, year=args.year)))
+        print(get_catalog(parse_semester(args.season, year=args.year)))
     elif args.info == 'bookstore':
-        print(get(parse_semester(args.season, year=args.year),
-                  args.department, args.number, args.section))
+        print(get_bookstore(parse_semester(args.season, year=args.year),
+                            args.department, args.number, args.section))
     else:
-        stdout.buffer.write(get(args.year, args.season, args.campus))
+        stdout.buffer.write(get_grades(args.year, args.season, args.campus))
