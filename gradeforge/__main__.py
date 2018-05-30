@@ -12,117 +12,115 @@ from gradeforge.download import get_exam, get_sections, get_bookstore, get_catal
 from gradeforge.sql import create_sql, dump, query
 from gradeforge.web import app
 
-verbosity_parser = ArgumentParser(add_help=False)
-verbosity_parser.add_argument('--verbose', '--debug', '-v', action='count', default=0)
+VERBOSITY = ArgumentParser(add_help=False)
+VERBOSITY.add_argument('--verbose', '--debug', '-v', action='count', default=0)
 # couldn't find a good way to do this in argparse; quiet will later be subtracted from verbose
-verbosity_parser.add_argument('--quiet', '-q', action='count', default=0)
+VERBOSITY.add_argument('--quiet', '-q', action='count', default=0)
 
-parser = ArgumentParser(formatter_class=SingleMetavarFormatter, prog='gradeforge',
+PARSER = ArgumentParser(formatter_class=SingleMetavarFormatter, prog='gradeforge',
                         description="backend for the GradeForge app")
 
-subparsers = parser.add_subparsers(dest='subparser', help='commands to run')
+SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
 # this is a bug in argparse: https://stackoverflow.com/a/18283730
-subparsers.required = True
+SUBPARSERS.required = True
 
 # begin web parser
-web = subparsers.add_parser('web', description='run the web server', parents=[verbosity_parser])
-web.add_argument('--port', '-p', type=int, default=5000)
+WEB = SUBPARSERS.add_parser('web', description='run the web server', parents=[VERBOSITY])
+WEB.add_argument('--port', '-p', type=int, default=5000)
 
 # begin `parse` parser
-parse = subparsers.add_parser('parse', description='parse downloaded files',
-                              parents=[verbosity_parser])
-parse.add_argument('info', help='type of info to parse',
+PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files',
+                              parents=[VERBOSITY])
+PARSE.add_argument('info', help='type of info to parse',
                    choices=('sections', 'catalog', 'exam', 'bookstore', 'grades'))
-parse.add_argument('file', help='file to parse')
+PARSE.add_argument('file', help='file to parse')
 
 # begin sql parser
-sql = subparsers.add_parser('sql', description='create, query, and modify the sql database')
-sql.add_argument('--database', '-d', default=path.abspath('classes.sql'))
-command = sql.add_subparsers(dest='command', help='command to execute')
-command.required = True
+SQL = SUBPARSERS.add_parser('sql', description='create, query, and modify the sql database')
+SQL.add_argument('--database', '-d', default=path.abspath('classes.sql'))
+COMMAND = SQL.add_subparsers(dest='command', help='command to execute')
+COMMAND.required = True
 
-query = command.add_parser('query', help='query information from an existing database')
-query.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='?',
+QUERY = COMMAND.add_parser('query', help='query information from an existing database')
+QUERY.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='?',
                    help='query to run. must be valid SQLite3 syntax, but ending semicolon is optional.')
 
-create = command.add_parser('create', help='create a new database')
+CREATE = COMMAND.add_parser('create', help='create a new database')
 # TODO: implement this
-create.add_argument('--source', default=None, nargs='+',
+CREATE.add_argument('--source', nargs='+',
                     help='one or more files containing data. must be valid python using built-in datastructures. '
                     + 'must contain the variables DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, and SECTIONS.')
 
-dump = command.add_parser('dump', help='show everything in a database')
+COMMAND.add_parser('dump', help='show everything in a database')
 
 # begin download parser
-download = subparsers.add_parser('download', description='download files from sc.edu',
-                                 parents=[verbosity_parser])
-download.required = True
+DOWNLOAD = SUBPARSERS.add_parser('download', description='download files from sc.edu',
+                                 parents=[VERBOSITY])
+DOWNLOAD.required = True
 
-download.add_argument('--season', '-s', type=str.lower,
+DOWNLOAD.add_argument('--season', '-s', type=str.lower,
                       default=get_season_today(),
                       choices=('fall', 'summer', 'spring'))
-download.add_argument('--year', '-y', type=int, default=date.today().year,
+DOWNLOAD.add_argument('--year', '-y', type=int, default=date.today().year,
                       choices=range(2008, date.today().year + 1))
 
-info = download.add_subparsers(dest='info')
-info.required = True
+INFO = DOWNLOAD.add_subparsers(dest='info')
+INFO.required = True
 
-sections = info.add_parser('sections', description='course sections offered')
+SECTIONS = INFO.add_parser('sections', description='course sections offered')
 # TODO: make campus nicer
-sections.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
+SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
 # TODO: allowed['term'] is a dumpster fire that needs to be nuked from orbit
-sections.add_argument('--term', '-T', choices=allowed['term'], default='30')
+SECTIONS.add_argument('--term', '-T', choices=allowed['term'], default='30')
 
-bookstore = info.add_parser('bookstore', description='textbooks for a given section')
-bookstore.add_argument('department', choices=allowed['department'],
+BOOKSTORE = INFO.add_parser('bookstore', description='textbooks for a given section')
+BOOKSTORE.add_argument('department', choices=allowed['department'],
                        metavar='DEPARTMENT', type=str.upper)
-bookstore.add_argument('number', choices=range(1000), type=int, metavar='CODE')
+BOOKSTORE.add_argument('number', choices=range(1000), type=int, metavar='CODE')
 
-bookstore.add_argument('section')
+BOOKSTORE.add_argument('section')
 
-catalog = info.add_parser('catalog', description='courses offered')
-exam = info.add_parser('exam', description='final exam times')
-grades = info.add_parser('grades', description='grade spreads for past semester')
-grades.add_argument('campus', nargs='?', default=None, type=str.lower,
+INFO.add_parser('catalog', description='courses offered')
+INFO.add_parser('exam', description='final exam times')
+GRADES = INFO.add_parser('grades', description='grade spreads for past semester')
+GRADES.add_argument('campus', nargs='?', type=str.lower,
                     choices=('columbia', 'aiken', 'upstate'))
 
-args = parser.parse_args()
-if 'verbose' in args.__dict__:
-    args.verbose -= args.quiet - 1  # verbosity defaults to 1
+ARGS = PARSER.parse_args()
+if 'verbose' in ARGS.__dict__:
+    ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
 
-if args.subparser == 'web':
-    from gradeforge.web import app
-    app.config['ENV'] = ('development' if args.verbose else 'production')
-    app.run(debug=args.verbose > 0, port=args.port, use_debugger=args.verbose > 0)
-elif args.subparser == 'sql':
-    if args.command == 'create':
-        from gradeforge.sql import create_sql
+if ARGS.subparser == 'web':
+    app.config['ENV'] = ('development' if ARGS.verbose else 'production')
+    app.run(debug=ARGS.verbose > 0, port=ARGS.port, use_debugger=ARGS.verbose > 0)
+elif ARGS.subparser == 'sql':
+    if ARGS.command == 'create':
         # TODO: do this in a sane way
         DEPARTMENTS, CLASSES = load('.courses.data')
         INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
         quit(create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS,
-                        SEMESTERS, SECTIONS, database=args.database))
-    if not path.exists(args.database):
-        raise ValueError("database '%s' does not exist or is invalid" % args.database)
-    if args.command == 'query':
-        print(query(args.sql_query, database=args.database))
-    elif args.command == 'dump':
-        print(dump(database=args.database))
-elif args.subparser == 'parse':
+                        SEMESTERS, SECTIONS, database=ARGS.database))
+    if not path.exists(ARGS.database):
+        raise ValueError("database '%s' does not exist or is invalid" % ARGS.database)
+    if ARGS.command == 'query':
+        print(query(ARGS.sql_query, database=ARGS.database))
+    elif ARGS.command == 'dump':
+        print(dump())
+elif ARGS.subparser == 'parse':
     # I love the smell of meta-programming in the morning.
-    exec('from gradeforge.parse import parse_' + args.info + ' as parse')
-    with open(args.file) as f:
+    exec('from gradeforge.parse import parse_' + ARGS.info + ' as parse')
+    with open(ARGS.file) as f:
         print(parse(f))
 else:  # download
-    if args.info == 'exam':
-        print(get_exam(args.year, args.season))
-    elif args.info == 'sections':
-        print(get_sections(semester=parse_semester(args.season, year=args.year),
-                  campus=args.campus, term=args.term))
-    elif args.info == 'catalog':
-        print(get_catalog(parse_semester(args.season, year=args.year)))
-    elif args.info == 'bookstore':
-        print(get_bookstore(parse_semester(args.season, year=args.year),
-                            args.department, args.number, args.section))
+    if ARGS.info == 'exam':
+        print(get_exam(ARGS.year, ARGS.season))
+    elif ARGS.info == 'sections':
+        print(get_sections(semester=parse_semester(ARGS.season, year=ARGS.year),
+                           campus=ARGS.campus, term=ARGS.term))
+    elif ARGS.info == 'catalog':
+        print(get_catalog(parse_semester(ARGS.season, year=ARGS.year)))
+    elif ARGS.info == 'bookstore':
+        print(get_bookstore(parse_semester(ARGS.season, year=ARGS.year),
+                            ARGS.department, ARGS.number, ARGS.section))
     else:
-        stdout.buffer.write(get_grades(args.year, args.season, args.campus))
+        stdout.buffer.write(get_grades(ARGS.year, ARGS.season, ARGS.campus))
