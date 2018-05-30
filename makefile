@@ -19,7 +19,7 @@ dump: sql
 .PHONY: test
 test: sql
 	pytest --pyargs gradeforge
-	pylint gradeforge | tee pylint.txt
+	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
 
 classes.sql: gradeforge/sql.py $(DATA)
