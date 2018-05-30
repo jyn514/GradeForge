@@ -64,6 +64,16 @@ $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
 	$(GRADEFORGE) parse grades $^ > $@
 
+# WARNING: since make allows only a single pattern to match, this unconditionally
+# matches all html files in the directory. HOWEVER, the rule will fail for any
+# filename not in the format books/<department>-<code>-<section>.html
+books/%.html: | books
+	$(GRADEFORGE) download bookstore \
+		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
+
+books/%.py: books/%.html
+	$(GRADEFORGE) parse bookstore $^ > $@
+
 .courses.data: gradeforge/parse.py webpages/catalog.html
 	$(GRADEFORGE) parse catalog $(lastword $^) > $@
 
@@ -85,7 +95,7 @@ export command
 	echo "$$command"  # so you can see what's going on :)
 	python -c "$$command" > $@
 
-webpages exams grades:
+webpages exams grades books:
 	mkdir $@
 
 # lxml has trouble with too much whitespace

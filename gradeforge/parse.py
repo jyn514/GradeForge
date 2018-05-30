@@ -363,15 +363,6 @@ def parse_bookstore(file_handle):
     return all_books
 
 
-def get_books(semester, department, number, section):
-    html = 'books/%s-%s-%s-%s-%s.html' % (get_season(semester), semester[:4],
-                                          department, number, section)
-    if not exists(html):  # TODO: move this to makefile
-        save(get_bookstore_selenium(semester, department, number, section), html, binary=False)
-
-    return parse_bookstore(html)
-
-
 def parse_grades(file_handle):
     lines = tuple(re.split(' +', line.strip())
                   for line in file_handle.readlines()
