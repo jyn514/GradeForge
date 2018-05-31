@@ -116,8 +116,7 @@ elif ARGS.subparser == 'parse':
              parse_catalog  if ARGS.info == 'catalog' else
              parse_bookstore if ARGS.info == 'bookstore' else
              parse_grades)
-    with open(ARGS.file) as f:
-        print(parse(f))
+    print(parse(ARGS.file))
 else:  # download
     if ARGS.info == 'exam':
         print(get_exam(ARGS.year, ARGS.season))
