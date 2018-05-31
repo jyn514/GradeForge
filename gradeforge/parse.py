@@ -306,10 +306,9 @@ def parse_exam(file_handle, semester, output=stdout):
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
-    from lxml.etree import iterparse
     tmp = mkstemp()[1]
     save(get(section_link).text, tmp, binary=False)
-    body = iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
+    body = etree.iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
     table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
     elements = list(list(table.iterdescendants('tr'))[1])[-3:]
     return tuple(map(lambda x: x.text, elements))
