@@ -4,6 +4,8 @@
 
 from __future__ import print_function, generators
 from tempfile import mkstemp  # used for downloading seats remaining
+from sys import stdout, stderr
+import csv
 import re  # used for only very basic stuff
 
 from lxml import etree
@@ -238,20 +240,20 @@ def clean_section(course):
     return course
 
 
-def parse_exam(file_handle):
+def parse_exam(file_handle, semester, output=stdout):
     '''Return {days_met: [(time_met, exam_datetime), ...], ...}
     File can be either absolute/relative path or an actual file handle
     Quite fast compared to parse_sections, but it's handling less data.'''
-    all_exams = {}
-    try:
-        doc = etree.parse(file_handle, etree.HTMLParser())
-        # Yeah. I know.
-        div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
-    except AssertionError:  # This was annoying
-        raise ValueError("'%s' is empty or not an HTML file" % file_handle)
+    doc = etree.parse(file_handle, etree.HTMLParser())
+    div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
 
     assert len(div) == 1, str(len(div)) + " should be 1"
     div = div[0]
+
+    csv_headers = 'semester', 'days', 'time_met', 'exam_date', 'exam_time'
+    writer = csv.DictWriter(output, csv_headers)
+    writer.writeheader()
+
     headers = div.xpath('div[@class="accordion-summary"]/h5')
     bodies = div.xpath('div[@class="accordion-details"]/table/tbody')
     for i, header in enumerate(headers):
@@ -259,9 +261,10 @@ def parse_exam(file_handle):
             days_met = parse_days(header.text)
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
-            days_met = None  # TODO
+            days_met = 'any'  # TODO
         times = {}
         for row in bodies[i].findall('tr'):
+            current = {'semester': semester, 'days': days_met}
             # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
             # school likes to put some as spans, some not
             time_met, exam_datetime = map(lambda td: ''.join(td.itertext())
@@ -269,33 +272,36 @@ def parse_exam(file_handle):
                                           .replace('\xa0', ' '),
                                           row.findall('td'))
             if exam_datetime == 'TBA':  # this is frustrating
-                all_exams[days_met] = 'TBA'
-                continue
-            split = exam_datetime.split(', ')
-            regex = r'\s*[–-]\s*'
-            if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
-                exam_date, exam_time = split[0], split[-1]  # commma after Friday
+                exam_date, exam_time = 'TBA', 'TBA'
+            else:
+                split = exam_datetime.split(', ')
+                regex = r'\s*[–-]\s*'
+                if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
+                    exam_date, exam_time = split[0], split[-1]  # commma after Friday
+                    try:
+                        exam_time = re.split(regex, exam_time)[1]
+                    except IndexError:
+                        assert 'class meeting time' in exam_time.lower(), exam_time
+                else:  # Friday, May 4 - 8:30 p.m.
+                    exam_date, exam_time = re.split(r'\s*[–-]\s*', split[1])
+                exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
                 try:
-                    exam_time = re.split(regex, exam_time)[1]
-                except IndexError:
+                    exam_time = army_time(exam_time)
+                except ValueError:  # TODO: DRY
                     assert 'class meeting time' in exam_time.lower(), exam_time
-            else:  # Friday, May 4 - 8:30 p.m.
-                exam_date, exam_time = re.split(r'\s*[–-]\s*', split[1])
-            exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
-            try:
-                exam_time = army_time(exam_time)
-            except ValueError:  # TODO: DRY
-                assert 'class meeting time' in exam_time.lower(), exam_time
             if 'all sections' in time_met.lower():
-                times = ReturnSame(exam_date, exam_time)
+                # TODO: add post-processing
+                current.update({'time_met': 'any'})
+                writer.writerow(current)
             else:
                 split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
-                time_met = split[-1]
+                if days_met == 'any':
+                    print(split, file=stderr)
                 # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
-                for time in re.split(', ?', time_met):
-                    times[army_time(time)] = exam_date, exam_time
-        all_exams[days_met] = times
-    return all_exams
+                for time in re.split(', ?', split[-1]):
+                    copy = current.copy()
+                    copy.update({'time_met': army_time(time), 'exam_date': exam_date, 'exam_time': exam_time})
+                    writer.writerow(copy)
 
 
 def get_seats(section_link):
@@ -320,9 +326,11 @@ def follow_links(sections):
     return sections
 
 
-def parse_bookstore(file_handle):
+def parse_bookstore(file_handle, output=stdout):
     '''
-    Not implemented:
+    Output must be a file_handle, not a file path
+
+    Implemented:
     - name
     - ISBN
     - prices
@@ -340,7 +348,9 @@ def parse_bookstore(file_handle):
     form = doc.xpath('/html/body/header/section/div[@class="courseMaterialsList"]/div/form[@id="courseListForm"]')[0]
     books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
-    all_books = []
+    headers = 'image', 'link', 'title', 'required', 'author', 'edition', 'publisher', 'isbn', 'buy-new'
+    writer = csv.DictWriter(output, headers)
+    writer.writeheader()
     for book in books:
         info = {}
 
@@ -359,8 +369,7 @@ def parse_bookstore(file_handle):
         prices = book.xpath('div[4]/div[@class="selectBookCont"]/div/ul/li[2]/ul/li')
         for p in prices:
             info[p.attrib['title'].lower().strip().replace(' ', '-')] = p.find('span').text.strip()
-        all_books.append(info)
-    return all_books
+        writer.writerow(info)
 
 
 def parse_grades(file_handle):
