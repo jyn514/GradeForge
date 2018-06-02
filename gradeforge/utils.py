@@ -146,7 +146,7 @@ def parse_semester(season, year=date.today().year):
             return year + '41'
         elif season == 'spring':
             return year + '11'
-    raise ValueError(season)
+    raise ValueError("'%s' not a valid USC season for year %s" % (season, year))
 
 
 def load(stdin=sys.stdin.buffer):
