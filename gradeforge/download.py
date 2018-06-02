@@ -9,7 +9,7 @@ from requests import get, post
 from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
 
 def get_sections(department='%', semester='201808', campus='COL', number='', title='',
-                 min_credits=0, max_credits='', level='%', term='30', times='%',
+                 min_credits=0, max_credits='', level='%', term='%', times='%',
                  location='%', start_hour=0, start_minute=0, end_hour=0,
                  end_minute=0, days='dummy'):
     '''str -> str (HTML)

@@ -75,7 +75,7 @@ SECTIONS = INFO.add_parser('sections', description='course sections offered')
 # TODO: make campus nicer
 SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
 # TODO: allowed['term'] is a dumpster fire that needs to be nuked from orbit
-SECTIONS.add_argument('--term', '-T', choices=allowed['term'], default='30')
+SECTIONS.add_argument('--term', '-T', choices=allowed['term'], default='%')
 
 BOOKSTORE = INFO.add_parser('bookstore', description='textbooks for a given section')
 BOOKSTORE.add_argument('department', choices=allowed['department'],
