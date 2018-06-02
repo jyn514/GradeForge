@@ -124,7 +124,7 @@ else:  # download
         print(get_sections(semester=parse_semester(ARGS.season, year=ARGS.year),
                            campus=ARGS.campus, term=ARGS.term))
     elif ARGS.info == 'catalog':
-        print(get_catalog(parse_semester(ARGS.season, year=ARGS.year)))
+        print(get_catalog(semester=parse_semester(ARGS.season, year=ARGS.year)))
     elif ARGS.info == 'bookstore':
         print(get_bookstore(parse_semester(ARGS.season, year=ARGS.year),
                             ARGS.department, ARGS.number, ARGS.section))
