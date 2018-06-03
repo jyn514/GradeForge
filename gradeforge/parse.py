@@ -419,6 +419,11 @@ def parse_bookstore(file_handle, output=stdout):
     - edition
     - required/recommended/optional
     '''
+
+    if not hasattr(output, 'write'):
+        with open(output, 'w') as writable:
+            parse_bookstore(file_handle, writable)
+            return
     doc = etree.parse(file_handle, etree.HTMLParser())
     form = doc.xpath('/html/body/header/section/div[@class="courseMaterialsList"]/div/form[@id="courseListForm"]')[0]
     books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
