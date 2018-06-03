@@ -142,7 +142,7 @@ def get_grades(year, season, campus=None):
     elif year == date.today().year - 1 and semester[-1] == '8' and date.today().month < 2:
         raise ValueError(too_soon)
 
-    if year >= 2014 or (year == 2013 and season == 'Fall'):
+    if year >= 2014 or semester == '201341':  # fall 2013
         ext = 'xlsx'
     elif campus == 'none':
         raise ValueError("grade spreads prior to fall 2013 are seperated by campus")
