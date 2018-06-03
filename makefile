@@ -2,10 +2,11 @@
 
 # NOTE: make does not allow spaces anywhere in filenames
 # this is implicit to the tool itself and there are no workarounds that I am aware of
-EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
-OLD_GRADES := $(addsuffix .pdf,$(addprefix grades/,Fall-2008-Columbia Fall-2008-Aiken Fall-2008-Upstate Fall-2009-Columbia Fall-2009-Aiken Fall-2009-Upstate Fall-2010-Columbia Fall-2010-Aiken Fall-2010-Upstate Fall-2011-Columbia Fall-2011-Aiken Fall-2011-Upstate Fall-2012-Columbia Fall-2012-Aiken Fall-2012-Upstate Spring-2008-Columbia Spring-2008-Aiken Spring-2008-Upstate Spring-2009-Columbia Spring-2009-Aiken Spring-2009-Upstate Spring-2010-Columbia Spring-2010-Aiken Spring-2010-Upstate Spring-2011-Columbia Spring-2011-Aiken Spring-2011-Upstate Spring-2012-Columbia Spring-2012-Aiken Spring-2012-Upstate Spring-2013-Columbia Spring-2013-Aiken Spring-2013-Upstate))
-NEW_GRADES := $(addsuffix .xlsx,$(addprefix grades/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
-MAKEFLAGS += -j4
+
+# input config
+BOOK_DIR = books
+EXAM_DIR = exams
+GRADE_DIR = grades
 
 # output config
 BOOKSTORE_OUTPUT = books.csv
@@ -29,8 +30,31 @@ DATA := $(CATALOG_OUTPUT) $(GRADES_OUTPUT) $(EXAM_OUTPUT) $(SECTION_OUTPUT)
 
 GRADEFORGE = python -m gradeforge
 
+# make config; don't change until you read man (1) make
+# WARNING: changing -j4 to -j will spawn arbitrary processes and probably set your computer thrashing
+MAKEFLAGS += -j4 --warn-undefined-variables
+SHELL = sh
+
+EXAMS := $(addsuffix .csv,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
+
+OLD_GRADES != for season in Fall Spring; do \
+		for campus in Columbia Aiken Upstate; do \
+			for year in `seq 2008 2013`; do \
+				if ! ([ $$year = 2013 ] && [ $$season = Fall ]); then \
+					printf "$(GRADE_DIR)/$$season-$$year-$$campus.pdf "; \
+				fi \
+			done; done; done;
+
+NEW_GRADES := $(addsuffix .xlsx,$(addprefix $(GRADE_DIR)/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
+
+.PHONY: all
+all: sql
+
 .PHONY: sql
 sql: classes.sql
+
+.PHONY: data
+data: $(DATA)
 
 .PHONY: web server website
 web server website: sql
@@ -59,7 +83,7 @@ webpages/%.html: | webpages
 	$(GRADEFORGE) download $* > $@
 	$(call clean,$@)
 
-exams/%.html: | exams
+$(EXAM_DIR)/%.html: | $(EXAM_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $* | cut -d- -f1` \
 	  --year   `echo $* | cut -d- -f2`\
@@ -69,20 +93,20 @@ exams/%.html: | exams
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
 
-$(NEW_GRADES): | grades
+$(NEW_GRADES): | $(GRADE_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades > $@
 
-$(OLD_GRADES): | grades
+$(OLD_GRADES): | $(GRADE_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades `echo $@ | cut -d. -f1 | cut -d- -f3` > $@
 
 $(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
-	xlsx2csv $^ > $@
+	xlsx2csv $^ $@
 
 $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 	pdftotext -layout $^
@@ -90,15 +114,14 @@ $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
 	$(GRADEFORGE) parse grades $^ > $@
 
+$(GRADES_OUTPUT): $(OLD_GRADES) $(NEW_GRADES)
+
 # WARNING: since make allows only a single pattern to match, this unconditionally
 # matches all html files in the directory. HOWEVER, the rule will fail for any
 # filename not in the format books/<department>-<code>-<section>.html
 books/%.html: | books
 	$(GRADEFORGE) download bookstore \
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
-
-books/%.py: books/%.html
-	$(GRADEFORGE) parse bookstore $^ > $@
 
 .SECONDARY: $(DEPARTMENT_OUTPUT)
 $(CATALOG_OUTPUT): webpages/catalog.html
@@ -130,12 +153,11 @@ endef
 
 .PHONY: clean
 clean:
-	$(RM) -r __pycache__
 	$(RM) $(DATA) $(EXAMS) classes.sql *.pyc
 
 .PHONY: clobber
 clobber: clean
-	$(RM) -r webpages exams
+	$(RM) -r webpages $(EXAM_DIR) __pycache__ gradeforge/__pycache__
 
 .PHONY: dist-clean
 # careful with this, it's a good way to lose anything you haven't committed
