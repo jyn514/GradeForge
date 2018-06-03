@@ -1,6 +1,6 @@
 .cache
 .pytest_cache
-*.data
+*.csv
 exams/
 grades/
 secrets.py
