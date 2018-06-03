@@ -41,8 +41,8 @@ IO.add_argument('output', help='main output of parse function', nargs='?')
 # TODO: not implemented
 IO.add_argument('--create', action='store_true',
                 help='create new file. '
-                     + 'if true, fails if file already exists. '
-                     + 'if false, does not print a csv header')
+                + 'if true, fails if file already exists. '
+                + 'if false, does not print a csv header')
 
 INFO = PARSE.add_subparsers(dest='info', help='type of info to parse')
 INFO.required = True

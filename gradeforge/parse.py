@@ -238,7 +238,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]
             if not tmp:  # independent study; this is handled on the frontend
                 for key in ['days', 'location', 'startTime', 'endTime',
-                             'instructor']:
+                            'instructor']:
                     course[key] = None
                 email, semester['startDate'], semester['endDate'] = [None] * 3
             else:
@@ -260,14 +260,15 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 if email != instructor_dict[course['instructor']]:
                     print("WARNING: email '%s' for instructor '%s' already exists and does not match '%s'"
                           % (instructor_dict[course['instructor']], course['instructor'], email),
-                      file=stderr)
+                          file=stderr)
             except KeyError:
                 instructor_dict[course['instructor']] = email
             try:
                 if (tuple(semester_dict[course['semester']].values()) !=
                     tuple(semester.values())):
                     print("WARNING: semester info '%s' already exists for semester '%s' and does not match '%s'"
-                          % (semester_dict[course['semester']], course['semester'], semester))
+                          % (semester_dict[course['semester']], course['semester'], semester),
+                          file=stderr)
             except KeyError:
                 semester_dict[course['semester']] = semester
             sections.writerow(clean_section(course))
@@ -317,7 +318,8 @@ def parse_exam(file_handle, output=stdout):
     '''
     if not hasattr(output, 'write'):
         with open(output, 'w') as writable:
-            return parse_exam(file_handle, writable)
+            parse_exam(file_handle, writable)
+            return
 
     doc = etree.parse(file_handle, etree.HTMLParser())
 
@@ -444,11 +446,13 @@ def parse_grades(file_handle, output='grades.csv'):
     '''File_handle is assumed to contain the output of `pdftotext -layout <pdf>`'''
     if not hasattr(file_handle, 'read'):
         with open(file_handle) as readable:
-            return parse_grades(readable, output)
+            parse_grades(readable, output)
+            return
 
     if not hasattr(output, 'write'):
         with open(output, 'w') as writable:
-            return parse_grades(file_handle, writable)
+            parse_grades(file_handle, writable)
+            return
 
     semester, campus = next(file_handle).strip().split(' GRADESPREAD FOR ')
     semester = parse_semester(*semester.split(' '))

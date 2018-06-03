@@ -79,7 +79,7 @@ def create_sql(catalog='catalog.csv', departments='departments.csv',
         CURSOR = DATABASE.cursor()
 
         CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
-                                    for key, value in TABLES.items()))
+                                     for key, value in TABLES.items()))
 
         csv_insert('class', catalog, CURSOR)
         csv_insert('department', departments, CURSOR)
