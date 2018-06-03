@@ -99,23 +99,6 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
         department.writerow(i)
 
 
-def infer_tables(iterable, classes=True):
-    '''If classes, assume classes. Else, assume sections.'''
-    iterable = tuple(iterable)  # so generators aren't exhausted
-    if classes:
-        departments = dict(set((c['department'], c.pop('department_long'))
-                               for c in iterable))
-        return departments, iterable
-
-    instructors = dict(set((s['instructor_email'], s.pop('instructor'))
-                           for s in iterable))
-    semesters = tuple(set((s['semester'], s.pop('start_date'), s.pop('end_date'),
-                           s.pop('registration_start'),
-                           s.pop('registration_end'))
-                          for s in iterable))
-    return instructors, semesters, iterable
-
-
 def clean_catalog(course):
     '''Make elements of dict predictable'''
     if course['course_link'].startswith('/'):
@@ -305,13 +288,6 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
 def clean_section(course):
     '''Make course elements more predictable'''
-    try:
-        if course['instructor_email'] == '':
-            course['instructor_email'] = None
-    except KeyError:
-        course['instructor_email'] = None
-    if course['instructor'] is not None:
-        course['instructor'] = re.sub(' +', ' ', course['instructor'].replace(' (', ''))
     try:
         if course['syllabus'].startswith('/'):
             course['syllabus'] = BASE_URL + course['syllabus']
