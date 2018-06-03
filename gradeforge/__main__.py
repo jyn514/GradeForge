@@ -7,7 +7,7 @@ from datetime import date
 from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
-from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester, load
+from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester
 from gradeforge.parse import parse_exam, parse_sections, parse_bookstore, parse_catalog, parse_grades
 from gradeforge.download import get_exam, get_sections, get_bookstore, get_catalog, get_grades
 from gradeforge.sql import create_sql, dump, query

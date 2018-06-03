@@ -149,19 +149,6 @@ def parse_semester(season, year=date.today().year):
     raise ValueError("'%s' not a valid USC season for year %s" % (season, year))
 
 
-def load(stdin=sys.stdin.buffer):
-    '''Opposite of save. Given a file or file path, return the contents of the file.
-    Must be either a pickled file or a valid python script.'''
-    if not hasattr(stdin, 'read'):
-        with open(stdin, 'rb') as f:
-            return load(f)
-    try:
-        return pickle.load(stdin)
-    except pickle.UnpicklingError:  # was saved as text
-        import gradeforge  # for gradeforge.ReturnSame
-        return eval(stdin.read())
-
-
 def save(obj, output, binary=True):
     if binary:
         with open(output, 'wb') as i:

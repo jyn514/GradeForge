@@ -11,7 +11,7 @@ import re  # used for only very basic stuff
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester, ReturnSame, load, parse_days
+from gradeforge.utils import save, army_time, parse_semester, ReturnSame, parse_days
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
