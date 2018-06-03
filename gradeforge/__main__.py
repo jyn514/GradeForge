@@ -18,6 +18,7 @@ VERBOSITY.add_argument('--verbose', '--debug', '-v', action='count', default=0)
 # couldn't find a good way to do this in argparse; quiet will later be subtracted from verbose
 VERBOSITY.add_argument('--quiet', '-q', action='count', default=0)
 
+
 PARSER = ArgumentParser(formatter_class=SingleMetavarFormatter, prog='gradeforge',
                         description="backend for the GradeForge app")
 

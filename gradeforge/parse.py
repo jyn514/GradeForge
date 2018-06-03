@@ -90,7 +90,6 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
                 course['all_sections'] = a.attrib['href']
             catalog.writerow(clean_catalog(course))
             del course
-
         HEADER = not HEADER
 
     department = csv.writer(department_output)
@@ -164,6 +163,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     - department is overwritten by last seen, so there's a lot of stuff specific to upstate
     - remove 'Department' from departments
     - fix misc screwiness
+    - term is different from semester, i.e. a course over summer can be three or six weeks
+        TODO: organize start_date/end_date by term, not semester
     '''
 
     if not hasattr(instructor_output, 'write'):

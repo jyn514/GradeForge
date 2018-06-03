@@ -27,6 +27,9 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 
 ### Short-Term
 - parse_bookstore has yet to be implemented either in the makefile or in `parse sections`
+- all the `parse` functions should take a boolean `create`
+	- if true, assert the output file does not exist
+	- if false, don't write headers
 - the submit button for `index.html` is broken
 
 ### Non-Goals

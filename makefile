@@ -1,3 +1,7 @@
+# common tasks: sql/all, data, web, test, dump, clean
+
+# NOTE: make does not allow spaces anywhere in filenames
+# this is implicit to the tool itself and there are no workarounds that I am aware of
 EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
 OLD_GRADES := $(addsuffix .pdf,$(addprefix grades/,Fall-2008-Columbia Fall-2008-Aiken Fall-2008-Upstate Fall-2009-Columbia Fall-2009-Aiken Fall-2009-Upstate Fall-2010-Columbia Fall-2010-Aiken Fall-2010-Upstate Fall-2011-Columbia Fall-2011-Aiken Fall-2011-Upstate Fall-2012-Columbia Fall-2012-Aiken Fall-2012-Upstate Spring-2008-Columbia Spring-2008-Aiken Spring-2008-Upstate Spring-2009-Columbia Spring-2009-Aiken Spring-2009-Upstate Spring-2010-Columbia Spring-2010-Aiken Spring-2010-Upstate Spring-2011-Columbia Spring-2011-Aiken Spring-2011-Upstate Spring-2012-Columbia Spring-2012-Aiken Spring-2012-Upstate Spring-2013-Columbia Spring-2013-Aiken Spring-2013-Upstate))
 NEW_GRADES := $(addsuffix .xlsx,$(addprefix grades/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
@@ -134,5 +138,6 @@ clobber: clean
 	$(RM) -r webpages exams
 
 .PHONY: dist-clean
+# careful with this, it's a good way to lose anything you haven't committed
 dist-clean: clobber
 	git clean -dfx
