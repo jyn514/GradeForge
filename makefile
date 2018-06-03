@@ -1,8 +1,28 @@
 EXAMS := $(addsuffix .py,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
 OLD_GRADES := $(addsuffix .pdf,$(addprefix grades/,Fall-2008-Columbia Fall-2008-Aiken Fall-2008-Upstate Fall-2009-Columbia Fall-2009-Aiken Fall-2009-Upstate Fall-2010-Columbia Fall-2010-Aiken Fall-2010-Upstate Fall-2011-Columbia Fall-2011-Aiken Fall-2011-Upstate Fall-2012-Columbia Fall-2012-Aiken Fall-2012-Upstate Spring-2008-Columbia Spring-2008-Aiken Spring-2008-Upstate Spring-2009-Columbia Spring-2009-Aiken Spring-2009-Upstate Spring-2010-Columbia Spring-2010-Aiken Spring-2010-Upstate Spring-2011-Columbia Spring-2011-Aiken Spring-2011-Upstate Spring-2012-Columbia Spring-2012-Aiken Spring-2012-Upstate Spring-2013-Columbia Spring-2013-Aiken Spring-2013-Upstate))
 NEW_GRADES := $(addsuffix .xlsx,$(addprefix grades/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
-DATA = .courses.data .sections.data .exams.data
 MAKEFLAGS += -j4
+
+# output config
+BOOKSTORE_OUTPUT = books.csv
+
+CATALOG_OUTPUT = catalog.csv
+DEPARTMENT_OUTPUT = departments.csv
+
+GRADES_OUTPUT = grades.csv
+
+EXAM_OUTPUT = exams.csv
+
+INSTRUCTOR_OUTPUT = instructors.csv
+SECTION_OUTPUT = sections.csv
+SEMESTER_OUTPUT = semesters.csv
+
+# NOTE: because instructors, semesters, and departments are marked SECONDARY later,
+# they don't need to be prereqs (because there's no rule for how to make them)
+# BOOKSTORE_OUTPUT is not here because a) getting books for every section would
+# get us IP-banned and b) cut doesn't work with newlines
+DATA := $(CATALOG_OUTPUT) $(GRADES_OUTPUT) $(EXAM_OUTPUT) $(SECTION_OUTPUT)
+
 GRADEFORGE = python -m gradeforge
 
 .PHONY: sql
@@ -42,8 +62,8 @@ exams/%.html: | exams
 	  exam > $@
 	$(call clean,$@)
 
-exams/%.py: exams/%.html
-	$(GRADEFORGE) parse exam $^ > $@
+$(EXAMS): $$(subst .csv,.html, $$@)
+	$(GRADEFORGE) parse exam $^ $@
 
 $(NEW_GRADES): | grades
 	$(GRADEFORGE) download \
@@ -76,28 +96,22 @@ books/%.html: | books
 books/%.py: books/%.html
 	$(GRADEFORGE) parse bookstore $^ > $@
 
-.courses.data: gradeforge/parse.py webpages/catalog.html
-	$(GRADEFORGE) parse catalog $(lastword $^) > $@
+.SECONDARY: $(DEPARTMENT_OUTPUT)
+$(CATALOG_OUTPUT): webpages/catalog.html
+	$(GRADEFORGE) parse catalog --department-output $(DEPARTMENT_OUTPUT) \
+				    $^ $@
 
-.sections.data: gradeforge/parse.py webpages/sections.html .exams.data
-	$(GRADEFORGE) parse sections $(word 2,$^) > $@
+.SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
+$(SECTION_OUTPUT): webpages/sections.html
+	$(GRADEFORGE) parse sections --instructor-output $(INSTRUCTOR_OUTPUT) \
+				     --semester-output $(SEMESTER_OUTPUT) \
+				     $^ $@
+# TODO: make this concurrent
+$(EXAM_OUTPUT): $(EXAMS)
+	head -1 $< > $@  # headers
+	for exam in $^; do tail -n+2 $$exam >> $@; done
 
-# multiline variable: https://stackoverflow.com/a/649462
-define command
-import gradeforge
-result = {}
-for exam in '$(EXAMS)'.split(' '):
-	key = gradeforge.utils.parse_semester(*exam.replace('exams/', '').replace('.py', '').split('-'))
-	with open(exam) as f:
-		result[key] = eval(f.read())
-print(result)
-endef
-export command
-.exams.data: $(EXAMS)
-	echo "$$command"  # so you can see what's going on :)
-	python -c "$$command" > $@
-
-webpages exams grades books:
+webpages $(EXAM_DIR) $(GRADE_DIR) books:
 	mkdir $@
 
 # lxml has trouble with too much whitespace
