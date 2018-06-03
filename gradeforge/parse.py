@@ -304,7 +304,7 @@ def clean_section(course):
     return course
 
 
-def parse_exam(file_handle, semester, output=stdout):
+def parse_exam(file_handle, output=stdout):
     '''Writes a csv to `output`, with headers.
     Quite fast compared to parse_sections, but it's handling less data.
 
@@ -320,11 +320,12 @@ def parse_exam(file_handle, semester, output=stdout):
             return parse_exam(file_handle, writable)
 
     doc = etree.parse(file_handle, etree.HTMLParser())
-    div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
 
-    assert len(div) == 1, str(len(div)) + " should be 1"
-    div = div[0]
+    title = doc.xpath('/html/head/title/text()')[0]
+    semester = title.split(' - ')[0].replace('Final Exam Schedule ', '')
+    semester = parse_semester(*semester.split(' '))
 
+    div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')[0]
     csv_headers = 'semester', 'days', 'time_met', 'exam_date', 'exam_time'
     writer = csv.DictWriter(output, csv_headers)
     writer.writeheader()
