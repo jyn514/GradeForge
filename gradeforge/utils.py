@@ -5,8 +5,6 @@ from __future__ import print_function
 
 from datetime import date
 from argparse import HelpFormatter
-import pickle  # PICKLE IS NOT AN API
-import sys
 import re
 
 # first semester is not a typo, this is how it is really accepted on the USC side
@@ -149,13 +147,9 @@ def parse_semester(season, year=date.today().year):
     raise ValueError("'%s' not a valid USC season for year %s" % (season, year))
 
 
-def save(obj, output, binary=True):
-    if binary:
-        with open(output, 'wb') as i:
-            pickle.dump(obj, i)
-    else:
-        with open(output, 'w') as i:
-            i.write(obj)
+def save(obj, output):
+    with open(output, 'wb') as i:
+        i.write(obj)
 
 
 def army_time(time):

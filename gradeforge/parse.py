@@ -11,12 +11,12 @@ import re  # used for only very basic stuff
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester, ReturnSame, parse_days
+from gradeforge.utils import save, army_time, parse_semester, parse_days
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
 def parse_catalog(file_handle, catalog_output='courses.csv',
-                  department_output='departments.csv', create_output=False):
+                  department_output='departments.csv'):
     '''
     file -> (classes, departments)
         where classes = [c...]
@@ -338,7 +338,6 @@ def parse_exam(file_handle, output=stdout):
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
             days_met = 'any'  # TODO
-        times = {}
         for row in bodies[i].findall('tr'):
             current = {'semester': semester, 'days': days_met}
             # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
@@ -383,22 +382,11 @@ def parse_exam(file_handle, output=stdout):
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
     tmp = mkstemp()[1]
-    save(get(section_link).text, tmp, binary=False)
+    save(get(section_link).text, tmp)
     body = etree.iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
     table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
     elements = list(list(table.iterdescendants('tr'))[1])[-3:]
     return tuple(map(lambda x: x.text, elements))
-
-
-def follow_links(sections):
-    exams = load('.exams.data')
-    for s in sections:
-        # Takes about half an hour. The data goes out of date quickly. Not worth it.
-        #s['capacity'], s['actual'], s['remaining'] = get_seats(s['section_link'])
-        # Still crashing.
-        #s['final_exam'] = exams[s['semester']][s['days']][s['start_time']]
-        pass
-    return sections
 
 
 def parse_bookstore(file_handle, output=stdout):
