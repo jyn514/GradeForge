@@ -15,7 +15,8 @@ from gradeforge.utils import save, army_time, parse_semester, ReturnSame, load, 
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
-def parse_catalog(file_handle):
+def parse_catalog(file_handle, catalog_output='courses.csv',
+                  department_output='departments.csv', create_output=False):
     '''
     file -> (classes, departments)
         where classes = [c...]
@@ -37,10 +38,27 @@ def parse_catalog(file_handle):
         - classification (Freshman, etc.)
         - other
     '''
-    classes = []
+    if not hasattr(catalog_output, 'write'):
+        with open(catalog_output, 'w') as writable:
+            parse_catalog(file_handle, writable, department_output)
+            return
+
+    if not hasattr(department_output, 'write'):
+        with open(department_output, 'w') as writable:
+            parse_catalog(file_handle, catalog_output, writable)
+            return
+
+
+    catalog_headers = 'course_link', 'title', 'department', 'code', 'description', 'credits', 'attributes', 'level', 'type', 'all_sections'
+    catalog = csv.DictWriter(catalog_output, catalog_headers)
+    catalog.writeheader()
+
+    departments = {}
+
     doc = etree.parse(file_handle, parser=etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"]/tr')
     HEADER = True
+
     for row in rows:
         if HEADER:
             anchor = row.find('td').find('a')
@@ -59,16 +77,26 @@ def parse_catalog(file_handle):
                 course['attributes'] = tmp[-1]
                 tmp = tmp[:-1]
             # type can be multiple (since there might be anchor in middle)
-            course['level'], course['type'], course['department_long'] = tmp[0], ''.join(tmp[1:-1]), tmp[-1]
+            course['level'], course['type'], department_description = tmp[0], ''.join(tmp[1:-1]), tmp[-1]
+            if course['department'] in departments.keys() and departments[course['department']] != department_description:
+                print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
+                      % (course['department'], department_description, departments[course['department']]),
+                      file=stderr)
+            else:
+                departments[course['department']] = department_description
 
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']
-            classes.append(clean_catalog(course))
+            catalog.writerow(clean_catalog(course))
             del course
 
         HEADER = not HEADER
-    return infer_tables(classes)
+
+    department = csv.writer(department_output)
+    department_output.write('code,description\n')
+    for i in departments.items():
+        department.writerow(i)
 
 
 def infer_tables(iterable, classes=True):
@@ -109,8 +137,9 @@ def clean_catalog(course):
     return course
 
 
-def parse_sections(file_handle):
-    '''file_handle -> tuple(c, ...)
+def parse_sections(file_handle, instructor_output='instructors.csv',
+                   semester_output='semesters.csv', section_output='sections.csv'):
+    '''file_handle -> None
             where c is dictionary with keys (section_link, UID, section, department,
             code, registration_start, registration_end, semester, attributes,
             campus, type, method, catalog_link, bookstore_link, syllabus,
@@ -153,7 +182,35 @@ def parse_sections(file_handle):
     - remove 'Department' from departments
     - fix misc screwiness
     '''
-    sections = []
+
+    if not hasattr(instructor_output, 'write'):
+        with open(instructor_output, 'w') as writable:
+            parse_sections(file_handle, writable, semester_output, section_output)
+            return
+
+    if not hasattr(semester_output, 'write'):
+        with open(semester_output, 'w') as writable:
+            parse_sections(file_handle, instructor_output, writable, section_output)
+            return
+
+    if not hasattr(section_output, 'write'):
+        with open(section_output, 'w') as writable:
+            parse_sections(file_handle, instructor_output, semester_output, writable)
+            return
+
+    headers = ('section_link', 'department', 'code', 'section', 'UID', 'semester', 'campus',
+               'type', 'method', 'catalog_link', 'bookstore_link', 'days',
+               'location', 'startTime', 'endTime', 'instructor', 'syllabus', 'attributes')
+    sections = csv.DictWriter(section_output, headers)
+    sections.writeheader()
+
+    # these allow constant-time lookups to see if a key is already present,
+    # as opposed to sets, which require linear search
+    # the reason for lookups is because the parsing is still imperfect;
+    # this allows warning when a key already exists in the dict
+    semester_dict = {}
+    instructor_dict = {}
+
     doc = etree.parse(file_handle, etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
     assert len(rows) % 2 == 0  # even
@@ -172,10 +229,11 @@ def parse_sections(file_handle):
             after = main.xpath('span/following-sibling::text()')
             after = tuple(map(lambda x: x.strip(), filter(lambda x: x != '\n', after)))
 
-            semester, registration = after[:2]  # third is level, which we know
-            course['registration_start'], course['registration_end'] = registration.split(' to ')
+            semester = {}
+            semester_raw, registration = after[:2]  # third is level, which we know
+            semester['registration_start'], semester['registration_end'] = registration.split(' to ')
 
-            course['semester'] = parse_semester(*semester.split(' '))
+            semester['semester'] = parse_semester(*semester_raw.split(' '))
             if len(after) == 8:
                 course['attributes'] = after[3]
             campus, schedule_type, method = after[-4:-1]  # last is credits
@@ -196,24 +254,53 @@ def parse_sections(file_handle):
                 tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]
             if not tmp:  # independent study
                 for key in ['days', 'location', 'start_time', 'end_time',
-                            'start_date', 'end_date', 'instructor', 'instructor_email']:
-                    course[key] = None  # this is handled on the frontend
+                            'instructor']
+                    semester[key] = None
+                email, semester['startDate'], semester['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = tmp
+                course['instructor'] = re.sub(' +', ' ', course['instructor'].strip().replace(' (', ''))
                 if times == 'TBA':
                     course['start_time'], course['end_time'] = 'TBA', 'TBA'
                 else:
                     course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
                 course['start_date'], course['end_date'] = dates.split(' - ')
                 tmp = main.xpath('table/tr[2]/td/a/@href')
-                if len(tmp) == 1:
+                try:
                     # str is necessary, otherwise returns _ElementUnicodeResult
-                    course['instructor_email'] = str(tmp[0])
-            sections.append(clean_section(course))
-            # error instead of silently addding wrong info when rows are out of order
+                    email = str(tmp[0])
+                except IndexError:
+                    email = None
+            # TODO: if course['instructor'] or semester['semester'] already exists, throw an error
+            try:
+                if email != instructor_dict[course['instructor']]:
+                    print("WARNING: email '%s' for instructor '%s' already exists and does not match '%s'"
+                          % (instructor_dict[course['instructor']], course['instructor'], email),
+                      file=stderr)
+            except KeyError:
+                instructor_dict[course['instructor']] = email
+            try:
+                if (tuple(semester_dict[course['semester']].values()) !=
+                    tuple(semester.values())):
+                    print("WARNING: semester info '%s' already exists for semester '%s' and does not match '%s'"
+                          % (semester_dict[course['semester']], course['semester'], semester))
+            except KeyError:
+                semester_dict[course['semester']] = semester
+            sections.writerow(clean_section(course))
+            # error instead of silently addding wrong info when rows/headers out of order
             del course
         HEADER = not HEADER
-    return infer_tables(follow_links(sections), classes=False)
+
+    instructors = csv.writer(instructor_output)
+    instructor_output.write('name, email\n')
+    instructors.writerows(instructor_dict.items())
+
+    headers = 'id', 'start_date', 'end_date', 'registration_start', 'registration_end'
+    semesters = csv.DictWriter(semester_output, headers)
+    semesters.writeheader()
+    semesters.writerows(dict({'id': key}, **values)
+                        for key, values in semester_dict.items())
+
 
 
 def clean_section(course):
@@ -241,9 +328,20 @@ def clean_section(course):
 
 
 def parse_exam(file_handle, semester, output=stdout):
-    '''Return {days_met: [(time_met, exam_datetime), ...], ...}
-    File can be either absolute/relative path or an actual file handle
-    Quite fast compared to parse_sections, but it's handling less data.'''
+    '''Writes a csv to `output`, with headers.
+    Quite fast compared to parse_sections, but it's handling less data.
+
+    Params:
+        - file_handle: str or implements `read`
+        - semester: the semester to use for every exam in the csv.
+                    default is to infer from file_handle name.
+                    custom is to use USC semester (use utils.parse_semester).
+        - output: same type as file_handle, where to write the csv
+    '''
+    if not hasattr(output, 'write'):
+        with open(output, 'w') as writable:
+            return parse_exam(file_handle, writable)
+
     doc = etree.parse(file_handle, etree.HTMLParser())
     div = doc.xpath('/html/body/section/div/div/section[2]/div/section/div/div/section')
 
@@ -371,9 +469,22 @@ def parse_bookstore(file_handle, output=stdout):
         writer.writerow(info)
 
 
-def parse_grades(file_handle):
-    lines = tuple(re.split(' +', line.strip())
-                  for line in file_handle.readlines()
-                  if line.strip() != '')
-    useful_lines = tuple(lines[1]) + tuple(filter(lambda l: len(l) == len(lines[-1]), lines))
-    return '\n'.join(','.join(row) for row in useful_lines)
+def parse_grades(file_handle, output='grades.csv'):
+    '''File_handle is assumed to contain the output of `pdftotext -layout <pdf>`'''
+    if not hasattr(file_handle, 'read'):
+        with open(file_handle) as readable:
+            return parse_grades(readable, output)
+
+    if not hasattr(output, 'write'):
+        with open(output, 'w') as writable:
+            return parse_grades(file_handle, writable)
+
+    semester, campus = next(file_handle).strip().split(' GRADESPREAD FOR ')
+    semester = parse_semester(*semester.split(' '))
+    # 'COURSE #' has a space in the middle; 'COURSE' is descriptive enough I think
+    headers = next(file_handle).replace(' #', '').split()
+    output.write(','.join(['SEMESTER', 'CAMPUS'] + headers) + '\n')
+    # all of these functions are generators, which require very low memory usage
+    csv.writer(output).writerows(map(lambda s: [semester, campus] + s,
+                                     filter(lambda l: len(l) == len(headers),
+                                            map(str.split, file_handle))))

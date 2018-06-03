@@ -32,9 +32,29 @@ WEB.add_argument('--port', '-p', type=int, default=5000)
 # begin `parse` parser
 PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files',
                               parents=[VERBOSITY])
-PARSE.add_argument('info', help='type of info to parse',
-                   choices=('sections', 'catalog', 'exam', 'bookstore', 'grades'))
-PARSE.add_argument('file', help='file to parse')
+
+# parent parser
+IO = ArgumentParser(add_help=False)
+IO.add_argument('input', help='file to parse')
+IO.add_argument('output', help='main output of parse function', nargs='?')
+# TODO: not implemented
+IO.add_argument('--create', action='store_true',
+                help='create new file. '
+                     + 'if true, fails if file already exists. '
+                     + 'if false, does not print a csv header')
+
+INFO = PARSE.add_subparsers(dest='info', help='type of info to parse')
+INFO.required = True
+INFO.add_parser('exam', parents=[IO])
+INFO.add_parser('bookstore', parents=[IO])
+INFO.add_parser('grades', parents=[IO])
+INFO.add_parser('catalog', parents=[IO]).add_argument('--departments', '--department-output',
+                                                      default='departments.csv')
+
+SECTIONS = INFO.add_parser('sections', parents=[IO])
+for opt in ['instructor', 'semester']:
+    SECTIONS.add_argument('--%ss' % opt, '--%s-output' % opt,
+                          default='%ss.csv' % opt)
 
 # begin sql parser
 SQL = SUBPARSERS.add_parser('sql', description='create, query, and modify the sql database')
@@ -99,24 +119,28 @@ if ARGS.subparser == 'web':
     app.run(debug=ARGS.verbose > 0, port=ARGS.port, use_debugger=ARGS.verbose > 0)
 elif ARGS.subparser == 'sql':
     if ARGS.command == 'create':
-        # TODO: do this in a sane way
-        DEPARTMENTS, CLASSES = load('.courses.data')
-        INSTRUCTORS, SEMESTERS, SECTIONS = load('.sections.data')
-        quit(create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS,
-                        SEMESTERS, SECTIONS, database=ARGS.database))
-    if not path.exists(ARGS.database):
+        # TODO: add params for csv files
+        create_sql(database=ARGS.database)
+    elif not path.exists(ARGS.database):
         raise ValueError("database '%s' does not exist or is invalid" % ARGS.database)
     if ARGS.command == 'query':
         print(query(ARGS.sql_query, database=ARGS.database))
     elif ARGS.command == 'dump':
         print(dump())
 elif ARGS.subparser == 'parse':
-    parse = (parse_exam if ARGS.info == 'exam' else
-             parse_sections if ARGS.info == 'sections' else
-             parse_catalog  if ARGS.info == 'catalog' else
-             parse_bookstore if ARGS.info == 'bookstore' else
-             parse_grades)
-    print(parse(ARGS.file))
+    if ARGS.info == 'exam':
+        parse_exam(ARGS.input, ARGS.output or 'exams.csv')
+    elif ARGS.info == 'bookstore':
+        parse_bookstore(ARGS.input, ARGS.output or 'books.csv')
+    elif ARGS.info == 'grades':
+        parse_grades(ARGS.input, ARGS.output or 'grades.csv')
+    elif ARGS.info == 'catalog':
+        parse_catalog(ARGS.input, catalog_output=ARGS.output or 'courses.csv',
+                      department_output=ARGS.departments)
+    else:
+        parse_sections(ARGS.input, instructor_output=ARGS.instructors,
+                       semester_output=ARGS.semesters,
+                       section_output=ARGS.output or 'sections.csv')
 else:  # download
     if ARGS.info == 'exam':
         print(get_exam(ARGS.year, ARGS.season))
