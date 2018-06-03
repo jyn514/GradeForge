@@ -11,6 +11,7 @@ cache:
     directories:
         - webpages
         - exams
+        - grades
 
 script:
     - make test
