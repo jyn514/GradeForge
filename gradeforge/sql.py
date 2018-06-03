@@ -11,6 +11,7 @@ TODO:
 '''
 
 import sqlite3
+import csv
 
 # dictionaries are insertion ordered; see https://stackoverflow.com/q/39980323
 # do not change order without also modifying parse.py
@@ -25,8 +26,8 @@ TABLES = {'class': ["course_link tinytext",
                     "level tinytext",
                     "type tinytext",
                     "all_sections tinytext"],
-          'department': ["abbr char(4)",
-                         "title tinytext"],
+          'department': ["code char(4)",
+                         "description tinytext"],
           'instructor': ["name tinytext",
                          "email tinytext"],
           'semester': ["id char(6)",
@@ -60,29 +61,31 @@ TABLES = {'class': ["course_link tinytext",
                      #"capacity tinyint", "remaining tinyint"
          }
 
-def create_sql(DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, SECTIONS, database='../classes.sql'):
-    DATABASE = sqlite3.connect(database)
-    CURSOR = DATABASE.cursor()
 
-    CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
-                                 for key, value in TABLES.items()))
+def csv_insert(table, file_name, cursor):
+    with open(file_name) as f:
+        reader = csv.reader(f)
+        headers = next(reader)  # TODO: check if this matches table
+        cursor.executemany('INSERT INTO %s (%s) VALUES (%s)'
+                           % (table, ', '.join(headers), ', '.join('?' * len(headers))),
+                           reader)
 
-    CURSOR.executemany('INSERT INTO class VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                       (tuple(c.values()) for c in CLASSES))
 
-    CURSOR.executemany('INSERT INTO department VALUES (?, ?)',
-                       tuple(DEPARTMENTS.items()))
-    CURSOR.executemany('INSERT INTO instructor VALUES (?, ?)',
-                       tuple(INSTRUCTORS.items()))
+def create_sql(catalog='catalog.csv', departments='departments.csv',
+               instructors='instructors.csv', semesters='semesters.csv',
+               sections='sections.csv', database='../classes.sql'):
+    '''TODO: accept parameters for file IO'''
+    with sqlite3.connect(database) as DATABASE:
+        CURSOR = DATABASE.cursor()
 
-    CURSOR.executemany('INSERT INTO semester VALUES (?, ?, ?, ?, ?)', SEMESTERS)
+        CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
+                                    for key, value in TABLES.items()))
 
-    CURSOR.executemany('INSERT INTO section VALUES (%s)' %
-                       ', '.join('?' * len(TABLES['section'])), # didn't feel like typing
-                       # final exam not done yet
-                       (tuple(s.values()) + ('None',) for s in SECTIONS))
-    DATABASE.commit()
-    DATABASE.close()
+        csv_insert('class', catalog, CURSOR)
+        csv_insert('department', departments, CURSOR)
+        csv_insert('instructor', instructors, CURSOR)
+        csv_insert('semester', semesters, CURSOR)
+        csv_insert('section', sections, CURSOR)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):

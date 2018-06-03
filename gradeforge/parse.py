@@ -231,9 +231,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
             semester = {}
             semester_raw, registration = after[:2]  # third is level, which we know
-            semester['registration_start'], semester['registration_end'] = registration.split(' to ')
+            course['semester'] = parse_semester(*semester_raw.split(' '))
+            semester['registrationStart'], semester['registrationEnd'] = registration.split(' to ')
 
-            semester['semester'] = parse_semester(*semester_raw.split(' '))
             if len(after) == 8:
                 course['attributes'] = after[3]
             campus, schedule_type, method = after[-4:-1]  # last is credits
@@ -252,19 +252,19 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             elif len(tmp) > 9:  # multiple instructors
                 # combine instructors into one element
                 tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]
-            if not tmp:  # independent study
-                for key in ['days', 'location', 'start_time', 'end_time',
-                            'instructor']
-                    semester[key] = None
+            if not tmp:  # independent study; this is handled on the frontend
+                for key in ['days', 'location', 'startTime', 'endTime',
+                             'instructor']:
+                    course[key] = None
                 email, semester['startDate'], semester['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = tmp
                 course['instructor'] = re.sub(' +', ' ', course['instructor'].strip().replace(' (', ''))
                 if times == 'TBA':
-                    course['start_time'], course['end_time'] = 'TBA', 'TBA'
+                    course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
-                    course['start_time'], course['end_time'] = map(army_time, times.split(' - '))
-                course['start_date'], course['end_date'] = dates.split(' - ')
+                    course['startTime'], course['endTime'] = map(army_time, times.split(' - '))
+                semester['startDate'], semester['endDate'] = dates.split(' - ')
                 tmp = main.xpath('table/tr[2]/td/a/@href')
                 try:
                     # str is necessary, otherwise returns _ElementUnicodeResult
@@ -295,7 +295,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     instructor_output.write('name, email\n')
     instructors.writerows(instructor_dict.items())
 
-    headers = 'id', 'start_date', 'end_date', 'registration_start', 'registration_end'
+    headers = 'id', 'startDate', 'endDate', 'registrationStart', 'registrationEnd'
     semesters = csv.DictWriter(semester_output, headers)
     semesters.writeheader()
     semesters.writerows(dict({'id': key}, **values)
