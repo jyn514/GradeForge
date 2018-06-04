@@ -454,10 +454,41 @@ def parse_grades(file_handle, output='grades.csv'):
             parse_grades(file_handle, writable)
             return
 
-    semester, campus = next(file_handle).strip().split(' GRADESPREAD FOR ')
-    semester = parse_semester(*semester.split(' '))
-    # 'COURSE #' has a space in the middle; 'COURSE' is descriptive enough I think
-    headers = next(file_handle).replace(' #', '').split()
+    while True:  # sometimes header is not on first line
+        metadata = next(file_handle).strip()
+        metadata = re.sub(' ?GRADE ?(SPREAD FOR|DISTRIBUTION)', '', metadata)
+        match = re.search('(FALL|SUMMER|SPRING)? ?([0-9]{4})', metadata, re.IGNORECASE)
+        if match is not None:
+            season, year = match.groups()
+            break
+    if season is None:
+        print("WARNING: '%s' does not have enough info to parse semester, "
+              % metadata + "assuming season is Spring", file=stderr)
+        season = 'spring'
+    semester = parse_semester(season, year)
+    try:
+        campus = re.search('((THE )?UNIVERSITY OF SOUTH CAROLINA ?([‐-]|at) ?|USC[‐ -])([^:]*)', metadata, flags=re.IGNORECASE)
+        campus = campus.groups()[-1].replace(' CAMPUS', '').upper()
+    except:
+        print(metadata, file=stderr)
+
+    while True:
+        try:
+            headers = next(file_handle)
+        except StopIteration:
+            print(file_handle, file=stderr)
+            raise
+        if re.match(' *DEP(ar)?T', headers, flags=re.IGNORECASE) is not None:
+            headers = headers.upper()
+            headers = re.sub('DEP(AR)?T(\.|MENT)?', 'DEPARTMENT', headers)
+            headers = re.sub('SEC(T(ION)?)?\.?', 'SECTION', headers)
+            headers = re.sub('C(OU)?RSE( ?#)?', 'COURSE', headers)
+            headers = headers.replace('DEPARTMENT/COURSE', 'DEPARTMENT COURSE')
+            headers = headers.replace('AUD', 'AUDIT')
+            headers = headers.replace(' I ', ' INCOMPLETE ').split()
+            break
+    if len(headers) < 18:
+        raise ValueError("Bad value '%s' for headers" % headers)
     output.write(','.join(['SEMESTER', 'CAMPUS'] + headers) + '\n')
     # all of these functions are generators, which require very low memory usage
     csv.writer(output).writerows(map(lambda s: [semester, campus] + s,
