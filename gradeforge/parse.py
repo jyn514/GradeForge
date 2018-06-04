@@ -49,7 +49,8 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
             return
 
 
-    catalog_headers = 'course_link', 'title', 'department', 'code', 'description', 'credits', 'attributes', 'level', 'type', 'all_sections'
+    catalog_headers = ('course_link', 'title', 'department', 'code', 'description',
+                       'credits', 'attributes', 'level', 'type', 'all_sections')
     catalog = csv.DictWriter(catalog_output, catalog_headers)
     catalog.writeheader()
 
@@ -418,7 +419,8 @@ def parse_bookstore(file_handle, output=stdout):
     form = doc.xpath('/html/body/header/section/div[@class="courseMaterialsList"]/div/form[@id="courseListForm"]')[0]
     books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
-    headers = 'image', 'link', 'title', 'required', 'author', 'edition', 'publisher', 'isbn', 'buy-new'
+    # TODO: sometimes prices are missing. need to handle this gracefully
+    headers = 'title', 'required', 'author', 'edition', 'publisher', 'isbn', 'image', 'link', 'buy-new'
     writer = csv.DictWriter(output, headers)
     writer.writeheader()
     for book in books:
@@ -480,9 +482,9 @@ def parse_grades(file_handle, output='grades.csv'):
             raise
         if re.match(' *DEP(ar)?T', headers, flags=re.IGNORECASE) is not None:
             headers = headers.upper()
-            headers = re.sub('DEP(AR)?T(\.|MENT)?', 'DEPARTMENT', headers)
-            headers = re.sub('SEC(T(ION)?)?\.?', 'SECTION', headers)
-            headers = re.sub('C(OU)?RSE( ?#)?', 'COURSE', headers)
+            headers = re.sub(r'DEP(AR)?T(\.|MENT)?', 'DEPARTMENT', headers)
+            headers = re.sub(r'SEC(T(ION)?)?\.?', 'SECTION', headers)
+            headers = re.sub(r'C(OU)?RSE( ?#)?', 'COURSE', headers)
             headers = headers.replace('DEPARTMENT/COURSE', 'DEPARTMENT COURSE')
             headers = headers.replace('AUD', 'AUDIT')
             headers = headers.replace(' I ', ' INCOMPLETE ').split()
