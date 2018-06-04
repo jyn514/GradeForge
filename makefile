@@ -105,16 +105,24 @@ $(OLD_GRADES): | $(GRADE_DIR)
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades `echo $@ | cut -d. -f1 | cut -d- -f3` > $@
 
+sed = s/\([A-DF]+?\)_GF/\1/g; s/COURSE_SECTION/SECTION/; s/_NUMBER//g; \
+      s/No ?Grade/No Grade/; s/Num Grades Posted/TOTAL/; \
+      s/Incomplete/INCOMPLETE/i; s/SUBJECT/DEPARTMENT/
 $(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
 	xlsx2csv $^ $@
+	sed -i '$(sed)' $@
 
 $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 	pdftotext -layout $^
 
 $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
-	$(GRADEFORGE) parse grades $^ > $@
+	$(GRADEFORGE) parse grades $^ $@
 
-$(GRADES_OUTPUT): $(OLD_GRADES) $(NEW_GRADES)
+$(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES))
+	files=$$(echo $(GRADE_DIR)/*.csv); \
+	python -c "from gradeforge.parse import combine_grades; \
+	combine_grades('$@', *'$$(echo $$files)'.split())"
+
 
 # WARNING: since make allows only a single pattern to match, this unconditionally
 # matches all html files in the directory. HOWEVER, the rule will fail for any
