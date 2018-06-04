@@ -13,9 +13,6 @@ TODO:
 import sqlite3
 import csv
 
-# dictionaries are insertion ordered; see https://stackoverflow.com/q/39980323
-# do not change order without also modifying parse.py
-# (this happened because I was lazy in the main portion) - JN
 TABLES = {'class': ["course_link tinytext",
                     "title tinytext",
                     "department char(4)",
