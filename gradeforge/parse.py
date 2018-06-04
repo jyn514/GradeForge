@@ -494,3 +494,15 @@ def parse_grades(file_handle, output='grades.csv'):
     csv.writer(output).writerows(map(lambda s: [semester, campus] + s,
                                      filter(lambda l: len(l) == len(headers),
                                             map(str.split, file_handle))))
+
+def combine_grades(output='grades.csv', *file_handles):
+    '''The headers for CSV files change from file to file.
+    This method normalizes headers and adds empty strings if needed.'''
+    # TODO: what the hell do these mean
+    headers = 'SEMESTER,CAMPUS,DEPARTMENT,COURSE,SECTION,A,B+,B,C+,C,D+,D,F,S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,D+_GF,D_GF,TITLE,B+_GF,No Grade,C+_GF,T,F_GF,IP,B_GF,C_GF,FN,AUDIT,A_GF'.split(',')
+    with open(output, 'w') as w:
+        writer = csv.DictWriter(w, headers)
+        writer.writeheader()
+        for handle in file_handles:
+            with open(handle) as r:
+                writer.writerows(csv.DictReader(r))
