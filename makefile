@@ -56,6 +56,9 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
+.PHONY: all_grades
+all_grades: $(GRADES_OUTPUT)
+
 .PHONY: web server website
 web server website: sql
 	$(GRADEFORGE) web
@@ -70,7 +73,7 @@ test: sql
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
 
-classes.sql: gradeforge/sql.py $(DATA)
+classes.sql: $(DATA)
 	$(RM) $@
 	PYTHONIOENCODING=utf-8 $(GRADEFORGE) sql create
 
