@@ -161,11 +161,11 @@ endef
 
 .PHONY: clean
 clean:
-	$(RM) $(DATA) $(EXAMS) classes.sql *.pyc
+	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) classes.sql *.pyc
 
 .PHONY: clobber
 clobber: clean
-	$(RM) -r webpages $(EXAM_DIR) __pycache__ gradeforge/__pycache__
+	$(RM) -r webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) __pycache__ gradeforge/__pycache__
 
 .PHONY: dist-clean
 # careful with this, it's a good way to lose anything you haven't committed
