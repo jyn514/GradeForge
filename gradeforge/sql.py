@@ -4,7 +4,6 @@
 TODO:
 - have James redo schema
 - add location table (all info is available in course['location'])
-- make insertion NOT dependent on order dictionaries were created
 - make bookstore_link a property of course instead of section
 - compare section attribute to course attribute and remove if same
 - ask brady if we care about registration start
