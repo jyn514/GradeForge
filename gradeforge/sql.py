@@ -87,21 +87,20 @@ def create_sql(catalog='catalog.csv', departments='departments.csv',
 def limited_query(database='classes.sql', table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
     Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
-    DATABASE = sqlite3.connect(database)
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
                                  for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
-    stdout = DATABASE.execute(command).fetchall()
-    DATABASE.close()
-    return stdout
+    with sqlite3.connect(database) as DATABASE:
+        return DATABASE.execute(command).fetchall()
 
 
 def query(sql_query, database='classes.sql'):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
-    return '\n'.join('|'.join(str(s) for s in t)
-                     for t in sqlite3.connect(database).execute(sql_query).fetchall())
+    with sqlite3.connect(database) as DATABASE:
+        return '\n'.join('|'.join(map(str, t))
+                         for t in DATABASE.execute(sql_query).fetchall())
 
 
 def dump():
