@@ -25,9 +25,13 @@ def png_for(department, code, section, semester=get_semester_today()):
     grades_query = "SELECT " + repr(grades)[1:-1].replace("'", '"') + " FROM grade WHERE section = ?"
     with connect('classes.sql') as database:
         cursor = database.cursor()
-        uid, instructor, title = cursor.execute(metadata_query, (department, code, section, semester)).fetchone()
+        try:
+            uid, instructor, title = cursor.execute(metadata_query, (department, code, section, semester)).fetchone()
+        except TypeError:
+            raise ValueError("No sections found for " + ' '.join([department, code, section]))
         results = dict(zip(grades, cursor.execute(grades_query, [uid])))
 
+    assert results != {}, "query was " + grades_query.replace('?', str(uid))
     course_code = "%s %s (S: %s)" % (department, code, section)
     header = "%s - %s - %s" % (instructor, title, course_code)
 
