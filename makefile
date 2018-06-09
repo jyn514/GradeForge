@@ -135,6 +135,9 @@ books/%.html: | books
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
 	if grep 'Textbook Not Registered' $@; then exit 1; fi
 
+$(BOOK_DIR)/%.csv: $$(subst .csv,.html,$$@)
+	$(GRADEFORGE) parse bookstore $^ $@
+
 .SECONDARY: $(DEPARTMENT_OUTPUT)
 $(CATALOG_OUTPUT): webpages/catalog.html
 	$(GRADEFORGE) parse catalog --department-output $(DEPARTMENT_OUTPUT) \
