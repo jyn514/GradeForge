@@ -154,14 +154,14 @@ $(EXAM_OUTPUT): $(EXAMS)
 	head -1 $< > $@  # headers
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 
-webpages $(EXAM_DIR) $(GRADE_DIR) books:
+webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR):
 	mkdir $@
 
 # lxml has trouble with too much whitespace
 define clean =
 	if grep '404 page not found' $1; then \
 		echo file "'$1'" gave a 404 not found; \
-		rm $1; \
+		$(RM) $1; \
 		exit 999; \
 	fi
 	sed -i 's/\s\+$$//' $1
