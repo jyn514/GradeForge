@@ -500,10 +500,12 @@ def parse_grades(file_handle, output='grades.csv'):
 def combine_grades(output='grades.csv', *file_handles):
     '''The headers for CSV files change from file to file.
     This method normalizes headers and adds empty strings if needed.'''
-    # TODO: what the hell do these mean
-    headers = 'SEMESTER,CAMPUS,DEPARTMENT,COURSE,SECTION,A,B+,B,C+,C,D+,D,F,S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,D+_GF,D_GF,TITLE,B+_GF,No Grade,C+_GF,T,F_GF,IP,B_GF,C_GF,FN,AUDIT,A_GF'.split(',')
+    headers = 'SEMESTER,CAMPUS,DEPARTMENT,COURSE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
+              # TODO: what the hell do these mean
+    headers += 'A_GF,B+_GF,B_GF,C_GF,C+_GF,D+_GF,D_GF,F_GF,'
+    headers += 'S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,No Grade,T,IP,FN,AUDIT'
     with open(output, 'w') as w:
-        writer = csv.DictWriter(w, headers)
+        writer = csv.DictWriter(w, headers.split(','))
         writer.writeheader()
         for handle in file_handles:
             with open(handle) as r:
