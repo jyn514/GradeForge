@@ -129,8 +129,9 @@ $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRAD
 
 # WARNING: since make allows only a single pattern to match, this unconditionally
 # matches all html files in the directory. HOWEVER, the rule will fail for any
-# filename not in the format books/<department>-<code>-<section>.html
-books/%.html: | books
+# filename not in the format <department>-<code>-<section>.html
+.PRECIOUS: $(BOOK_DIR)/%.html
+$(BOOK_DIR)/%.html: | $(BOOK_DIR)
 	$(GRADEFORGE) download bookstore \
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
 	if grep 'Textbook Not Registered' $@; then exit 1; fi
