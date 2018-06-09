@@ -50,6 +50,7 @@ for), but absolutely unacceptable for other users.
 - `parse_section` does not parse days met properly if the times are different
 on different days. run `make` on branch `broken` for an example.
 - course['attributes'] is a tuple on `broken`; this crashes `create_sql.py`
+- every section in grade is the number 0. this is incorrect.
 
 ### Notes
 - please do not try to use gradeforge directly for parsing,
