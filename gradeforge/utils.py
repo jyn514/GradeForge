@@ -147,6 +147,10 @@ def parse_semester(season, year=date.today().year):
     raise ValueError("'%s' not a valid USC season for year %s" % (season, year))
 
 
+def get_semester_today():
+    return parse_semester(get_season_today())
+
+
 def save(obj, output):
     with open(output, 'wb') as i:
         i.write(obj)
