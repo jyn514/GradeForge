@@ -22,7 +22,7 @@ def png_for(department, code, section, semester=get_semester_today()):
                   AND section = ?
                   AND semester = ?'''
     grades = "A","B","B+","C","C+","D","D+","F","I","W","WF"
-    grades_query = "SELECT " + repr(grades)[1:-1] + " FROM grade WHERE section = ?"
+    grades_query = "SELECT " + repr(grades)[1:-1].replace("'", '"') + " FROM grade WHERE section = ?"
     with connect('classes.sql') as database:
         cursor = database.cursor()
         uid, instructor, title = cursor.execute(metadata_query, (department, code, section, semester)).fetchone()
