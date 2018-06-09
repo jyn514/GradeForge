@@ -11,6 +11,7 @@ TODO:
 
 import sqlite3
 import csv
+from sys import stderr
 
 TABLES = {'class': ["course_link tinytext",
                     "title tinytext",
@@ -52,36 +53,98 @@ TABLES = {'class': ["course_link tinytext",
                       "startTime time",
                       "endTime time",
                       "instructor tinytext",  # this is by email, not name (since email is unique)
-                      "finalExam dateTime"]
+                      "finalExam dateTime"],
                      # always out of date; requires parsing different page
                      #"capacity tinyint", "remaining tinyint"
+            'grade': ['section int',
+                      'A tinyint',
+                      '"B+" tinyint',
+                      'B tinyint',
+                      '"C+" tinyint',
+                      'C tinyint',
+                      '"D+" tinyint',
+                      'D tinyint',
+                      'F tinyint',
+                      'AUDIT tinyint',
+                      'W tinyint',
+                      'WF tinyint',
+                      # columns after this are questionable
+                      'A_GF tinyint',
+                      '"B+_GF" tinyint',
+                      'B_GF tinyint',
+                      '"C+_GF" tinyint',
+                      'C_GF tinyint',
+                      '"D+_GF" tinyint',
+                      'D_GF tinyint',
+                      'F_GF tinyint',
+                      'S tinyint',
+                      'U tinyint',
+                      'UN tinyint',
+                      'INCOMPLETE tinyint',
+                      '"No Grade" tinyint',
+                      'NR tinyint',
+                      'T tinyint',
+                      'FN tinyint',
+                      'IP tinyint'
+                      ]
          }
 
 
 def csv_insert(table, file_name, cursor):
     with open(file_name) as f:
+        # TODO: use a dict reader?
         reader = csv.reader(f)
-        headers = next(reader)  # TODO: check if this matches table
-        cursor.executemany('INSERT INTO %s (%s) VALUES (%s)'
-                           % (table, ', '.join(headers), ', '.join('?' * len(headers))),
-                           reader)
+        # TODO: check if this matches table
+        headers = tuple(map(lambda s: repr(s.strip()), next(reader)))
+        command = 'INSERT INTO %s (%s) VALUES (%s)'
+        command %= table, ', '.join(headers), ', '.join('?' * len(headers))
+        cursor.executemany(command, reader)
 
 
 def create_sql(catalog='catalog.csv', departments='departments.csv',
                instructors='instructors.csv', semesters='semesters.csv',
-               sections='sections.csv', database='../classes.sql'):
+               sections='sections.csv', grades='grades.csv',
+               database='../classes.sql'):
     '''TODO: accept parameters for file IO'''
     with sqlite3.connect(database) as DATABASE:
         CURSOR = DATABASE.cursor()
 
-        CURSOR.executescript(''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
-                                     for key, value in TABLES.items()))
+        command = ''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
+                                     for key, value in TABLES.items())
+        CURSOR.executescript(command)
 
         csv_insert('class', catalog, CURSOR)
         csv_insert('department', departments, CURSOR)
         csv_insert('instructor', instructors, CURSOR)
         csv_insert('semester', semesters, CURSOR)
         csv_insert('section', sections, CURSOR)
+        # grades get special treatment because they have duplictated info
+        unused = 'TITLE', 'SEMESTER', 'CAMPUS', 'DEPARTMENT', 'COURSE', 'TOTAL'
+        with open(grades) as f:
+            reader = csv.DictReader(f)
+            headers = tuple(filter(lambda h: h not in unused,
+                                   map(str.strip, next(reader))))
+            for d in reader:
+                d.pop('TITLE')  # not used
+                d.pop('TOTAL')  # TODO: sanity check that this matches
+                query = '''
+                SELECT uid FROM section
+                WHERE semester = ? AND campus = ? AND department = ?
+                      AND code = ? AND section = ?'''
+                params = (d.pop('SEMESTER'), d.pop('CAMPUS'),
+                          d.pop('DEPARTMENT'), d.pop("COURSE"), d.pop("SECTION"))
+                d['SECTION'] = CURSOR.execute(query, params).fetchone()
+                command = 'INSERT INTO grade (%s) VALUES (%s)'
+                command %= ', '.join(map(repr, headers)), ', '.join('?' * len(headers))
+                params = []
+                for h in headers:
+                    try:
+                        params.append(int(d[h]))
+                    except ValueError:
+                        params.append(d[h])
+                    except TypeError:
+                        params.append(0)
+                CURSOR.execute(command, params)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):
