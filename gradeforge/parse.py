@@ -65,20 +65,20 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
             anchor = row.find('td').find('a')
             course = {'course_link': anchor.attrib['href']}
             # some courses have '-' in title
-            tmp = anchor.text.split(' - ')
-            course_id, course['title'] = tmp[0], ' - '.join(tmp[1:])
+            header_text = anchor.text.split(' - ')
+            course_id, course['title'] = header_text[0], ' - '.join(header_text[1:])
             course['department'], course['code'] = course_id.split(' ')
         else:
             td = row.xpath('td')[0]
             course['description'] = td.text.strip()
             course['credits'] = td.xpath('br[1]/following-sibling::text()')[0]
-            tmp = td.xpath('span/following-sibling::text()')
-            tmp = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', tmp)))
+            spans = td.xpath('span/following-sibling::text()')
+            spans = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', spans)))
             if len(td.xpath('span')) == 3:  # has attributes
-                course['attributes'] = tmp[-1]
-                tmp = tmp[:-1]
+                course['attributes'] = spans[-1]
+                spans = spans[:-1]
             # type can be multiple (since there might be anchor in middle)
-            course['level'], course['type'], department_description = tmp[0], ''.join(tmp[1:-1]), tmp[-1]
+            course['level'], course['type'], department_description = spans[0], ''.join(spans[1:-1]), spans[-1]
             if course['department'] in departments.keys() and departments[course['department']] != department_description:
                 print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
                       % (course['department'], department_description, departments[course['department']]),
@@ -206,8 +206,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             course = {'section_link': anchor.attrib.get('href')}
             text = anchor.text.split(' - ')
             # everything before last three is title
-            course['UID'], tmp, course['section'] = text[-3:]
-            course['department'], course['code'] = tmp.split(' ')
+            course['UID'], course_id, course['section'] = text[-3:]
+            course['department'], course['code'] = course_id.split(' ')
         else:
             main = row.xpath('td[1]')[0]
 
@@ -226,34 +226,33 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             course['type'] = schedule_type.replace(' Schedule Type', '')
             course['method'] = method.replace(' Instructional Method', '')
 
-            tmp = main.xpath('a/@href')
-            course['catalog_link'], course['bookstore_link'] = tmp[-2:]
-            if len(tmp) == 3:
-                course['syllabus'] = tmp[0]
+            links = main.xpath('a/@href')
+            course['catalog_link'], course['bookstore_link'] = links[-2:]
+            if len(links) == 3:
+                course['syllabus'] = links[0]
 
-            tmp = main.xpath('table/tr[2]/td//text()')
-            if len(tmp) == 9:  # instructor exists
-                tmp = tmp[:-2]  # don't get junk at end
-            elif len(tmp) > 9:  # multiple instructors
+            table_info = main.xpath('table/tr[2]/td//text()')
+            if len(table_info) == 9:  # instructor exists
+                table_info = table_info[:-2]  # don't get junk at end
+            elif len(table_info) > 9:  # multiple instructors
                 # combine instructors into one element
-                tmp = tmp[:6] + [''.join([tmp[7]] + tmp[9:])]
-            if not tmp:  # independent study; this is handled on the frontend
+                table_info = table_info[:6] + [''.join([table_info[7]] + table_info[9:])]
+            if not table_info:  # independent study; this is handled on the frontend
                 for key in ['days', 'location', 'startTime', 'endTime',
                             'instructor']:
                     course[key] = None
                 email, semester['startDate'], semester['endDate'] = [None] * 3
             else:
-                _, times, course['days'], course['location'], dates, _, course['instructor'] = tmp
+                _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
                 course['instructor'] = re.sub(' +', ' ', course['instructor'].strip().replace(' (', ''))
                 if times == 'TBA':
                     course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
                     course['startTime'], course['endTime'] = map(army_time, times.split(' - '))
                 semester['startDate'], semester['endDate'] = dates.split(' - ')
-                tmp = main.xpath('table/tr[2]/td/a/@href')
                 try:
                     # str is necessary, otherwise returns _ElementUnicodeResult
-                    email = str(tmp[0])
+                    email = str(main.xpath('table/tr[2]/td/a/@href')[0])
                 except IndexError:
                     email = None
             try:
@@ -383,9 +382,9 @@ def parse_exam(file_handle, output=stdout):
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
-    tmp = mkstemp()[1]
-    save(get(section_link).text, tmp)
-    body = etree.iterparse(open(tmp, 'rb'), html=True).__next__()[1].getparent().getnext()
+    tmp_file = mkstemp()[1]
+    save(get(section_link).text, tmp_file)
+    body = etree.iterparse(open(tmp_file, 'rb'), html=True).__next__()[1].getparent().getnext()
     table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
     elements = list(list(table.iterdescendants('tr'))[1])[-3:]
     return tuple(map(lambda x: x.text, elements))
