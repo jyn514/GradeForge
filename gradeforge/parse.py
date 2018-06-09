@@ -83,8 +83,11 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
                 print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
                       % (course['department'], department_description, departments[course['department']]),
                       file=stderr)
+            elif 'Department' not in department_description:
+                print("WARNING: invalid department '%s' for %s" % (department_description, course['department']),
+                      file=stderr)
             else:
-                departments[course['department']] = department_description
+                departments[course['department']] = department_description.replace('Department', '').strip()
 
             a = td.find('a')
             if a is not None:
