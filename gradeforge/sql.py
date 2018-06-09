@@ -89,7 +89,7 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
     Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
-                                 for key, value in filters.items()])
+                                for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
     with sqlite3.connect(database) as DATABASE:
