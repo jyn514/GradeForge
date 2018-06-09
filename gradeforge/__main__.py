@@ -37,7 +37,7 @@ PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files',
 # parent parser
 IO = ArgumentParser(add_help=False)
 IO.add_argument('input', help='file to parse')
-IO.add_argument('output', help='main output of parse function', nargs='?')
+IO.add_argument('output', help='main output of parse function', nargs='?', default=stdout)
 # TODO: not implemented
 IO.add_argument('--create', action='store_true',
                 help='create new file. '
@@ -50,12 +50,12 @@ INFO.add_parser('exam', parents=[IO])
 INFO.add_parser('bookstore', parents=[IO])
 INFO.add_parser('grades', parents=[IO])
 INFO.add_parser('catalog', parents=[IO]).add_argument('--departments', '--department-output',
-                                                      default='departments.csv')
+                                                      default=stdout)
 
 SECTIONS = INFO.add_parser('sections', parents=[IO])
 for opt in ['instructor', 'semester']:
     SECTIONS.add_argument('--%ss' % opt, '--%s-output' % opt,
-                          default='%ss.csv' % opt)
+                          default=stdout)
 
 # begin sql parser
 SQL = SUBPARSERS.add_parser('sql', description='create, query, and modify the sql database')
@@ -130,18 +130,18 @@ elif ARGS.subparser == 'sql':
         print(dump())
 elif ARGS.subparser == 'parse':
     if ARGS.info == 'exam':
-        parse_exam(ARGS.input, ARGS.output or 'exams.csv')
+        parse_exam(ARGS.input, ARGS.output)
     elif ARGS.info == 'bookstore':
-        parse_bookstore(ARGS.input, ARGS.output or 'books.csv')
+        parse_bookstore(ARGS.input, ARGS.output)
     elif ARGS.info == 'grades':
-        parse_grades(ARGS.input, ARGS.output or 'grades.csv')
+        parse_grades(ARGS.input, ARGS.output)
     elif ARGS.info == 'catalog':
-        parse_catalog(ARGS.input, catalog_output=ARGS.output or 'courses.csv',
+        parse_catalog(ARGS.input, catalog_output=ARGS.output,
                       department_output=ARGS.departments)
     else:
         parse_sections(ARGS.input, instructor_output=ARGS.instructors,
                        semester_output=ARGS.semesters,
-                       section_output=ARGS.output or 'sections.csv')
+                       section_output=ARGS.output)
 else:  # download
     if ARGS.info == 'exam':
         print(get_exam(ARGS.year, ARGS.season))
