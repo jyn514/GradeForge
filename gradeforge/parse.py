@@ -256,7 +256,6 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                     email = str(tmp[0])
                 except IndexError:
                     email = None
-            # TODO: if course['instructor'] or semester['semester'] already exists, throw an error
             try:
                 if email != instructor_dict[course['instructor']]:
                     print("WARNING: email '%s' for instructor '%s' already exists and does not match '%s'"
