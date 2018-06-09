@@ -6,7 +6,9 @@ import pandas
 from matplotlib import pyplot
 from sqlite3 import connect
 
-def png_for(department, code, section, semester='201808'):
+from gradeforge.utils import get_semester_today
+
+def png_for(department, code, section, semester=get_semester_today()):
     department, code, section, semester = map(str, (department, code, section, semester))
     assert code.isnumeric()
 
