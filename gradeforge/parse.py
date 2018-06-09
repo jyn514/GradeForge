@@ -421,7 +421,8 @@ def parse_bookstore(file_handle, output=stdout):
     books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
     # TODO: sometimes prices are missing. need to handle this gracefully
-    headers = 'title', 'required', 'author', 'edition', 'publisher', 'isbn', 'image', 'link', 'buy-new'
+    headers = ('title', 'required', 'author', 'edition', 'publisher', 'isbn',
+               'image', 'link', 'buy-new', 'buy-used', 'rent-new', 'rent-used')
     writer = csv.DictWriter(output, headers)
     writer.writeheader()
     for book in books:
