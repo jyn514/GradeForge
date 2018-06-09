@@ -133,6 +133,7 @@ $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRAD
 books/%.html: | books
 	$(GRADEFORGE) download bookstore \
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
+	if grep 'Textbook Not Registered' $@; then exit 1; fi
 
 .SECONDARY: $(DEPARTMENT_OUTPUT)
 $(CATALOG_OUTPUT): webpages/catalog.html
