@@ -15,7 +15,6 @@ def get_sections(department='%', semester='201808', campus='%', number='', title
     '''str -> str (HTML)
     Return the unparsed webpage corresponding to the courses selected'''
     # TODO: term is a nightmare, replace it with [first_half, second_half, all]
-    semester = parse_semester(semester)
     if department == '%':  # all sections
         department = allowed['department']
 
