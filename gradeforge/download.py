@@ -72,6 +72,7 @@ def get_bookstore(semester, department, number, section, driver=None):
     We use selenium to deobfuscate the javascript, then parse the resulting HTML'''
     if driver is None:
         driver = make_driver()
+    semester = str(semester)
     if len(semester) != 3:
         semester = b_and_n_semester(semester)
 
