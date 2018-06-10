@@ -84,12 +84,12 @@ classes.sql: $(DATA)
 	$(GRADEFORGE) sql create
 
 .SECONDEXPANSION:
-.PHONY: catalog sections
-catalog sections: webpages/$$@.html
+.PHONY: catalog
+catalog: webpages/catalog.html
 
 .DELETE_ON_ERROR:
-webpages/%.html: | webpages
-	$(GRADEFORGE) download $* > $@
+webpages/catalog.html: | webpages
+	$(GRADEFORGE) download catalog > $@
 	$(call clean,$@)
 
 $(SECTION_DIR)/%.html: | $(SECTION_DIR)
