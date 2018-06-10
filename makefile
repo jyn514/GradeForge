@@ -131,12 +131,17 @@ $(OLD_GRADES): | $(GRADE_DIR)
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades `echo $@ | cut -d. -f1 | cut -d- -f3` > $@
 
-sed = s/\([A-DF]+?\)_GF/\1/g; s/COURSE_SECTION/SECTION/; s/_NUMBER//g; \
-      s/No ?Grade/No Grade/; s/Num Grades Posted/TOTAL/; \
-      s/Incomplete/INCOMPLETE/i; s/SUBJECT/DEPARTMENT/
+cleanup = 1 s/\([A-DF]+?\)_GF/\1/g; 1 s/COURSE_SECTION/SECTION/; 1 s/_NUMBER//g; \
+      1 s/No ?Grade/No Grade/; 1 s/Num Grades Posted/TOTAL/; \
+      1 s/Incomplete/INCOMPLETE/i; 1 s/SUBJECT/DEPARTMENT/
 $(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
 	xlsx2csv $^ $@
-	sed -i '$(sed)' $@
+	sed -i '$(cleanup)' $@
+	$(eval SEMESTER := $(shell python -c 'from gradeforge.utils import parse_semester; \
+					      tmp = "$@".split("/")[1].split(".")[0].split("-"); \
+					      print(parse_semester(*tmp))'))
+	sed -i '1 s/^/SEMESTER,CAMPUS,/' $@
+	sed -i "2,$$ s/^/$(SEMESTER),,/" $@
 
 $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 	pdftotext -layout $^
