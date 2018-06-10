@@ -66,7 +66,7 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
             course = {'course_link': anchor.attrib['href']}
             # some courses have '-' in title
             header_text = anchor.text.split(' - ')
-            course_id, course['title'] = header_text[0], ' - '.join(header_text[1:])
+            course_id, course['title'] = header_text[0], ' - '.join(header_text[1:]).strip()
             course['department'], course['code'] = course_id.split(' ')
         else:
             td = row.xpath('td')[0]
