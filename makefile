@@ -43,7 +43,7 @@ OLD_GRADES != for season in Fall Spring; do \
 				if ! ([ $$year = 2013 ] && [ $$season = Fall ]); then \
 					printf "$(GRADE_DIR)/$$season-$$year-$$campus.pdf "; \
 				fi \
-			done; done; done;
+			done; done; done
 
 NEW_GRADES := $(addsuffix .xlsx,$(addprefix $(GRADE_DIR)/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
 
