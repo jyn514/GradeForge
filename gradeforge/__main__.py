@@ -92,7 +92,7 @@ DOWNLOAD.add_argument('--year', '-y', type=int, default=date.today().year,
 INFO = DOWNLOAD.add_subparsers(dest='info')
 INFO.required = True
 
-SECTIONS = INFO.add_parser('sections', description='course sections offered')
+SECTIONS = INFO.add_parser('sections', description='course sections offered', formatter_class=SingleMetavarFormatter)
 # TODO: make campus nicer
 SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
 # TODO: allowed['term'] is a dumpster fire that needs to be nuked from orbit
