@@ -445,7 +445,7 @@ def parse_bookstore(file_handle, output=stdout):
         writer.writerow(info)
 
 
-def parse_grades(file_handle, output='grades.csv'):
+def parse_grades(file_handle, output=stdout):
     '''File_handle is assumed to contain the output of `pdftotext -layout <pdf>`'''
     if not hasattr(file_handle, 'read'):
         with open(file_handle) as readable:
@@ -498,7 +498,7 @@ def parse_grades(file_handle, output='grades.csv'):
                                      filter(lambda l: len(l) == len(headers),
                                             map(str.split, file_handle))))
 
-def combine_grades(output='grades.csv', *file_handles):
+def combine_grades(output=stdout, *file_handles):
     '''The headers for CSV files change from file to file.
     This method normalizes headers and adds empty strings if needed.'''
     headers = 'SEMESTER,CAMPUS,DEPARTMENT,COURSE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
