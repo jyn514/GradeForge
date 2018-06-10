@@ -12,6 +12,8 @@ cache:
         - webpages
         - exams
         - grades
+        - books
+        - sections
 
 script:
     - make test
