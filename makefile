@@ -7,6 +7,7 @@
 BOOK_DIR = books
 EXAM_DIR = exams
 GRADE_DIR = grades
+SECTION_DIR = sections
 
 # output config
 BOOKSTORE_OUTPUT = books.csv
@@ -36,6 +37,11 @@ MAKEFLAGS += -j4 --warn-undefined-variables
 SHELL = sh
 
 EXAMS := $(addsuffix .csv,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
+
+SECTIONS != for season in Fall Summer Spring; do \
+		for year in `seq 2013 $$(date +%Y)`; do \
+			printf "$(SECTION_DIR)/$$season-$$year.csv "; \
+		done; done
 
 OLD_GRADES != for season in Fall Spring; do \
 		for campus in Columbia Aiken Upstate; do \
@@ -85,6 +91,23 @@ catalog sections: webpages/$$@.html
 webpages/%.html: | webpages
 	$(GRADEFORGE) download $* > $@
 	$(call clean,$@)
+
+$(SECTION_DIR)/%.html: | $(SECTION_DIR)
+	$(GRADEFORGE) download \
+	  --season `echo $* | cut -d- -f1` \
+	  --year   `echo $* | cut -d- -f2`\
+	  sections > $@
+	$(call clean,$@)
+
+$(SECTIONS): $$(subst .html,.csv,$$@)
+	$(GRADEFORGE) parse sections --instructor-output $(INSTRUCTOR_OUTPUT) \
+				     --semester-output $(SEMESTER_OUTPUT) \
+				     $^ $@
+
+
+.SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
+$(SECTION_OUTPUT): $(SECTIONS)
+	# TODO
 
 $(EXAM_DIR)/%.html: | $(EXAM_DIR)
 	$(GRADEFORGE) download \
@@ -144,17 +167,12 @@ $(CATALOG_OUTPUT): webpages/catalog.html
 	$(GRADEFORGE) parse catalog --department-output $(DEPARTMENT_OUTPUT) \
 				    $^ $@
 
-.SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
-$(SECTION_OUTPUT): webpages/sections.html
-	$(GRADEFORGE) parse sections --instructor-output $(INSTRUCTOR_OUTPUT) \
-				     --semester-output $(SEMESTER_OUTPUT) \
-				     $^ $@
 # TODO: make this concurrent
 $(EXAM_OUTPUT): $(EXAMS)
 	head -1 $< > $@  # headers
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 
-webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR):
+$(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR):
 	mkdir $@
 
 # lxml has trouble with too much whitespace
