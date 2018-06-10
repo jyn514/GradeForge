@@ -51,7 +51,7 @@ TABLES = {'class': ["course_link tinytext",
                       "location smallint",
                       "startTime time",
                       "endTime time",
-                      "instructor tinytext",  # this is by email, not name (since email is unique)
+                      "instructor tinytext",
                       "finalExam dateTime"],
                       # always out of date; requires parsing different page
                       #"capacity tinyint", "remaining tinyint"
