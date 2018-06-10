@@ -11,7 +11,6 @@ TODO:
 
 import sqlite3
 import csv
-from sys import stderr
 
 TABLES = {'class': ["course_link tinytext",
                     "title tinytext",
@@ -54,39 +53,39 @@ TABLES = {'class': ["course_link tinytext",
                       "endTime time",
                       "instructor tinytext",  # this is by email, not name (since email is unique)
                       "finalExam dateTime"],
-                     # always out of date; requires parsing different page
-                     #"capacity tinyint", "remaining tinyint"
-            'grade': ['section int',
-                      'A tinyint',
-                      '"B+" tinyint',
-                      'B tinyint',
-                      '"C+" tinyint',
-                      'C tinyint',
-                      '"D+" tinyint',
-                      'D tinyint',
-                      'F tinyint',
-                      'AUDIT tinyint',
-                      'W tinyint',
-                      'WF tinyint',
-                      # columns after this are questionable
-                      'A_GF tinyint',
-                      '"B+_GF" tinyint',
-                      'B_GF tinyint',
-                      '"C+_GF" tinyint',
-                      'C_GF tinyint',
-                      '"D+_GF" tinyint',
-                      'D_GF tinyint',
-                      'F_GF tinyint',
-                      'S tinyint',
-                      'U tinyint',
-                      'UN tinyint',
-                      'INCOMPLETE tinyint',
-                      '"No Grade" tinyint',
-                      'NR tinyint',
-                      'T tinyint',
-                      'FN tinyint',
-                      'IP tinyint'
-                      ]
+                      # always out of date; requires parsing different page
+                      #"capacity tinyint", "remaining tinyint"
+          'grade': ['section int',
+                    'A tinyint',
+                    '"B+" tinyint',
+                    'B tinyint',
+                    '"C+" tinyint',
+                    'C tinyint',
+                    '"D+" tinyint',
+                    'D tinyint',
+                    'F tinyint',
+                    'AUDIT tinyint',
+                    'W tinyint',
+                    'WF tinyint',
+                    # columns after this are questionable
+                    'A_GF tinyint',
+                    '"B+_GF" tinyint',
+                    'B_GF tinyint',
+                    '"C+_GF" tinyint',
+                    'C_GF tinyint',
+                    '"D+_GF" tinyint',
+                    'D_GF tinyint',
+                    'F_GF tinyint',
+                    'S tinyint',
+                    'U tinyint',
+                    'UN tinyint',
+                    'INCOMPLETE tinyint',
+                    '"No Grade" tinyint',
+                    'NR tinyint',
+                    'T tinyint',
+                    'FN tinyint',
+                    'IP tinyint'
+                   ]
          }
 
 
@@ -110,7 +109,7 @@ def create_sql(catalog='catalog.csv', departments='departments.csv',
         CURSOR = DATABASE.cursor()
 
         command = ''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
-                                     for key, value in TABLES.items())
+                          for key, value in TABLES.items())
         CURSOR.executescript(command)
 
         csv_insert('class', catalog, CURSOR)
@@ -152,7 +151,7 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
     Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
     query_filter = ' AND '.join([key + ' IN (%s)' % str(value)[1:-1].replace("'", '"')
-                                for key, value in filters.items()])
+                                 for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
     with sqlite3.connect(database) as DATABASE:
