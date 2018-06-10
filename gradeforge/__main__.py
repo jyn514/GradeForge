@@ -94,7 +94,7 @@ INFO.required = True
 
 SECTIONS = INFO.add_parser('sections', description='course sections offered', formatter_class=SingleMetavarFormatter)
 # TODO: make campus nicer
-SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'], default='COL')
+SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'] + ('%',), default='%')
 # TODO: allowed['term'] is a dumpster fire that needs to be nuked from orbit
 SECTIONS.add_argument('--term', '-T', choices=allowed['term'], default='%')
 

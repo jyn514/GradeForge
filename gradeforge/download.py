@@ -8,7 +8,7 @@ from requests import get, post
 
 from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
 
-def get_sections(department='%', semester='201808', campus='COL', number='', title='',
+def get_sections(department='%', semester='201808', campus='%', number='', title='',
                  min_credits=0, max_credits='', level='%', term='%', times='%',
                  location='%', start_hour=0, start_minute=0, end_hour=0,
                  end_minute=0, days='dummy'):
@@ -18,6 +18,9 @@ def get_sections(department='%', semester='201808', campus='COL', number='', tit
     semester = parse_semester(semester)
     if department == '%':  # all sections
         department = allowed['department']
+
+    if campus == '%':
+        campus = allowed['campus']
 
     params = locals()
     coursesite = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_get_crse_unsec'
