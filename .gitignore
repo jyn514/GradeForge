@@ -1,8 +1,10 @@
 .cache
 .pytest_cache
 *.csv
+books/
 exams/
 grades/
+sections/
 secrets.py
 classes.sql
 build
