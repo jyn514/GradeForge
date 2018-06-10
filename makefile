@@ -159,6 +159,21 @@ $(EXAM_OUTPUT): $(EXAMS)
 	head -1 $< > $@  # headers
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 
+# TODO: the HTML needs to be rate limited
+.PHONY: bookstore_downloads
+bookstore_downloads: classes.sql | $(BOOK_DIR)
+	for semester in `sqlite3 $^ "select distinct semester from section;"`; do \
+		python -c "from gradeforge.download import get_all_books; \
+			   get_all_books($$semester)"; done
+
+# the reason this call make recursively is because it's really a collection of
+# dependencies, same as $(EXAMS), but we don't know the sections until after
+# we've made the database.
+# TODO: can be parallel
+.PHONY: bookstore
+bookstore: classes.sql bookstore_downloads
+	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
+
 webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR):
 	mkdir $@
 
