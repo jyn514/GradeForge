@@ -31,6 +31,8 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 	- if true, assert the output file does not exist
 	- if false, don't write headers
 - the submit button for `index.html` is broken
+- add rules in the makefile for courses and sections in past years.
+  png_for won't work until this is implemented.
 
 ### Non-Goals
 - registering automatically. this would require storing the *university*
@@ -50,11 +52,14 @@ for), but absolutely unacceptable for other users.
 - `parse_section` does not parse days met properly if the times are different
 on different days. run `make` on branch `broken` for an example.
 - course['attributes'] is a tuple on `broken`; this crashes `create_sql.py`
-- every section in grade is the number 0. this is incorrect.
 
 ### Notes
 - please do not try to use gradeforge directly for parsing,
 the dependencies will drive you mad. use the beautiful makefile instead.
+- data for grades is available back until 2008, but data for sections is only available until 2013.
+  this means grades cannot be dependant on sections in the database
+- png_for won't work for this semester (because the grades haven't been published).
+  this sounds stupid but I was wracking my brains trying to figure out why it was broken.
 
 ## Relevant Links
 ### Search Pages
