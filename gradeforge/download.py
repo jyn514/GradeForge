@@ -63,7 +63,7 @@ def make_driver():
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     driver = Chrome(chrome_options=options)
-    driver.implicitly_wait(10)  # timeout for page to be deobfuscated
+    driver.implicitly_wait(4)  # timeout for page to be deobfuscated; this was with trial and error
     return driver
 
 
