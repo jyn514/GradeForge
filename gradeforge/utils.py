@@ -126,9 +126,11 @@ def get_season_today():
 def parse_semester(season, year=date.today().year):
     '''The opposite of get_season.
     Given a season and an optional year, return a semester in USC format.'''
+    season = str(season).lower()
     if season in allowed['semester']:
         return season
-    season = season.lower()
+    elif season.isnumeric() and len(season) == 6:
+        raise ValueError(season + " is in the right format but not valid. You probably have a year that's too early or late.")
     year = str(year)
     if len(year) != 4 or not year.isnumeric():
         raise ValueError("expected four digit year; was given " + year)
