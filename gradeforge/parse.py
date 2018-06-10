@@ -266,8 +266,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             except KeyError:
                 instructor_dict[course['instructor']] = email
             try:
-                if (tuple(semester_dict[course['semester']].values()) !=
-                    tuple(semester.values())):
+                if tuple(semester_dict[course['semester']].values()) != tuple(semester.values()):
                     print("WARNING: semester info '%s' already exists for semester '%s' and does not match '%s'"
                           % (semester_dict[course['semester']], course['semester'], semester),
                           file=stderr)

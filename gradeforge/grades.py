@@ -21,7 +21,7 @@ def png_for(department, code, section, semester=get_semester_today()):
                   AND class.code = ?
                   AND section = ?
                   AND semester = ?'''
-    grades = "A","B","B+","C","C+","D","D+","F","I","W","WF"
+    grades = "A", "B", "B+", "C", "C+", "D", "D+", "F", "I", "W", "WF"
     grades_query = "SELECT " + repr(grades)[1:-1].replace("'", '"') + " FROM grade WHERE section = ?"
     with connect('classes.sql') as database:
         cursor = database.cursor()
