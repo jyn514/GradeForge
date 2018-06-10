@@ -81,7 +81,7 @@ test: sql
 
 classes.sql: $(DATA)
 	$(RM) $@
-	PYTHONIOENCODING=utf-8 $(GRADEFORGE) sql create
+	$(GRADEFORGE) sql create
 
 .SECONDEXPANSION:
 .PHONY: catalog sections
