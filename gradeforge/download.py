@@ -3,8 +3,10 @@
 '''Network-based querires; GETs and POSTs'''
 
 from datetime import date
+from os.path import exists
 
 from requests import get, post
+from selenium.common.exceptions import NoSuchElementException
 
 from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
 
@@ -91,7 +93,13 @@ def get_bookstore(semester, department, number, section, driver=None):
     ''' % xml
 
     driver.execute_script(js)
-    driver.find_element_by_id('courseListForm')  # this is the implicit wait
+    try:
+        driver.find_element_by_id('courseListForm')  # this is the implicit wait
+    except NoSuchElementException:
+        if 'COURSE MATERIALS SELECTION PENDING' in driver.page_source:
+            raise ValueError("No textbooks available for %s"
+                             % ' '.join([semester, department, number, section]))
+        raise
     return driver.page_source
 
 
@@ -158,3 +166,24 @@ def get_grades(year, season, campus=None):
         semester += '_' + campus
     url = '%s/%s_grade_spread_report.%s' % (base_url, semester, ext)
     return get(url).content  # NOTE: content is binary; text is encoded
+
+def get_all_books(semester='201805'):
+    from sqlite3 import connect
+    query = '''SELECT department, code, section
+               FROM section
+               WHERE semester = ?'''
+    with connect('classes.sql') as database:
+        result = database.execute(query, [semester]).fetchall()
+    driver = make_driver()
+    try:
+        for section in result:
+            output = "books/%s-%s-%s-%s.html" % (semester, *section)
+            if not exists(output):
+                with open(output, 'w') as f:
+                    try:
+                        f.write(get_bookstore(semester, *section, driver=driver))
+                        print(f.name)
+                    except Exception as e:
+                        print("Info for", semester, ' '.join(section), "not available:", e)
+    finally:
+        driver.quit()
