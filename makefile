@@ -59,8 +59,9 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
-.PHONY: all_grades
+.PHONY: all_grades all_sections
 all_grades: $(GRADES_OUTPUT)
+all_sections: $(SECTIONS)
 
 .PHONY: web server website
 web server website: sql
