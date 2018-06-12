@@ -79,16 +79,18 @@ def parse_catalog(file_handle, catalog_output='courses.csv',
                 spans = spans[:-1]
             # type can be multiple (since there might be anchor in middle)
             course['level'], course['type'], department_description = spans[0], ''.join(spans[1:-1]), spans[-1]
-            if course['department'] in departments.keys() and departments[course['department']] != department_description:
-                print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
-                      % (course['department'], department_description, departments[course['department']]),
-                      file=stderr)
-            elif 'Department' not in department_description:
+            if 'Department' not in department_description:
                 print("WARNING: invalid department '%s' for %s" % (department_description, course['department']),
                       file=stderr)
             else:
-                departments[course['department']] = department_description.replace('Department', '').strip()
+                department_description = department_description.replace('Department', '').strip()
+                if course['department'] in departments.keys() and departments[course['department']] != department_description:
+                    print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
+                      % (course['department'], department_description, departments[course['department']]),
+                      file=stderr)
 
+                else:
+                    departments[course['department']] = department_description
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']
