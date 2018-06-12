@@ -100,7 +100,7 @@ def csv_insert(table, file_name, cursor):
         cursor.executemany(command, reader)
 
 
-def create_sql(catalog='catalog.csv', departments='departments.csv',
+def create(catalog='catalog.csv', departments='departments.csv',
                instructors='instructors.csv', semesters='semesters.csv',
                sections='sections.csv', grades='grades.csv',
                database='../classes.sql'):

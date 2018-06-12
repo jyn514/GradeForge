@@ -10,7 +10,7 @@ from os import path
 from gradeforge.utils import SingleMetavarFormatter, allowed, get_season_today, parse_semester
 from gradeforge.parse import parse_exam, parse_sections, parse_bookstore, parse_catalog, parse_grades
 from gradeforge.download import get_exam, get_sections, get_bookstore, get_catalog, get_grades
-from gradeforge.sql import create_sql, dump, query
+from gradeforge.sql import create, dump, query
 from gradeforge.web import app
 
 VERBOSITY = ArgumentParser(add_help=False)
@@ -121,7 +121,7 @@ if ARGS.subparser == 'web':
 elif ARGS.subparser == 'sql':
     if ARGS.command == 'create':
         # TODO: add params for csv files
-        create_sql(database=ARGS.database)
+        create(database=ARGS.database)
     elif not path.exists(ARGS.database):
         raise ValueError("database '%s' does not exist or is invalid" % ARGS.database)
     if ARGS.command == 'query':
