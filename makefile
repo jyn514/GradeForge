@@ -160,8 +160,8 @@ $(EXAM_OUTPUT): $(EXAMS)
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 
 # TODO: the HTML needs to be rate limited
-.PHONY: bookstore_downloads
-bookstore_downloads: classes.sql | $(BOOK_DIR)
+.PHONY: all_books
+all_books: classes.sql | $(BOOK_DIR)
 	for semester in `sqlite3 $^ "select distinct semester from section;"`; do \
 		python -c "from gradeforge.download import get_all_books; \
 			   get_all_books($$semester)"; done
@@ -171,7 +171,7 @@ bookstore_downloads: classes.sql | $(BOOK_DIR)
 # we've made the database.
 # TODO: can be parallel
 .PHONY: bookstore
-bookstore: classes.sql bookstore_downloads
+bookstore: classes.sql all_books
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
 webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR):
