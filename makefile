@@ -47,6 +47,9 @@ OLD_GRADES != for season in Fall Spring; do \
 
 NEW_GRADES := $(addsuffix .xlsx,$(addprefix $(GRADE_DIR)/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
 
+SECTIONS := $(addsuffix .csv,$(addprefix $(SECTION_DIR)/,Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Summer-2014 Summer-2015 Summer-2016 Summer-2017 Summer-2018 Spring-2013 Spring-2014 Spring-2015 Spring-2016 Spring-2017 Spring-2018))
+
+
 .PHONY: all
 all: sql
 
@@ -149,6 +152,16 @@ $(CATALOG_OUTPUT): webpages/catalog.html
 	$(GRADEFORGE) parse catalog --department-output $(DEPARTMENT_OUTPUT) \
 				    $^ $@
 
+$(SECTIONS): $$(subst .csv,.html,$$@)
+	# TODO: this is wrong
+	$(GRADEFORGE) parse sections --instructor-output /dev/null \
+				     --semester-output /dev/null \
+				     $^ $@
+
+$(subst .csv,.html,$(SECTIONS)): | $(SECTION_DIR)
+	$(eval tmp := $(shell echo $@ | cut -d/ -f2 | cut -d. -f1 | cut -d- -f1-2 --output-delimiter=' '))
+	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@
+
 .SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
 $(SECTION_OUTPUT): webpages/sections.html
 	$(GRADEFORGE) parse sections --instructor-output $(INSTRUCTOR_OUTPUT) \
@@ -174,8 +187,9 @@ all_books: classes.sql | $(BOOK_DIR)
 bookstore: classes.sql all_books
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
-webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR):
+$(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR):
 	mkdir $@
+
 
 # lxml has trouble with too much whitespace
 define clean =
