@@ -135,15 +135,16 @@ def create_sql(catalog='catalog.csv', departments='departments.csv',
                 d['SECTION'] = CURSOR.execute(query, params).fetchone()
                 command = 'INSERT INTO grade (%s) VALUES (%s)'
                 command %= ', '.join(map(repr, headers)), ', '.join('?' * len(headers))
-                params = []
+                insert_params = []
                 for h in headers:
                     try:
-                        params.append(int(d[h]))
+                        insert_params.append(int(d[h]))
                     except ValueError:
-                        params.append(d[h])
+                        insert_params.append(d[h])
                     except TypeError:
-                        params.append(0)
-                CURSOR.execute(command, params)
+                        print(h, d[h], query, params)
+                        insert_params.append(0)
+                CURSOR.execute(command, insert_params)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):
