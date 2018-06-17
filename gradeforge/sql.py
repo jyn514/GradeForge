@@ -132,7 +132,14 @@ def create(catalog='catalog.csv', departments='departments.csv',
                       AND code = ? AND section = ?'''
                 params = (d.pop('SEMESTER'), d.pop('CAMPUS'),
                           d.pop('DEPARTMENT'), d.pop("COURSE"), d.pop("SECTION"))
-                d['SECTION'] = CURSOR.execute(query, params).fetchone()[0]
+                if params[0][:4] < '201341':  # no grade data
+                    result = None
+                else:
+                    try:
+                        result = CURSOR.execute(query, params).fetchone()[0]
+                    except TypeError:
+                        print(query.replace('?', '%s') % params, 'returned None')
+                d['SECTION'] = result
                 command = 'INSERT INTO grade (%s) VALUES (%s)'
                 command %= ', '.join(map(repr, headers)), ', '.join('?' * len(headers))
                 insert_params = []
@@ -141,8 +148,8 @@ def create(catalog='catalog.csv', departments='departments.csv',
                         insert_params.append(int(d[h]))
                     except ValueError:
                         insert_params.append(d[h])
-                    except TypeError:  # d[h] is None
-                        print(h, d[h], query.replace('?', '%s') % params)
+                    except TypeError:
+                        assert d[h] == None
                         insert_params.append(0)
                 CURSOR.execute(command, insert_params)
 
