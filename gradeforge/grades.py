@@ -36,7 +36,9 @@ def png_for(department, code, section, semester=get_semester_today()):
     course_code = "%s %s (S: %s)" % (department, code, section)
     header = "%s - %s - %s" % (instructor, title, course_code)
 
-    pyplot.figure().suptitle(header)
-    pyplot.xticks(range(len(results)), results.keys())
+    figure = pyplot.figure()
+    figure.suptitle(header)
     pyplot.bar(range(len(results)), results.values(), align='center')
+    pyplot.xticks(range(len(results)), results.keys())
+    figure.autofmt_xdate()
     pyplot.savefig("images/%s-%s-%s-%s.png" % (department, code, section, semester))
