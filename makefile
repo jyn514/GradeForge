@@ -74,7 +74,8 @@ dump: sql
 	$(GRADEFORGE) sql dump
 
 .PHONY: test
-test: sql
+test: sql | images
+	python -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
 	pytest --pyargs gradeforge
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
@@ -195,7 +196,7 @@ all_books: classes.sql | $(BOOK_DIR)
 bookstore: classes.sql all_books
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
-$(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR):
+$(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR) images:
 	mkdir $@
 
 
