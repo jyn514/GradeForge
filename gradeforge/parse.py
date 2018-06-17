@@ -209,7 +209,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
         if HEADER:
             anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
             course = {'section_link': anchor.attrib.get('href')}
-            text = anchor.text.split(' - ')
+            text = re.split('\W-\W', anchor.text)
             # everything before last three is title
             course['UID'], course_id, course['section'] = text[-3:]
             course['department'], course['code'] = course_id.split(' ')
@@ -221,7 +221,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
             semester = {}
             semester_raw, registration = after[:2]  # third is level, which we know
-            course['semester'] = parse_semester(*semester_raw.split(' '))
+            course['semester'] = parse_semester(*re.split('\W+', semester_raw))
             semester['registrationStart'], semester['registrationEnd'] = registration.split(' to ')
 
             if len(after) == 8:
