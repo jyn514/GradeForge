@@ -19,15 +19,16 @@ def png_for(department, code, section, semester=get_semester_today()):
                   AND class.code = ?
                   AND section = ?
                   AND semester = ?'''
-    grades = "A", "B", "B+", "C", "C+", "D", "D+", "F", "I", "W", "WF"
-    grades_query = "SELECT " + repr(grades)[1:-1].replace("'", '"') + " FROM grade WHERE section = ?"
+    grades = 'A, "B+", B, "C+", C, "D+", D, F, INCOMPLETE, W, WF'
+    # NOTE: we can't use prepared statements for column names
+    grades_query = 'SELECT ' + grades + ' FROM grade WHERE section = ?'
     with connect('classes.sql') as database:
         cursor = database.cursor()
         try:
             uid, instructor, title = cursor.execute(metadata_query, (department, code, section, semester)).fetchone()
         except TypeError:
             raise ValueError("No sections found for " + ' '.join([department, code, section]))
-        results = dict(zip(grades, cursor.execute(grades_query, [uid])))
+        results = dict(zip(re.split('"?, "?', grades), cursor.execute(grades_query, [uid]).fetchone()))
 
     assert results != {}, "query was " + grades_query.replace('?', str(uid))
     course_code = "%s %s (S: %s)" % (department, code, section)
