@@ -16,6 +16,7 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 	- `libxslt-dev`
 - [`pdftotext`](https://poppler.freedesktop.org/) (part of `poppler-utils`)
 - [`chromedriver`](http://chromedriver.chromium.org/)
+- [`tidy`](http://www.html-tidy.org/)
 
 ## Goals
 ### Long-Term
