@@ -217,7 +217,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             main = row.xpath('td[1]')[0]
 
             after = main.xpath('(.|a|b|p)/span/following-sibling::text()')
-            after = tuple(map(lambda x: x.strip(), filter(lambda x: x != '\n', after)))
+            after = tuple(map(str.strip, filter(lambda x: x != '\n', after)))
 
             semester = {}
             semester_raw, registration = after[:2]  # third is level, which we know
