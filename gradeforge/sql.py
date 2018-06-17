@@ -132,7 +132,7 @@ def create(catalog='catalog.csv', departments='departments.csv',
                       AND code = ? AND section = ?'''
                 params = (d.pop('SEMESTER'), d.pop('CAMPUS'),
                           d.pop('DEPARTMENT'), d.pop("COURSE"), d.pop("SECTION"))
-                d['SECTION'] = CURSOR.execute(query, params).fetchone()
+                d['SECTION'] = CURSOR.execute(query, params).fetchone()[0]
                 command = 'INSERT INTO grade (%s) VALUES (%s)'
                 command %= ', '.join(map(repr, headers)), ', '.join('?' * len(headers))
                 insert_params = []
