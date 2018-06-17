@@ -16,6 +16,7 @@ def test_parse_semester():
     assert parse_semester('fall') == str(date.today().year) + '08'
     assert parse_semester('Summer') == str(date.today().year) + '05'
     assert parse_semester('sPrINg', 2015) == '201501'
+    assert parse_semester('spring', 2013) == '201311'
     with pytest.raises(ValueError):
         parse_semester('winter')
     for error in ('spring', 1), ('Fall', -107), ('summer', 10000):
