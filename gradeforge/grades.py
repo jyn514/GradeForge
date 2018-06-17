@@ -2,7 +2,6 @@
 import re
 import sys
 
-import pandas
 from matplotlib import pyplot
 from sqlite3 import connect
 
