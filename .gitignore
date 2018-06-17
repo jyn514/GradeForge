@@ -5,6 +5,7 @@ books/
 exams/
 grades/
 sections/
+images/
 secrets.py
 classes.sql
 build
