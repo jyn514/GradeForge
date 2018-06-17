@@ -141,8 +141,8 @@ def create(catalog='catalog.csv', departments='departments.csv',
                         insert_params.append(int(d[h]))
                     except ValueError:
                         insert_params.append(d[h])
-                    except TypeError:
-                        print(h, d[h], query, params)
+                    except TypeError:  # d[h] is None
+                        print(h, d[h], query.replace('?', '%s') % params)
                         insert_params.append(0)
                 CURSOR.execute(command, insert_params)
 
