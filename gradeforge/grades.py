@@ -9,7 +9,6 @@ from gradeforge.utils import get_semester_today
 
 def png_for(department, code, section, semester=get_semester_today()):
     department, code, section, semester = map(str, (department, code, section, semester))
-    assert code.isnumeric()
 
     metadata_query = '''
             SELECT uid, instructor, title
