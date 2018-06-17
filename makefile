@@ -7,6 +7,8 @@
 BOOK_DIR = books
 EXAM_DIR = exams
 GRADE_DIR = grades
+SECTION_DIR = sections
+CATALOG_DIR = catalogs
 
 # output config
 BOOKSTORE_OUTPUT = books.csv
@@ -161,15 +163,20 @@ $(SECTIONS): $$(subst .csv,.html,$$@)
 
 $(subst .csv,.html,$(SECTIONS)): | $(SECTION_DIR)
 	$(eval tmp := $(shell echo $@ | cut -d/ -f2 | cut -d. -f1 | cut -d- -f1-2 --output-delimiter=' '))
-	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@
+	# keep original because we'll be changing it in a second
+	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@.bak
+	# 1. change two opening tags to single closed tag
+	# 2. the school seems to think <p> is the same as <br>
+	sed 's#<b>\(.*\)<b>#<b>\1</b>#; s/ <p>$$//' $@.bak > $@
+	# required for Summer 2016, others *might* work but less effort this way
+	# note that tidy returns 1 on warnings, and the html always gives warnings
+	tidy -modify $@ || if [ $$? -ne 1 ]; then exit $$?; fi
+
+$(SECTION_OUTPUT): $(SECTIONS)
+$(EXAM_OUTPUT): $(EXAMS)
 
 .SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
-$(SECTION_OUTPUT): webpages/sections.html
-	$(GRADEFORGE) parse sections --instructor-output $(INSTRUCTOR_OUTPUT) \
-				     --semester-output $(SEMESTER_OUTPUT) \
-				     $^ $@
-# TODO: make this concurrent
-$(EXAM_OUTPUT): $(EXAMS)
+$(SECTION_OUTPUT) $(EXAM_OUTPUT):
 	head -1 $< > $@  # headers
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 

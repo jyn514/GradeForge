@@ -216,7 +216,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
         else:
             main = row.xpath('td[1]')[0]
 
-            after = main.xpath('span/following-sibling::text()')
+            after = main.xpath('(.|a|b|p)/span/following-sibling::text()')
             after = tuple(map(lambda x: x.strip(), filter(lambda x: x != '\n', after)))
 
             semester = {}
@@ -231,8 +231,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             course['type'] = schedule_type.replace(' Schedule Type', '')
             course['method'] = method.replace(' Instructional Method', '')
 
-            links = main.xpath('a/@href')
+            links = main.xpath('(.|b|p)/a/@href')
             course['catalog_link'], course['bookstore_link'] = links[-2:]
+
             if len(links) == 3:
                 course['syllabus'] = links[0]
 
