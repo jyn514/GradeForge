@@ -171,7 +171,7 @@ $(subst .csv,.html,$(SECTIONS)): | $(SECTION_DIR)
 	sed 's#<b>\(.*\)<b>#<b>\1</b>#; s/ <p>$$//' $@.bak > $@
 	# required for Summer 2016, others *might* work but less effort this way
 	# note that tidy returns 1 on warnings, and the html always gives warnings
-	tidy -modify $@ || if [ $$? -ne 1 ]; then exit $$?; fi
+	tidy -modify -f /dev/null $@ || if [ $$? -ne 1 ]; then exit $$?; fi
 
 $(SECTION_OUTPUT): $(SECTIONS)
 $(EXAM_OUTPUT): $(EXAMS)
