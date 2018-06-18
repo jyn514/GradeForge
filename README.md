@@ -58,7 +58,7 @@ on different days. run `make` on branch `broken` for an example.
 - please do not try to use gradeforge directly for parsing,
 the dependencies will drive you mad. use the beautiful makefile instead.
 - data for grades is available back until 2008, but data for sections is only available until 2013.
-  this means grades cannot be dependant on sections in the database
+- columns in grades ending in `_GF` stand for 'Grade Forgiveness'
 - png_for won't work for this semester (because the grades haven't been published).
   this sounds stupid but I was wracking my brains trying to figure out why it was broken.
 
@@ -80,3 +80,4 @@ the dependencies will drive you mad. use the beautiful makefile instead.
 - [RateMyProfessor](https://www.ratemyprofessors.com/search.jsp?queryBy=schoolId&schoolID=1309)
 - [Schedule Planner](https://sc.collegescheduler.com/entry)
 - [Grade Spreads](https://www.sc.edu/about/offices_and_divisions/registrar/toolbox/grade_processing/grade_spreads/index.php)
+- [Grade Abbreviations](https://www.sc.edu/about/offices_and_divisions/registrar/transcripts_and_records/grade_point_scale/index.php)
