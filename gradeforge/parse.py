@@ -250,7 +250,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 email, semester['startDate'], semester['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
-                course['instructor'] = re.sub(' +', ' ', course['instructor'].strip().replace(' (', ''))
+                course['instructor'] = re.sub(' +', ' ',
+                                              course['instructor'].strip().replace(' (', ''))
                 if times == 'TBA':
                     course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
@@ -475,9 +476,9 @@ def parse_grades(file_handle, output=stdout):
     try:
         campus = re.search('((THE )?UNIVERSITY OF SOUTH CAROLINA ?([‐-]|at) ?|USC[‐ -])([^:]*)', metadata, flags=re.IGNORECASE)
         campus = campus.groups()[-1].replace(' CAMPUS', '').upper()
-    except:
+    except Exception:
         print(metadata, file=stderr)
-
+        raise
     while True:
         try:
             headers = next(file_handle)

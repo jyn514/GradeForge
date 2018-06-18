@@ -130,7 +130,8 @@ def parse_semester(season, year=date.today().year):
     if season in allowed['semester']:
         return season
     elif season.isnumeric() and len(season) == 6:
-        raise ValueError(season + " is in the right format but not valid. You probably have a year that's too early or late.")
+        error = season + " is the right format but invalid. The year is likely too early or late."
+        raise ValueError(error)
     year = str(year)
     if len(year) != 4 or not year.isnumeric():
         raise ValueError("expected four digit year; was given " + year)

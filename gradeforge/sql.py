@@ -109,12 +109,11 @@ def csv_insert(table, file_name, cursor):
 
 
 def create(catalog='catalog.csv', departments='departments.csv',
-               instructors='instructors.csv', semesters='semesters.csv',
-               sections='sections.csv', grades='grades.csv',
-               database='../classes.sql'):
-    '''TODO: accept parameters for file IO'''
-    with sqlite3.connect(database) as DATABASE:
-        CURSOR = DATABASE.cursor()
+           instructors='instructors.csv', semesters='semesters.csv',
+           sections='sections.csv', grades='grades.csv',
+           database='../classes.sql'):
+    with sqlite3.connect(database) as connection:
+        CURSOR = connection.cursor()
 
         command = ''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
                           for key, value in TABLES.items())
