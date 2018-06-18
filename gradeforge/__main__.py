@@ -64,14 +64,7 @@ QUERY.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='
                    help='query to run. must be valid SQLite3 syntax, '
                    + 'but ending semicolon is optional.')
 
-CREATE = COMMAND.add_parser('create', help='create a new database')
-# TODO: implement this
-CREATE.add_argument('--source', nargs='+',
-                    help='one or more files containing data. '
-                    + 'must be valid python using built-in datastructures. '
-                    + 'must contain the variables '
-                    + 'DEPARTMENTS, CLASSES, INSTRUCTORS, SEMESTERS, and SECTIONS.')
-
+COMMAND.add_parser('create', help='create a new database')
 COMMAND.add_parser('dump', help='show everything in a database')
 
 # begin download parser

@@ -18,13 +18,9 @@ BASE_URL = 'https://ssb.onecarolina.sc.edu'
 def parse_catalog(file_handle, catalog_output='courses.csv',
                   department_output='departments.csv'):
     '''
-    file -> (classes, departments)
-        where classes = [c...]
-            where c.keys() = ('course_link', 'title', 'department', 'code',
-                              'description', 'credits', 'attributes', 'level',
-                              'type', 'all_sections')
-        where departments = {short: long for header in html}
-    TODO: lots
+    file -> None
+
+    TODO:
     - seperate prereqs from description
     - 'type' is not picked up if inside an anchor; the current mess doesn't do what I thought
     - general screwy stuff
@@ -128,11 +124,7 @@ def clean_catalog(course):
 def parse_sections(file_handle, instructor_output='instructors.csv',
                    semester_output='semesters.csv', section_output='sections.csv'):
     '''file_handle -> None
-            where c is dictionary with keys (section_link, UID, section, department,
-            code, registration_start, registration_end, semester, attributes,
-            campus, type, method, catalog_link, bookstore_link, syllabus,
-            days, location, start_time, end_time, start_date, end_date,
-            instructor, instructor_email
+
     Parses sections of a course
     Essentially a giant finite state autonoma
 
@@ -408,11 +400,14 @@ def parse_bookstore(file_handle, output=stdout):
         - new rent
         - used buy
         - new buy
-        - amazon
+    Note that if price is not available on bookstore, it is not entered as a key
     - link
     - author
     - edition
     - required/recommended/optional
+
+    Not implemented:
+    - price on amazon
     '''
 
     if not hasattr(output, 'write'):
