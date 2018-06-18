@@ -117,7 +117,7 @@ $(OLD_GRADES): | $(GRADE_DIR)
 
 cleanup = 1 s/\([A-DF]+?\)_GF/\1/g; 1 s/COURSE_SECTION/SECTION/; 1 s/_NUMBER//g; \
       1 s/No ?Grade/No Grade/; 1 s/Num Grades Posted/TOTAL/; \
-      1 s/Incomplete/INCOMPLETE/i; 1 s/SUBJECT/DEPARTMENT/
+      1 s/Incomplete/INCOMPLETE/i; 1 s/SUBJECT/DEPARTMENT/; 1 s/COURSE/CODE/
 $(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
 	xlsx2csv $^ $@
 	sed -i '$(cleanup)' $@

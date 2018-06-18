@@ -55,7 +55,12 @@ TABLES = {'class': ["title tinytext",
                       "finalExam dateTime"],
                       # always out of date; requires parsing different page
                       #"capacity tinyint", "remaining tinyint"
-          'grade': ['section int PRIMARY KEY',
+          'grade': ['semester char(6)',
+                    'department char(4)',
+                    'code varchar(5)',
+                    'title tinytext',
+                    'section tinytext',
+                    'campus tinytext',
                     'A tinyint',
                     '"B+" tinyint',
                     'B tinyint',
@@ -84,7 +89,8 @@ TABLES = {'class': ["title tinytext",
                     'NR tinyint',
                     'T tinyint',
                     'FN tinyint',
-                    'IP tinyint'
+                    'IP tinyint',
+                    'TOTAL tinyint'
                    ]
          }
 
@@ -117,41 +123,7 @@ def create(catalog='catalog.csv', departments='departments.csv',
         csv_insert('instructor', instructors, CURSOR)
         csv_insert('semester', semesters, CURSOR)
         csv_insert('section', sections, CURSOR)
-        # grades get special treatment because they have duplictated info
-        unused = 'TITLE', 'SEMESTER', 'CAMPUS', 'DEPARTMENT', 'COURSE', 'TOTAL'
-        with open(grades) as f:
-            reader = csv.DictReader(f)
-            headers = tuple(filter(lambda h: h not in unused,
-                                   map(str.strip, next(reader))))
-            for d in reader:
-                d.pop('TITLE')  # not used
-                d.pop('TOTAL')  # TODO: sanity check that this matches
-                query = '''
-                SELECT uid FROM section
-                WHERE semester = ? AND campus = ? AND department = ?
-                      AND code = ? AND section = ?'''
-                params = (d.pop('SEMESTER'), d.pop('CAMPUS'),
-                          d.pop('DEPARTMENT'), d.pop("COURSE"), d.pop("SECTION"))
-                if params[0][:4] < '201341':  # no grade data
-                    result = None
-                else:
-                    try:
-                        result = CURSOR.execute(query, params).fetchone()[0]
-                    except TypeError:
-                        print(query.replace('?', '%s') % params, 'returned None')
-                d['SECTION'] = result
-                command = 'INSERT INTO grade (%s) VALUES (%s)'
-                command %= ', '.join(map(repr, headers)), ', '.join('?' * len(headers))
-                insert_params = []
-                for h in headers:
-                    try:
-                        insert_params.append(int(d[h]))
-                    except ValueError:
-                        insert_params.append(d[h])
-                    except TypeError:
-                        assert d[h] == None
-                        insert_params.append(0)
-                CURSOR.execute(command, insert_params)
+        csv_insert('grade', grades, CURSOR)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):

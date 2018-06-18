@@ -488,8 +488,8 @@ def parse_grades(file_handle, output=stdout):
             headers = headers.upper()
             headers = re.sub(r'DEP(AR)?T(\.|MENT)?', 'DEPARTMENT', headers)
             headers = re.sub(r'SEC(T(ION)?)?\.?', 'SECTION', headers)
-            headers = re.sub(r'C(OU)?RSE( ?#)?', 'COURSE', headers)
-            headers = headers.replace('DEPARTMENT/COURSE', 'DEPARTMENT COURSE')
+            headers = re.sub(r'C(OU)?RSE( ?#)?', 'CODE', headers)
+            headers = headers.replace('DEPARTMENT/CODE', 'DEPARTMENT CODE')
             headers = headers.replace('AUD', 'AUDIT')
             headers = headers.replace(' I ', ' INCOMPLETE ').split()
             break
@@ -504,7 +504,7 @@ def parse_grades(file_handle, output=stdout):
 def combine_grades(output=stdout, *file_handles):
     '''The headers for CSV files change from file to file.
     This method normalizes headers and adds empty strings if needed.'''
-    headers = 'SEMESTER,CAMPUS,DEPARTMENT,COURSE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
+    headers = 'SEMESTER,CAMPUS,DEPARTMENT,CODE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
               # TODO: what the hell do these mean
     headers += 'A_GF,B+_GF,B_GF,C_GF,C+_GF,D+_GF,D_GF,F_GF,'
     headers += 'S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,No Grade,T,IP,FN,AUDIT'
