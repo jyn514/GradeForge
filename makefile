@@ -191,12 +191,13 @@ all_books: classes.sql | $(BOOK_DIR)
 		python -c "from gradeforge.download import get_all_books; \
 			   get_all_books($$semester)"; done
 
-# the reason this call make recursively is because it's really a collection of
+# the reason this calls make recursively is because it's really a collection of
 # dependencies, same as $(EXAMS), but we don't know the sections until after
 # we've made the database.
 # TODO: can be parallel
 .PHONY: bookstore
 bookstore: classes.sql all_books
+	# sqlite uses '||' for string concatenation for some reason
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
 $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR) images:
