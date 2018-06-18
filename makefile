@@ -162,13 +162,16 @@ $(SECTIONS): $$(subst .csv,.html,$$@)
 				     --semester-output /dev/null \
 				     $^ $@
 
-$(subst .csv,.html,$(SECTIONS)): | $(SECTION_DIR)
+$(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR)
 	$(eval tmp := $(shell echo $@ | cut -d/ -f2 | cut -d. -f1 | cut -d- -f1-2 --output-delimiter=' '))
 	# keep original because we'll be changing it in a second
-	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@.bak
+	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@
+
+
+$(subst .csv,.html,$(SECTIONS)): $$(addsuffix .bak,$$@)
 	# 1. change two opening tags to single closed tag
 	# 2. the school seems to think <p> is the same as <br>
-	sed 's#<b>\(.*\)<b>#<b>\1</b>#; s/ <p>$$//' $@.bak > $@
+	sed 's#<b>\(.*\)<b>#<b>\1</b>#; s/ <p>$$//' $^ > $@
 	# required for Summer 2016, others *might* work but less effort this way
 	# note that tidy returns 1 on warnings, and the html always gives warnings
 	tidy -modify -f /dev/null $@ || if [ $$? -ne 1 ]; then exit $$?; fi
