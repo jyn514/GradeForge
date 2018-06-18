@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# encoding: utf-8
 '''HTML parsing. Generally, works only on files, not on strings'''
 
 from __future__ import print_function, generators
