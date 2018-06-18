@@ -67,28 +67,6 @@ class SingleMetavarFormatter(HelpFormatter):
         return ', '.join(parts)
 
 
-class ReturnSame(object):
-    '''Returns the same value no matter what object is used to access.
-    Meant to mimic a dictionary.
-    Example use:
-    >>> d = ReturnSame(4)
-    >>> d['some_value']
-    4
-    '''
-    def __init__(self, *values):
-        self.value = values[0] if len(values) == 1 else values
-
-    def __getitem__(self, item):
-        return self.value
-
-    def __str__(self):
-        # str is necessary in case value is a tuple
-        return "gradeforge.ReturnSame(%s)" % str(self.value)
-
-    def __repr__(self):
-        return self.__str__()
-
-
 def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''
     semester = str(semester)
