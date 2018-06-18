@@ -25,6 +25,7 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 	- past grade distributions
 	- schedule planner or an equivalent
 	- degreeworks
+	- required textbooks
 
 ### Short-Term
 - parse_bookstore has yet to be implemented either in the makefile or in `parse sections`
