@@ -67,7 +67,7 @@ all_sections: $(SECTIONS)
 
 .PHONY: web server website
 web server website: sql
-	$(GRADEFORGE) web
+	PYTHONPATH=. $(GRADEFORGE) web
 
 .PHONY: dump
 dump: sql
