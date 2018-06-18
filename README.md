@@ -7,7 +7,7 @@ viewing offline. Support is available for an SQL database. Work on a web
 interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 
 ## Requirements
-- `make`
+- GNU `make` (`gmake` for BSD users)
 - `python3`
 - `pip` and modules from `requirements.txt`. if not using a packaged version of `lxml`, you will need
 	- a working C compiler
