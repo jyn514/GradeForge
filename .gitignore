@@ -1,10 +1,10 @@
 .cache
 .pytest_cache
 *.csv
+sections/*.html
 books/
 exams/
 grades/
-sections/
 images/
 secrets.py
 classes.sql
