@@ -204,7 +204,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             text = re.split('\W-\W', anchor.text)
             # everything before last three is title
             course['UID'], course_id, course['section'] = text[-3:]
-            course['department'], course['code'] = course_id.split(' ')
+            course['department'], course['code'] = re.split('\W+', course_id)
         else:
             main = row.xpath('td[1]')[0]
 
