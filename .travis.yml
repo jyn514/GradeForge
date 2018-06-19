@@ -21,4 +21,5 @@ cache:
         - sections
 
 script:
+    - make clean
     - make test
