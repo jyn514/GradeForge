@@ -244,6 +244,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             elif len(table_info) > 9:  # multiple instructors
                 # combine instructors into one element
                 table_info = table_info[:6] + [''.join([table_info[7]] + table_info[9:])]
+            elif len(table_info) == 8:  # multiple instructors and no junk
+                table_info = table_info[:6] + [''.join(table_info[6:])]
             if not table_info:  # independent study; this is handled on the frontend
                 for key in ['days', 'location', 'startTime', 'endTime',
                             'instructor']:
@@ -253,6 +255,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
                 course['instructor'] = re.sub(' +', ' ',
                                               course['instructor'].strip().replace(' (', ''))
+                course['instructor'] = course['instructor'].replace('P, ', '')
                 if times == 'TBA':
                     course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
