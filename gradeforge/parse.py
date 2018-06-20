@@ -198,7 +198,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
     doc = etree.parse(file_handle, etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
-    assert len(rows) % 2 == 0  # even
+    assert not len(rows) & 1  # even
     HEADER = True
     for row in rows:
         if HEADER:
@@ -514,10 +514,10 @@ def parse_grades(file_handle, output=stdout):
 def combine_grades(output=stdout, *file_handles):
     '''The headers for CSV files change from file to file.
     This method normalizes headers and adds empty strings if needed.'''
-    headers = 'SEMESTER,CAMPUS,DEPARTMENT,CODE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
-              # TODO: what the hell do these mean
-    headers += 'A_GF,B+_GF,B_GF,C_GF,C+_GF,D+_GF,D_GF,F_GF,'
-    headers += 'S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,No Grade,T,IP,FN,AUDIT'
+    headers = ('SEMESTER,CAMPUS,DEPARTMENT,CODE,SECTION,TITLE,A,B+,B,C+,C,D+,D,F,'
+               # TODO: what the hell do these mean
+               'A_GF,B+_GF,B_GF,C_GF,C+_GF,D+_GF,D_GF,F_GF,'
+               'S,U,UN,INCOMPLETE,W,WF,NR,TOTAL,No Grade,T,IP,FN,AUDIT')
     with open(output, 'w') as w:
         writer = csv.DictWriter(w, headers.split(','))
         writer.writeheader()
