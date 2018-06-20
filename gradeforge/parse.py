@@ -267,7 +267,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 except IndexError:
                     email = None
             try:
-                if email != instructor_dict[course['instructor']]:
+                if email is not None and email != instructor_dict[course['instructor']]:
                     print("WARNING: email '%s' for instructor '%s' already exists and does not match '%s'"
                           % (instructor_dict[course['instructor']], course['instructor'], email),
                           file=stderr)
