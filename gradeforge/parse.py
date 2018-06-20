@@ -15,8 +15,7 @@ from gradeforge.utils import save, army_time, parse_semester, parse_days
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
-def parse_catalog(file_handle, catalog_output='courses.csv',
-                  department_output='departments.csv'):
+def parse_catalog(file_handle, catalog_output='courses.csv', department_output='departments.csv'):
     '''
     file -> None
 
@@ -122,7 +121,7 @@ def clean_catalog(course):
 
 
 def parse_sections(file_handle, instructor_output='instructors.csv',
-                   semester_output='semesters.csv', section_output='sections.csv'):
+                   term_output='semesters.csv', section_output='sections.csv'):
     '''file_handle -> None
 
     Parses sections of a course
@@ -170,7 +169,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             parse_sections(file_handle, writable, semester_output, section_output)
             return
 
-    if not hasattr(semester_output, 'write'):
+    if not hasattr(term_output, 'write'):
         with open(semester_output, 'w') as writable:
             parse_sections(file_handle, instructor_output, writable, section_output)
             return
@@ -180,7 +179,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             parse_sections(file_handle, instructor_output, semester_output, writable)
             return
 
-    headers = ('section_link', 'department', 'code', 'section', 'UID', 'semester', 'campus',
+    headers = ('section_link', 'department', 'code', 'section', 'UID', 'term', 'campus',
                'type', 'method', 'catalog_link', 'bookstore_link', 'days',
                'location', 'startTime', 'endTime', 'instructor', 'syllabus', 'attributes')
     sections = csv.DictWriter(section_output, headers)
@@ -190,8 +189,11 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     # as opposed to sets, which require linear search
     # the reason for lookups is because the parsing is still imperfect;
     # this allows warning when a key already exists in the dict
-    semester_dict = {}
     instructor_dict = {}
+    # this should be a set but we need a primary key; index serves this purpose
+    # ideally we would use an ordered set but it's not a builtin and I'm lazy
+    # see https://github.com/jyn514/GradeForge/issues/20 for details
+    terms = []
 
     doc = etree.parse(file_handle, etree.HTMLParser())
     rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
@@ -211,10 +213,16 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             after = main.xpath('(.|a|b|p)/span/following-sibling::text()')
             after = tuple(map(str.strip, filter(lambda x: x != '\n', after)))
 
-            semester = {}
-            semester_raw, registration = after[:2]  # third is level, which we know
-            course['semester'] = parse_semester(*re.split('\W+', semester_raw))
-            semester['registrationStart'], semester['registrationEnd'] = registration.split(' to ')
+            term = {}
+            try:  # this is always first point of failure for parser
+                semester_raw, registration = after[:2]  # third is level, which we know
+            except Exception:
+                print(after, course, list(main), text, file=stderr)
+                raise
+
+            term['semester'] = parse_semester(*re.split('\W+', semester_raw))
+            term['registrationStart'], term['registrationEnd'] = map(lambda s: re.sub('\W+', ' ', s),
+                                                                     registration.split(' to '))
 
             if len(after) == 8:
                 course['attributes'] = after[3]
@@ -239,7 +247,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 for key in ['days', 'location', 'startTime', 'endTime',
                             'instructor']:
                     course[key] = None
-                email, semester['startDate'], semester['endDate'] = [None] * 3
+                email, term['startDate'], term['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
                 course['instructor'] = re.sub(' +', ' ',
@@ -248,7 +256,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                     course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
                     course['startTime'], course['endTime'] = map(army_time, times.split(' - '))
-                semester['startDate'], semester['endDate'] = dates.split(' - ')
+                term['startDate'], term['endDate'] = dates.split(' - ')
                 try:
                     # str is necessary, otherwise returns _ElementUnicodeResult
                     email = str(main.xpath('table/tr[2]/td/a/@href')[0])
@@ -262,12 +270,10 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             except KeyError:
                 instructor_dict[course['instructor']] = email
             try:
-                if tuple(semester_dict[course['semester']].values()) != tuple(semester.values()):
-                    print("WARNING: semester info '%s' already exists for semester '%s' and does not match '%s'"
-                          % (semester_dict[course['semester']], course['semester'], semester),
-                          file=stderr)
-            except KeyError:
-                semester_dict[course['semester']] = semester
+                course['term'] = terms.index(term)
+            except ValueError:
+                terms.append(term)
+                course['term'] = len(terms) - 1
             sections.writerow(clean_section(course))
             # error instead of silently addding wrong info when rows/headers out of order
             del course
@@ -277,11 +283,10 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     instructor_output.write('name, email\n')
     instructors.writerows(instructor_dict.items())
 
-    headers = 'id', 'startDate', 'endDate', 'registrationStart', 'registrationEnd'
-    semesters = csv.DictWriter(semester_output, headers)
-    semesters.writeheader()
-    semesters.writerows(dict({'id': key}, **values)
-                        for key, values in semester_dict.items())
+    headers = 'semester', 'startDate', 'endDate', 'registrationStart', 'registrationEnd'
+    term_writer = csv.DictWriter(term_output, headers)
+    term_writer.writeheader()
+    term_writer.writerows(terms)
 
 
 
