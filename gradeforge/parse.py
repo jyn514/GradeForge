@@ -5,6 +5,7 @@
 from __future__ import print_function, generators
 from tempfile import mkstemp  # used for downloading seats remaining
 from sys import stdout, stderr
+from datetime import datetime
 import csv
 import re  # used for only very basic stuff
 
@@ -191,7 +192,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     # this allows warning when a key already exists in the dict
     instructor_dict = {}
     # this should be a set but we need a primary key; index serves this purpose
-    # ideally we would use an ordered set but it's not a builtin and I'm lazy
+    # TODO: switch to ordered set: https://pypi.org/project/ordered-set/
     # see https://github.com/jyn514/GradeForge/issues/20 for details
     terms = []
 
@@ -269,6 +270,11 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                           file=stderr)
             except KeyError:
                 instructor_dict[course['instructor']] = email
+            for key, value in term.items():
+                if key != 'semester' and value is not None:
+                    'Aug 24, 2018 -> 2018-08-24'
+                    term[key] = datetime.strptime(value.replace(',', ''),
+                                                  "%b %d %Y").date().isoformat()
             try:
                 course['term'] = terms.index(term)
             except ValueError:
