@@ -167,17 +167,17 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
     if not hasattr(instructor_output, 'write'):
         with open(instructor_output, 'w') as writable:
-            parse_sections(file_handle, writable, semester_output, section_output)
+            parse_sections(file_handle, writable, term_output, section_output)
             return
 
     if not hasattr(term_output, 'write'):
-        with open(semester_output, 'w') as writable:
+        with open(term_output, 'w') as writable:
             parse_sections(file_handle, instructor_output, writable, section_output)
             return
 
     if not hasattr(section_output, 'write'):
         with open(section_output, 'w') as writable:
-            parse_sections(file_handle, instructor_output, semester_output, writable)
+            parse_sections(file_handle, instructor_output, term_output, writable)
             return
 
     headers = ('section_link', 'department', 'code', 'section', 'UID', 'term', 'campus',

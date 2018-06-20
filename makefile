@@ -159,7 +159,7 @@ $(CATALOG_OUTPUT): webpages/catalog.html
 $(SECTIONS): $$(subst .csv,.html,$$@)
 	# TODO: this is wrong
 	$(GRADEFORGE) parse sections --instructor-output /dev/null \
-				     --semester-output /dev/null \
+				     --term-output /dev/null \
 				     $^ $@
 
 $(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR)

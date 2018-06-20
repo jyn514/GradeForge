@@ -49,7 +49,7 @@ INFO.add_parser('catalog', parents=[IO]).add_argument('--departments', '--depart
                                                       default=stdout)
 
 SECTIONS = INFO.add_parser('sections', parents=[IO])
-for opt in ['instructor', 'semester']:
+for opt in ['instructor', 'term']:
     SECTIONS.add_argument('--%ss' % opt, '--%s-output' % opt,
                           default=stdout)
 
@@ -130,7 +130,7 @@ elif ARGS.subparser == 'parse':
                       department_output=ARGS.departments)
     else:
         parse_sections(ARGS.input, instructor_output=ARGS.instructors,
-                       semester_output=ARGS.semesters,
+                       term_output=ARGS.terms,
                        section_output=ARGS.output)
 else:  # download
     if ARGS.info == 'exam':
