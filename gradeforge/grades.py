@@ -1,13 +1,19 @@
-#!/usr/bin/env python3
+'''Heavily adapted version of the original grade creator from jpc/grades.py'''
 import re
-import sys
+from sqlite3 import connect
 
 from matplotlib import pyplot
-from sqlite3 import connect
 
 from gradeforge.utils import get_semester_today
 
 def png_for(department, code, section, semester=get_semester_today()):
+    '''Given the appropriate info, create a bar graph of the grades for that section
+    department: 4 character abbreviation (ex: CSCE)
+    code: a 3-5 character major descriptor (ex: 145)
+    section: a 3-4 character minor descriptor (ex: 001)
+    semester: standard USC form, YYYYMM
+    outputs to images/<department>-<code>-<section>-<semester>.png
+    TODO: allow customization of output file'''
     department, code, section, semester = map(str, (department, code, section, semester))
 
     metadata_query = '''

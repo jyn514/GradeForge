@@ -58,6 +58,7 @@ def get_sections(department='%', semester='201808', campus='%', number='', title
 
 
 def make_driver():
+    '''Make a webdriver for selenium with appropriate options'''
     from selenium.webdriver import Chrome
     from selenium.webdriver.chrome.options import Options
     # https://stackoverflow.com/a/49582462

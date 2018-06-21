@@ -1,14 +1,17 @@
+'''Stage three of data collection. Given many files of a given category,
+combine them into a single enormous file as befits the category.'''
+
 import csv
 from sys import stdout
 
 import pandas
 
 def ensure_open(file_handle, read=True):
+    '''given either a path or a file descriptor, return a file descriptor'''
     mode = 'read' if read else 'write'
     if hasattr(file_handle, mode):
         return file_handle
-    else:
-        return open(file_handle, mode[0])
+    return open(file_handle, mode[0])
 
 
 def combine_grades(file_handles, output=stdout):
@@ -28,6 +31,9 @@ def combine_grades(file_handles, output=stdout):
 
 
 def simple_combine(files, output=stdout, unique=False):
+    '''Given some CSV files, slap them together.
+    We don't use `cut` because it can't catch duplicates.
+    unique: columns to drop if duplicated; if falsy, don't drop anything'''
     result = pandas.concat(map(pandas.read_csv, files), axis=0, ignore_index=True)
     if unique:
         result = result.drop_duplicates(unique)
@@ -35,10 +41,12 @@ def simple_combine(files, output=stdout, unique=False):
 
 
 def combine_departments(files, output=stdout):
+    '''just a little wrapper'''
     simple_combine(files, output, unique='code')
 
 
 def combine_instructors(files, output=stdout):
+    '''just a little wrapper'''
     simple_combine(files, output, unique='name')
 
 

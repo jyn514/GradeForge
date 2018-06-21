@@ -93,6 +93,7 @@ def get_season(semester='201808'):
 
 
 def get_season_today():
+    '''Return current season: one of ('Spring', 'Summer', 'Fall')'''
     month = date.today().month
     if month < 5:
         return 'Spring'
@@ -129,15 +130,18 @@ def parse_semester(season, year=date.today().year):
 
 
 def get_semester_today():
+    '''Helper function, I was repeating a lot of code'''
     return parse_semester(get_season_today())
 
 
-def save(obj, output):
+def save(obj, output=stdout):
+    '''Put some data on disk'''
     with open(output, 'wb') as i:
         i.write(obj)
 
 
 def army_time(time):
+    '''Convert 12-hour a.m./p.m. time to 24-hour time'''
     if ':' not in time:
         raise ValueError("Invalid time " + time)
     hours, minutes = time.split(':')

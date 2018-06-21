@@ -98,8 +98,10 @@ TABLES = {'class': ["title tinytext",
          }
 
 
-def csv_insert(table, file_name, cursor):
-    with open(file_name) as f:
+def csv_insert(table, csv_file, cursor):
+    '''Given a table and the corresponding CSV file, plop the whole thing into a database
+    TODO: accept file descriptor for csv_file'''
+    with open(csv_file) as f:
         # TODO: use a dict reader?
         reader = csv.reader(f)
         # TODO: check if this matches table
@@ -113,6 +115,8 @@ def create(catalog='catalog.csv', departments='departments.csv',
            instructors='instructors.csv', terms='terms.csv',
            sections='sections.csv', grades='grades.csv',
            database='../classes.sql'):
+    '''main create function for the gradeforge project. for every table in
+    TABLES, create it in the database and add the corresponding CSV file.'''
     with sqlite3.connect(database) as connection:
         CURSOR = connection.cursor()
 
@@ -147,5 +151,6 @@ def query(sql_query, database='classes.sql'):
                          for t in DATABASE.execute(sql_query).fetchall())
 
 
-def dump():
+def dump(database='classes.sql'):
+    '''Dump the whole database. Assumes the database was created by GradeForge.'''
     print('\n'.join(query("SELECT * FROM " + table) for table in TABLES))
