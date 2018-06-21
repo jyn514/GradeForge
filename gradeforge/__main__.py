@@ -34,11 +34,6 @@ PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files',
 IO = ArgumentParser(add_help=False)
 IO.add_argument('input', help='file to parse')
 IO.add_argument('output', help='main output of parse function', nargs='?', default=stdout)
-# TODO: not implemented
-IO.add_argument('--create', action='store_true',
-                help='create new file. '
-                + 'if true, fails if file already exists. '
-                + 'if false, does not print a csv header')
 
 INFO = PARSE.add_subparsers(dest='info', help='type of info to parse')
 INFO.required = True
