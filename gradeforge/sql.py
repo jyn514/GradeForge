@@ -27,7 +27,8 @@ TABLES = {'class': ["title tinytext",
                          "description tinytext"],
           'instructor': ["name tinytext PRIMARY KEY",
                          "email tinytext"],
-          'semester': ["id char(6) PRIMARY KEY",
+          'term': ["id INTEGERY PRIMARY KEY",
+                       "semester char(6)",
                        "startDate date",
                        "endDate date",
                        'registrationStart data',
@@ -41,7 +42,7 @@ TABLES = {'class': ["title tinytext",
                       "section tinytext",
                       "department char(4)",
                       "code varchar(5)",
-                      "semester char(6)",
+                      "term INTEGER",
                       "attributes tinytext",
                       "campus tinytext",
                       'type tinytext',
@@ -109,7 +110,7 @@ def csv_insert(table, file_name, cursor):
 
 
 def create(catalog='catalog.csv', departments='departments.csv',
-           instructors='instructors.csv', semesters='semesters.csv',
+           instructors='instructors.csv', terms='terms.csv',
            sections='sections.csv', grades='grades.csv',
            database='../classes.sql'):
     with sqlite3.connect(database) as connection:
@@ -122,7 +123,7 @@ def create(catalog='catalog.csv', departments='departments.csv',
         csv_insert('class', catalog, CURSOR)
         csv_insert('department', departments, CURSOR)
         csv_insert('instructor', instructors, CURSOR)
-        csv_insert('semester', semesters, CURSOR)
+        csv_insert('term', terms, CURSOR)
         csv_insert('section', sections, CURSOR)
         csv_insert('grade', grades, CURSOR)
 

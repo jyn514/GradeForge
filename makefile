@@ -22,20 +22,20 @@ EXAM_OUTPUT = exams.csv
 
 INSTRUCTOR_OUTPUT = instructors.csv
 SECTION_OUTPUT = sections.csv
-SEMESTER_OUTPUT = semesters.csv
+TERM_OUTPUT = terms.csv
 
-# NOTE: because instructors, semesters, and departments are marked SECONDARY later,
-# they don't need to be prereqs (because there's no rule for how to make them)
-# BOOKSTORE_OUTPUT is not here because a) getting books for every section would
-# get us IP-banned and b) cut doesn't work with newlines
-DATA := $(CATALOG_OUTPUT) $(GRADES_OUTPUT) $(EXAM_OUTPUT) $(SECTION_OUTPUT)
-
-GRADEFORGE = python -m gradeforge
 
 # make config; don't change until you read man (1) make
 # WARNING: changing -j4 to -j will spawn arbitrary processes and probably set your computer thrashing
 MAKEFLAGS += -j4 --warn-undefined-variables
 SHELL = sh
+
+# data variables
+GRADEFORGE = python -m gradeforge
+
+# NOTE: BOOKSTORE_OUTPUT is not here because a) getting books for every section would
+# get us IP-banned and b) cut doesn't work with newlines
+DATA := $(CATALOG_OUTPUT) $(GRADES_OUTPUT) $(EXAM_OUTPUT) $(SECTION_OUTPUT) $(INSTRUCTOR_OUTPUT) $(TERM_OUTPUT) $(DEPARTMENT_OUTPUT)
 
 EXAMS := $(addsuffix .csv,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
 
@@ -100,6 +100,18 @@ $(EXAM_DIR)/%.html: | $(EXAM_DIR)
 	  exam > $@
 	$(call clean,$@)
 
+$(INSTRUCTOR_OUTPUT): $(SECTIONS)
+	$(GRADEFORGE) combine instructors $(subst .csv,.instructors.csv,$^) > $@
+
+$(TERM_OUTPUT): $(SECTIONS)
+	$(GRADEFORGE) combine terms $(subst .csv,.terms.csv,$^) > $@
+
+$(DEPARTMENT_OUTPUT): $(CATALOG_OUTPUT)
+	$(GRADEFORGE) combine departments $(subst .csv,.departments.csv,$^) > $@
+
+$(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES))
+	$(GRADEFORGE) combine grades $^ > $@
+
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
 
@@ -133,10 +145,6 @@ $(subst .pdf,.txt,$(OLD_GRADES)): $$(subst .txt,.pdf,$$@)
 $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
 	$(GRADEFORGE) parse grades $^ $@
 
-$(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES))
-	files=$$(echo $(GRADE_DIR)/*.csv); \
-	python -c "from gradeforge.parse import combine_grades; \
-	combine_grades('$@', *'$$(echo $$files)'.split())"
 
 
 # WARNING: since make allows only a single pattern to match, this unconditionally
@@ -151,15 +159,12 @@ $(BOOK_DIR)/%.html: | $(BOOK_DIR)
 $(BOOK_DIR)/%.csv: $$(subst .csv,.html,$$@)
 	$(GRADEFORGE) parse bookstore $^ $@
 
-.SECONDARY: $(DEPARTMENT_OUTPUT)
 $(CATALOG_OUTPUT): webpages/catalog.html
-	$(GRADEFORGE) parse catalog --department-output $(DEPARTMENT_OUTPUT) \
-				    $^ $@
+	$(GRADEFORGE) parse catalog --department-output $(subst .csv,.departments.csv,$@) $^ $@
 
 $(SECTIONS): $$(subst .csv,.html,$$@)
-	# TODO: this is wrong
-	$(GRADEFORGE) parse sections --instructor-output /dev/null \
-				     --term-output /dev/null \
+	$(GRADEFORGE) parse sections --instructor-output $(subst .csv,.instructors.csv,$@) \
+				     --term-output $(subst .csv,.terms.csv,$@) \
 				     $^ $@
 
 $(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR)
@@ -176,10 +181,10 @@ $(subst .csv,.html,$(SECTIONS)): $$(addsuffix .bak,$$@)
 	# note that tidy returns 1 on warnings, and the html always gives warnings
 	tidy -modify -f /dev/null $@ || if [ $$? -ne 1 ]; then exit $$?; fi
 
-$(SECTION_OUTPUT): $(SECTIONS)
+# TODO: this is wrong, it's just convenient
+$(SECTION_OUTPUT): $(SECTIONS) | $(TERM_OUTPUT)
 $(EXAM_OUTPUT): $(EXAMS)
 
-.SECONDARY: $(INSTRUCTOR_OUTPUT) $(SEMESTER_OUTPUT)
 $(SECTION_OUTPUT) $(EXAM_OUTPUT):
 	head -1 $< > $@  # headers
 	for exam in $^; do tail -n+2 $$exam >> $@; done
