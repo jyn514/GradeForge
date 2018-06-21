@@ -4,7 +4,7 @@ from datetime import date
 
 import pytest
 
-from gradeforge.utils import DAYS, parse_semester, ReturnSame, army_time, get_season, b_and_n_semester
+from gradeforge.utils import DAYS, parse_semester, army_time, get_season, b_and_n_semester
 
 def test_constants():
     '''TODO: test `allowed`'''
@@ -22,16 +22,6 @@ def test_parse_semester():
     for error in ('spring', 1), ('Fall', -107), ('summer', 10000):
         with pytest.raises(ValueError, message=str(error)):
             parse_semester(*error)
-
-
-def test_ReturnSame():
-    assert ReturnSame(0)[0] == 0
-    assert ReturnSame(1)[10] == 1
-    assert ReturnSame(2)['Hi there!'] == 2
-    assert ReturnSame(3, 5, 12)[None] == (3, 5, 12)
-    assert ReturnSame([None, 'pi', 3.2])[date] == [None, 'pi', 3.2]
-    l = lambda f: f.strip()  # python compares lambdas by memory address
-    assert ReturnSame(l)[lambda y: y**2] == l
 
 
 def test_army_time():
