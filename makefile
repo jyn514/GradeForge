@@ -84,9 +84,18 @@ classes.sql: $(DATA)
 	$(RM) $@
 	$(GRADEFORGE) sql create
 
-.SECONDEXPANSION:
 .PHONY: catalog
 catalog: webpages/catalog.html
+
+# lxml has trouble with too much whitespace
+define clean =
+	if grep '404 page not found' $1; then \
+		echo file "'$1'" gave a 404 not found; \
+		$(RM) $1; \
+		exit 999; \
+	fi
+	sed -i 's/\s\+$$//' $1
+endef
 
 .DELETE_ON_ERROR:
 webpages/catalog.html: | webpages
@@ -112,6 +121,7 @@ $(DEPARTMENT_OUTPUT): $(CATALOG_OUTPUT)
 $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES))
 	$(GRADEFORGE) combine grades $^ > $@
 
+.SECONDEXPANSION:
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
 
@@ -209,23 +219,14 @@ $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR) images webpag
 	mkdir $@
 
 
-# lxml has trouble with too much whitespace
-define clean =
-	if grep '404 page not found' $1; then \
-		echo file "'$1'" gave a 404 not found; \
-		$(RM) $1; \
-		exit 999; \
-	fi
-	sed -i 's/\s\+$$//' $1
-endef
 
 .PHONY: clean
 clean:
-	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) $(SECTION_DIR)/*.csv classes.sql catalog.departments.csv *.pyc
+	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) $(SECTION_DIR)/*.csv classes.sql catalog.departments.csv
 
 .PHONY: clobber
 clobber: clean
-	$(RM) -r webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) __pycache__ gradeforge/__pycache__
+	$(RM) -r webpages $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) __pycache__ gradeforge/__pycache__ *.pyc
 
 .PHONY: dist-clean
 # careful with this, it's a good way to lose anything you haven't committed
