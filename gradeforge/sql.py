@@ -28,11 +28,12 @@ TABLES = {'class': ["title tinytext",
           'instructor': ["name tinytext PRIMARY KEY",
                          "email tinytext"],
           'term': ["id INTEGERY PRIMARY KEY",
-                       "semester char(6)",
-                       "startDate date",
-                       "endDate date",
-                       'registrationStart data',
-                       "registrationEnd date"],
+                   "semester char(6)",
+                   "startDate date",
+                   "endDate date",
+                   'registrationStart data',
+                   "registrationEnd date"],
+          # currently unused
           'location': ["id smallint PRIMARY KEY",
                        "building tinytext",
                        "room smallint"],
@@ -118,18 +119,16 @@ def create(catalog='catalog.csv', departments='departments.csv',
     '''main create function for the gradeforge project. for every table in
     TABLES, create it in the database and add the corresponding CSV file.'''
     with sqlite3.connect(database) as connection:
-        CURSOR = connection.cursor()
-
         command = ''.join('CREATE TABLE %s(%s);' % (key, ', '.join(value))
                           for key, value in TABLES.items())
-        CURSOR.executescript(command)
+        connection.executescript(command)
 
-        csv_insert('class', catalog, CURSOR)
-        csv_insert('department', departments, CURSOR)
-        csv_insert('instructor', instructors, CURSOR)
-        csv_insert('term', terms, CURSOR)
-        csv_insert('section', sections, CURSOR)
-        csv_insert('grade', grades, CURSOR)
+        csv_insert('class', catalog, connection)
+        csv_insert('department', departments, connection)
+        csv_insert('instructor', instructors, connection)
+        csv_insert('term', terms, connection)
+        csv_insert('section', sections, connection)
+        csv_insert('grade', grades, connection)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):
@@ -140,15 +139,15 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
                                  for key, value in filters.items()])
     command = 'SELECT %s FROM %s%s;' % (', '.join(columns), table,
                                         ' WHERE ' + query_filter if query_filter != '' else '')
-    with sqlite3.connect(database) as DATABASE:
-        return DATABASE.execute(command).fetchall()
+    with sqlite3.connect(database) as connection:
+        return connection.execute(command).fetchall()
 
 
 def query(sql_query, database='classes.sql'):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
-    with sqlite3.connect(database) as DATABASE:
+    with sqlite3.connect(database) as connection:
         return '\n'.join('|'.join(map(str, t))
-                         for t in DATABASE.execute(sql_query).fetchall())
+                         for t in connection.execute(sql_query).fetchall())
 
 
 def dump(database='classes.sql'):

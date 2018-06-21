@@ -12,7 +12,7 @@ import re  # used for only very basic stuff
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester, parse_days
+from gradeforge.utils import save, army_time, parse_semester
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 
@@ -76,14 +76,18 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             # type can be multiple (since there might be anchor in middle)
             course['level'], course['type'], department_description = spans[0], ''.join(spans[1:-1]), spans[-1]
             if 'Department' not in department_description:
-                print("WARNING: invalid department '%s' for %s" % (department_description, course['department']),
+                print("WARNING: invalid department '%s' for %s"
+                      % (department_description, course['department']),
                       file=stderr)
             else:
                 department_description = department_description.replace('Department', '').strip()
-                if course['department'] in departments.keys() and departments[course['department']] != department_description:
-                    print("WARNING: incompatible description for department '%s' (new: '%s', overwrites old: '%s')"
-                      % (course['department'], department_description, departments[course['department']]),
-                      file=stderr)
+                if (course['department'] in departments.keys()
+                    and departments[course['department']] != department_description):
+                    warning = ("WARNING: incompatible description for department "
+                               "'%s' (new: '%s', overwrites old: '%s')")
+                    print(warning % (course['department'], department_description,
+                                     departments[course['department']]),
+                          file=stderr)
 
                 else:
                     departments[course['department']] = department_description
@@ -197,17 +201,19 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     terms = []
 
     doc = etree.parse(file_handle, etree.HTMLParser())
-    rows = doc.xpath('/html/body//table[@class="datadisplaytable" and @width="100%"][1]/tr[position() > 2]')
+    xpath = ('/html/body//table[@class="datadisplaytable" and @width="100%"][1]'
+             '/tr[position() > 2]')
+    rows = doc.xpath(xpath)
     assert not len(rows) & 1  # even
     HEADER = True
     for row in rows:
         if HEADER:
             anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
             course = {'section_link': anchor.attrib.get('href')}
-            text = re.split('\W-\W', anchor.text)
+            text = re.split(r'\W-\W', anchor.text)
             # everything before last three is title
             course['UID'], course_id, course['section'] = text[-3:]
-            course['department'], course['code'] = re.split('\W+', course_id)
+            course['department'], course['code'] = re.split(r'\W+', course_id)
         else:
             main = row.xpath('td[1]')[0]
 
@@ -221,8 +227,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 print(after, course, list(main), text, file=stderr)
                 raise
 
-            term['semester'] = parse_semester(*re.split('\W+', semester_raw))
-            term['registrationStart'], term['registrationEnd'] = map(lambda s: re.sub('\W+', ' ', s),
+            term['semester'] = parse_semester(*re.split(r'\W+', semester_raw))
+            term['registrationStart'], term['registrationEnd'] = map(lambda s: re.sub(r'\W+', ' ', s),
                                                                      registration.split(' to '))
 
             if len(after) == 8:
@@ -253,7 +259,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 email, term['startDate'], term['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
-                course['instructor'] = re.sub('\W+', ' ',
+                course['instructor'] = re.sub(r'\W+', ' ',
                                               course['instructor'].strip().replace(' (', ''))
                 course['instructor'] = re.sub('^P,? ', '', course['instructor'])
                 if times == 'TBA':
@@ -332,6 +338,23 @@ def parse_exam(file_handle, output=stdout):
             parse_exam(file_handle, writable)
             return
 
+    def parse_days(text):
+        '''TODO: this doesn't need to be a function'''
+        days = {'Monday': 'M',
+                'Tuesday': 'T',
+                'Wednesday': 'W',
+                'Thursday': 'R',
+                'Friday': 'F',
+                'Saturday': 'S',
+                'Sunday': 'U'}
+
+        text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
+        if 'Session' in text:
+            return text  # don't mess with this
+        elif 'Only' in text:
+            return days[text.split(' Only')[0]]
+        return ''.join(days[d] for d in text.split('/'))
+
     doc = etree.parse(file_handle, etree.HTMLParser())
 
     title = doc.xpath('/html/head/title/text()')[0]
@@ -383,12 +406,13 @@ def parse_exam(file_handle, output=stdout):
                 writer.writerow(current)
             else:
                 split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
-                if days_met == 'any':
+                if days_met == 'any':  # don't remember what this is
                     print(split, file=stderr)
                 # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
                 for time in re.split(', ?', split[-1]):
                     copy = current.copy()
-                    copy.update({'time_met': army_time(time), 'exam_date': exam_date, 'exam_time': exam_time})
+                    copy.update({'time_met': army_time(time),
+                                 'exam_date': exam_date, 'exam_time': exam_time})
                     writer.writerow(copy)
 
 
@@ -429,7 +453,9 @@ def parse_bookstore(file_handle, output=stdout):
             parse_bookstore(file_handle, writable)
             return
     doc = etree.parse(file_handle, etree.HTMLParser())
-    form = doc.xpath('/html/body/header/section/div[@class="courseMaterialsList"]/div/form[@id="courseListForm"]')[0]
+    xpath = ('/html/body/header/section/div[@class="courseMaterialsList"]'
+             '/div/form[@id="courseListForm"]')
+    form = doc.xpath(xpath)[0]
     books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
     # TODO: sometimes prices are missing. need to handle this gracefully
@@ -448,10 +474,12 @@ def parse_bookstore(file_handle, output=stdout):
         info['link'] = anchor.attrib['href']
         info['title'] = anchor.attrib['title']
 
-        info['required'] = main.xpath('h2/span[@class="recommendBookType"]/text()')[0].strip().lower()
+        xpath = 'h2/span[@class="recommendBookType"]/text()'
+        info['required'] = main.xpath(xpath)[0].strip().lower()
         info['author'] = main.xpath('h2/span/i/text()')[0].replace('By ', '')
-        info['edition'], info['publisher'], info['isbn'] = map(lambda s: s.tail.replace('\xa0', '').replace('Â', '').strip(),
-                                                               main.xpath('ul/li/strong'))
+
+        clean = lambda s: s.tail.replace('\xa0', '').replace('Â', '').strip()
+        info['edition'], info['publisher'], info['isbn'] = map(clean, main.xpath('ul/li/strong'))
         prices = book.xpath('div[4]/div[@class="selectBookCont"]/div/ul/li[2]/ul/li')
         for p in prices:
             info[p.attrib['title'].lower().strip().replace(' ', '-')] = p.find('span').text.strip()
@@ -483,7 +511,8 @@ def parse_grades(file_handle, output=stdout):
         season = 'spring'
     semester = parse_semester(season, year)
     try:
-        campus = re.search('((THE )?UNIVERSITY OF SOUTH CAROLINA ?([‐-]|at) ?|USC[‐ -])([^:]*)', metadata, flags=re.IGNORECASE)
+        expr = '((THE )?UNIVERSITY OF SOUTH CAROLINA ?([‐-]|at) ?|USC[‐ -])([^:]*)'
+        campus = re.search(expr, metadata, flags=re.IGNORECASE)
         campus = campus.groups()[-1].replace(' CAMPUS', '').upper()
     except Exception:
         print(metadata, file=stderr)

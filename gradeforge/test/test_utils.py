@@ -4,13 +4,7 @@ from datetime import date
 
 import pytest
 
-from gradeforge.utils import DAYS, parse_semester, army_time, get_season, b_and_n_semester
-
-def test_constants():
-    '''TODO: test `allowed`'''
-    assert len(DAYS) == 7
-    assert len(set(DAYS)) == 7
-
+from gradeforge.utils import parse_semester, army_time, get_season, b_and_n_semester
 
 def test_parse_semester():
     assert parse_semester('fall') == str(date.today().year) + '08'

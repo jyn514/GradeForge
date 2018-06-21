@@ -3,9 +3,10 @@
 '''Misc utils. Strictly functional, not state-based.'''
 from __future__ import print_function
 
-from datetime import date
-from argparse import HelpFormatter
 import re
+from argparse import HelpFormatter
+from datetime import date
+from sys import stdout
 
 # first semester is not a typo, this is how it is really accepted on the USC side
 allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
@@ -161,33 +162,12 @@ def army_time(time):
     return ':'.join((str(hours % 24), minutes))
 
 
-def parse_days(text):
-    text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
-    if 'Session' in text:
-        return text  # don't mess with this
-    elif 'Only' in text:
-        return DAYS[text.split(' Only')[0]]
-    return ''.join(DAYS[d] for d in text.split('/'))
-
-
-DAYS = {'Monday': 'M',
-        'Tuesday': 'T',
-        'Wednesday': 'W',
-        'Thursday': 'R',
-        'Friday': 'F',
-        'Saturday': 'S',
-        'Sunday': 'U'}
-
-
-def arg_filter(args):
-    return {k: v for k, v in args.__dict__.items()
-            if v is not None}
-
 def catalog_link(semester, department, code):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
-    return "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s" % (base_url, semester, department, code)
+    url_format = "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s"
+    return url_format % (base_url, semester, department, code)
 
 
 def bulletin_link():
@@ -195,8 +175,8 @@ def bulletin_link():
     raise BaseException("NOPE NOPE NOPE")
 
 
-def section_link(semester, CRN):
+def section_link(semester, uid):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
-    return "%s?term_in=%s&crn_in=%s" % (base_url, semester, CRN)
+    return "%s?term_in=%s&crn_in=%s" % (base_url, semester, uid)
