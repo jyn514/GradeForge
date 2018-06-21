@@ -221,7 +221,7 @@ endef
 
 .PHONY: clean
 clean:
-	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) classes.sql *.pyc
+	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) $(SECTION_DIR)/*.csv classes.sql *.pyc
 
 .PHONY: clobber
 clobber: clean
