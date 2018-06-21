@@ -42,11 +42,11 @@ def png_for(department, code, section, semester=get_semester_today()):
             results = dict(zip(re.split('"?, "?', grades),
                                cursor.execute(grades_query, info).fetchone()))
         except TypeError:
-            raise ValueError("No sections found for " + ' '.join([department, code, section]))
+            raise ValueError("No sections found for " + ' '.join(info))
 
     if results == {}:
-        quit("UID for section did not match grades. query was "
-             + grades_query.replace('?', str(uid)))
+        quit("info for section did not match grades. query was",
+             grades_query.replace('?', str(uid)))
     course_code = "%s %s (S: %s)" % (department, code, section)
     header = "%s - %s - %s" % (instructor, title, course_code)
 
