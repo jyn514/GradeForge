@@ -253,9 +253,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                 email, term['startDate'], term['endDate'] = [None] * 3
             else:
                 _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
-                course['instructor'] = re.sub(' +', ' ',
+                course['instructor'] = re.sub('\W+', ' ',
                                               course['instructor'].strip().replace(' (', ''))
-                course['instructor'] = course['instructor'].replace('P, ', '')
+                course['instructor'] = re.sub('^P,? ', '', course['instructor'])
                 if times == 'TBA':
                     course['startTime'], course['endTime'] = 'TBA', 'TBA'
                 else:
