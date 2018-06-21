@@ -62,6 +62,11 @@ QUERY.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='
 COMMAND.add_parser('create', help='create a new database')
 COMMAND.add_parser('dump', help='show everything in a database')
 
+# begin combine parser
+COMBINE = SUBPARSERS.add_parser("combine", description="combine multiple CSV files")
+COMBINE.add_argument('info', choices=('grades', 'instructors', 'terms', 'departments'))
+COMBINE.add_argument('input', nargs='+')
+
 # begin download parser
 DOWNLOAD = SUBPARSERS.add_parser('download', description='download files from sc.edu',
                                  parents=[VERBOSITY])
@@ -127,6 +132,15 @@ elif ARGS.subparser == 'parse':
         parse_sections(ARGS.input, instructor_output=ARGS.instructors,
                        term_output=ARGS.terms,
                        section_output=ARGS.output)
+elif ARGS.subparser == 'combine':
+    if ARGS.info == 'grades':
+        combine_grades(ARGS.input)
+    elif ARGS.info == 'instructors':
+        combine_instructors(ARGS.input)
+    elif ARGS.info == 'terms':
+        combine_terms(ARGS.input)
+    else:  # departments
+        combine_departments(ARGS.input)
 else:  # download
     if ARGS.info == 'exam':
         print(get_exam(ARGS.year, ARGS.season))

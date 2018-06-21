@@ -4,3 +4,4 @@ from .download import get_exam, get_sections, get_bookstore, get_catalog, get_gr
 from .sql import TABLES, create, query, dump
 from .web import app
 from .utils import allowed, get_season_today, SingleMetavarFormatter
+from .combine import combine_grades, combine_instructors, combine_departments, combine_terms
