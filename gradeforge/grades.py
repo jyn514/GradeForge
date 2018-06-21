@@ -13,8 +13,10 @@ def png_for(department, code, section, semester=get_semester_today()):
     metadata_query = '''
             SELECT uid, instructor, title
             FROM section INNER JOIN class
-                         ON class.department = section.department
-                         AND class.code = section.code
+                            ON class.department = section.department
+                            AND class.code = section.code
+                         INNER JOIN term
+                            ON term.id = section.term
             WHERE class.department = ?
                   AND class.code = ?
                   AND section = ?
