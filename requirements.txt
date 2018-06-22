@@ -2,7 +2,8 @@ lxml
 requests
 flask
 selenium
-pandas
+# pandas 0.23.1 doesn't properly write to stdout
+pandas<=0.23.0
 matplotlib
 xlsx2csv
 pylint
