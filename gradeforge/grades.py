@@ -2,6 +2,10 @@
 import re
 from sqlite3 import connect
 
+
+# https://stackoverflow.com/questions/5503601
+import matplotlib
+matplotlib.use("Agg")
 from matplotlib import pyplot
 
 from gradeforge.utils import get_semester_today
