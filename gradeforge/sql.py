@@ -106,7 +106,10 @@ def csv_insert(table, csv_file, cursor):
         # TODO: use a dict reader?
         reader = csv.reader(f)
         # TODO: check if this matches table
-        headers = tuple(map(lambda s: repr(s.strip()), next(reader)))
+        try:
+            headers = tuple(map(lambda s: repr(s.strip()), next(reader)))
+        except StopIteration as e:
+            raise ValueError("FATAL: csv file '%s' exists but is empty. Is there a makefile problem?" % csv_file) from e
         command = 'INSERT INTO %s (%s) VALUES (%s)'
         command %= table, ', '.join(headers), ', '.join('?' * len(headers))
         cursor.executemany(command, reader)
