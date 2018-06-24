@@ -61,6 +61,13 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
+.PHONY: install
+install: .gradeforge_installed
+
+.gradeforge_installed:
+	if [ -z $$VIRTUAL_ENV ]; then pip install --user .; else pip install .; fi
+	touch $@
+
 .PHONY: all_grades all_sections
 all_grades: $(GRADES_OUTPUT)
 all_sections: $(SECTIONS)
@@ -100,11 +107,11 @@ define clean =
 endef
 
 .DELETE_ON_ERROR:
-webpages/catalog.html: | webpages
+webpages/catalog.html: | webpages .gradeforge_installed
 	$(GRADEFORGE) download catalog > $@
 	$(call clean,$@)
 
-$(EXAM_DIR)/%.html: | $(EXAM_DIR)
+$(EXAM_DIR)/%.html: | $(EXAM_DIR) .gradeforge_installed
 	$(GRADEFORGE) download \
 	  --season `echo $* | cut -d- -f1` \
 	  --year   `echo $* | cut -d- -f2`\
@@ -127,13 +134,13 @@ $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRAD
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
 
-$(NEW_GRADES): | $(GRADE_DIR)
+$(NEW_GRADES): | $(GRADE_DIR) .gradeforge_installed
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades > $@
 
-$(OLD_GRADES): | $(GRADE_DIR)
+$(OLD_GRADES): | $(GRADE_DIR) .gradeforge_installed
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
@@ -163,7 +170,7 @@ $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
 # matches all html files in the directory. HOWEVER, the rule will fail for any
 # filename not in the format <department>-<code>-<section>.html
 .PRECIOUS: $(BOOK_DIR)/%.html
-$(BOOK_DIR)/%.html: | $(BOOK_DIR)
+$(BOOK_DIR)/%.html: | $(BOOK_DIR) .gradeforge_installed
 	$(GRADEFORGE) download bookstore \
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
 	if grep 'Textbook Not Registered' $@; then exit 1; fi
@@ -179,7 +186,7 @@ $(SECTIONS): $$(subst .csv,.html,$$@)
 				     --term-output $(subst .csv,.terms.csv,$@) \
 				     $^ $@
 
-$(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR)
+$(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR) .gradeforge_installed
 	$(eval tmp := $(shell echo $@ | cut -d/ -f2 | cut -d. -f1 | cut -d- -f1-2 --output-delimiter=' '))
 	# keep original because we'll be changing it in a second
 	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@
