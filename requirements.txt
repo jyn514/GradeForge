@@ -1,4 +1,5 @@
-lxml
+# after this lxml breaks matplotlib (??!?)
+lxml<=4.2.1
 requests
 flask
 selenium
