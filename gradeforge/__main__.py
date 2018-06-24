@@ -5,12 +5,13 @@ makefile; if you want to run SQL queries I recommend running `make` then
 from datetime import date
 from sys import stdout
 from os import path
-# I tried making this relative and it failed miserably, not worth the pain
-from gradeforge import *
 import argparse
+# I tried making this relative and it failed miserably, not worth the pain
+from . import *
 
 # override the default help formatter for ArgumentParser to avoid printing
 # duplicate copies of possible parameters
+# pylint: disable=undefined-variable
 argparse.HelpFormatter._format_action_invocation = utils.argparse_format_action_invocation
 
 from argparse import ArgumentParser
