@@ -48,7 +48,7 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
 
 
     catalog_headers = ('course_link', 'title', 'department', 'code', 'description',
-                       'credits', 'attributes', 'level', 'type', 'all_sections')
+                       'credits', 'attributes', 'level', 'type', 'all_sections', 'division')
     catalog = csv.DictWriter(catalog_output, catalog_headers)
     catalog.writeheader()
 
@@ -72,21 +72,30 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             course['credits'] = td.xpath('br[1]/following-sibling::text()')[0]
             spans = td.xpath('span/following-sibling::text()')
             spans = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', spans)))
-            if len(td.xpath('span')) == 3:  # has attributes
-                course['attributes'] = spans[-1]
-                spans = spans[:-1]
-            # type can be multiple (since there might be anchor in middle)
-            course['level'], course['type'], department_description = spans[0], ''.join(spans[1:-1]), spans[-1]
-            if 'Department' not in department_description:
-                print("WARNING: invalid department '%s' for %s"
-                      % (department_description, course['department']),
-                      file=stderr)
-            else:
-                regex = ' Department|(USC-[AB]|Upstate) |Sch of '
+            course['level'], spans = spans[0], spans[1:]
+
+            # this is a dumpster fire
+            course_id = course['department'] + ' ' + course['code']
+            department_description = None
+            if spans and ' Department' in spans[-1]:
+                department_description, spans = spans[-1], spans[:-1]
+            elif len(spans) > 1:
+                course['attributes'], spans = spans[-1], spans[:-1]
+                if ' Department' in spans[-1]:
+                    department_description, spans = spans[-1], spans[:-1]
+            if spans and ' Division' in spans[-1]:
+                course['division'], spans = spans[-1].replace(' Division', ''), spans[:-1]
+            # examples: ('USCB Final Exam, ', ', Other')
+            course['type'] = ', '.join(map(lambda s: s.replace(', ', ''), spans)) or None
+
+            # store departments in their own data structure
+            if department_description is not None:
+                regex = ' Department|(USC-[AB]|Upstate|Sch of) '
                 department_description = re.sub(regex, '', department_description).strip()
                 if course['department'] not in departments:
                     departments[course['department']] = defaultdict(int)
                 departments[course['department']][department_description] += 1
+
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']

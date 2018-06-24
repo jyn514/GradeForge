@@ -21,6 +21,8 @@ TABLES = {'class': ["title tinytext",
                     "level tinytext",
                     "type tinytext",
                     "course_link tinytext UNIQUE",
+                    # I don't even know, this is a campus I think?
+                    'division tinytext',
                     # NOTE: not unique because course could be crosslisted
                     "all_sections tinytext"],
           'department': ["code char(4) PRIMARY KEY",
