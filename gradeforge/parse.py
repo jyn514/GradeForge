@@ -85,8 +85,8 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
                     department_description, spans = spans[-1], spans[:-1]
             if spans and ' Division' in spans[-1]:
                 course['division'], spans = spans[-1].replace(' Division', ''), spans[:-1]
-            # examples: ('USCB Final Exam, ', ', Other')
-            course['type'] = ', '.join(map(lambda s: s.replace(', ', ''), spans)) or None
+            # remove duplicates; sometimes type are over multiple, sometimes not
+            course['type'] = ', '.join(set(', '.join(spans).split(', '))) or None
 
             # store departments in their own data structure
             if department_description is not None:
