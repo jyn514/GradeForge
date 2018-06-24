@@ -8,7 +8,7 @@ addons:
     apt:
         packages:
             - tidy
-            - zlib
+            - zlib1g
 
 install:
     - pip install -r requirements.txt
