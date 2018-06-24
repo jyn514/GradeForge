@@ -171,7 +171,7 @@ def get_grades(year, season, campus=None):
 def get_all_books(semester='201805'):
     from sqlite3 import connect
     query = '''SELECT department, code, section
-               FROM section
+               FROM section INNER JOIN term ON term = term.id
                WHERE semester = ?'''
     with connect('classes.sql') as database:
         result = database.execute(query, [semester]).fetchall()
