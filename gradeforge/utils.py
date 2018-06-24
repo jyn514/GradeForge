@@ -49,24 +49,21 @@ allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "20150
            'days': ('m', 't', 'w', 'r', 'f', 's', 'u'),
            'credits': range(4)}
 
-# https://stackoverflow.com/a/16969505
-class SingleMetavarFormatter(HelpFormatter):
-    '''For the picky among us.
-    Turns the default: -s ARGS, --long ARGS
-              into:    -s, --long ARGS
-    example: parser = ArgumentParser(formatter_class=SingleMetavarFormatter)'''
-    def _format_action_invocation(self, action):
-        if not action.option_strings:
-            return self._metavar_formatter(action, action.dest)(1)[0]
+def argparse_format_action_invocation(self, action):
+    # this function is used to override
+    # argparse.HelpFormatter._format_action_invocation globally so as to avoid
+    # printing duplicate copies of potential parameters.
 
-        parts = list(action.option_strings)
+    if not action.option_strings:
+        return self._metavar_formatter(action, action.dest)(1)[0]
 
-        # if the Optional takes a value, format is:
-        #    -s, --long ARGS
-        if action.nargs != 0:
-            parts[-1] += ' %s' % self._format_args(action, action.dest.upper())
-        return ', '.join(parts)
+    parts = list(action.option_strings)
 
+    # if the Optional takes a value, format is:
+    #    -s, --long ARGS
+    if action.nargs != 0:
+        parts[-1] += ' %s' % self._format_args(action, action.dest.upper())
+    return ', '.join(parts)
 
 def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''
