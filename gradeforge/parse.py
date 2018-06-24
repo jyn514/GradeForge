@@ -2,7 +2,9 @@
 # encoding: utf-8
 '''HTML parsing. Generally, works only on files, not on strings'''
 
-from __future__ import print_function, generators
+from __future__ import print_function
+
+from collections import defaultdict
 from tempfile import mkstemp  # used for downloading seats remaining
 from sys import stdout, stderr
 from datetime import datetime
@@ -80,17 +82,11 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
                       % (department_description, course['department']),
                       file=stderr)
             else:
-                department_description = department_description.replace('Department', '').strip()
-                if (course['department'] in departments.keys()
-                    and departments[course['department']] != department_description):
-                    warning = ("WARNING: incompatible description for department "
-                               "'%s' (new: '%s', overwrites old: '%s')")
-                    print(warning % (course['department'], department_description,
-                                     departments[course['department']]),
-                          file=stderr)
-
-                else:
-                    departments[course['department']] = department_description
+                regex = ' Department|(USC-[AB]|Upstate) |Sch of '
+                department_description = re.sub(regex, '', department_description).strip()
+                if course['department'] not in departments:
+                    departments[course['department']] = defaultdict(int)
+                departments[course['department']][department_description] += 1
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']
@@ -100,8 +96,14 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
 
     department = csv.writer(department_output)
     department_output.write('code,description\n')
-    for i in departments.items():
-        department.writerow(i)
+    for abbreviation, descriptions in departments.items():
+        # https://stackoverflow.com/a/613218
+        final = sorted(descriptions.items(), key=lambda tup: tup[1], reverse=True)
+        most_common = final[0][0]
+        if len(final) > 1:
+            print("WARNING: %d descriptions available for '%s'; choosing the most common (%s)"
+                  % (len(final), abbreviation, most_common), file=stderr)
+        department.writerow((abbreviation, most_common))
 
 
 def clean_catalog(course):
