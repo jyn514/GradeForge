@@ -2,20 +2,25 @@
 makefile; if you want to run SQL queries I recommend running `make` then
 `gradeforge sql query <your_query>`.'''
 
-from argparse import ArgumentParser
 from datetime import date
 from sys import stdout
 from os import path
 # I tried making this relative and it failed miserably, not worth the pain
 from gradeforge import *
+import argparse
+
+# override the default help formatter for ArgumentParser to avoid printing
+# duplicate copies of possible parameters
+argparse.HelpFormatter._format_action_invocation = utils.argparse_format_action_invocation
+
+from argparse import ArgumentParser
 
 VERBOSITY = ArgumentParser(add_help=False)
 VERBOSITY.add_argument('--verbose', '--debug', '-v', action='count', default=0)
 # couldn't find a good way to do this in argparse; quiet will later be subtracted from verbose
 VERBOSITY.add_argument('--quiet', '-q', action='count', default=0)
 
-
-PARSER = ArgumentParser(formatter_class=SingleMetavarFormatter, prog='gradeforge',
+PARSER = ArgumentParser(prog='gradeforge',
                         description="backend for the GradeForge app")
 
 SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
@@ -23,7 +28,9 @@ SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
 SUBPARSERS.required = True
 
 # begin web parser
-WEB = SUBPARSERS.add_parser('web', description='run the web server', parents=[VERBOSITY])
+WEB = SUBPARSERS.add_parser('web',
+    description='run the web server',
+    parents=[VERBOSITY])
 WEB.add_argument('--port', '-p', type=int, default=5000)
 
 # begin `parse` parser
@@ -81,8 +88,8 @@ DOWNLOAD.add_argument('--year', '-y', type=int, default=date.today().year,
 INFO = DOWNLOAD.add_subparsers(dest='info')
 INFO.required = True
 
-SECTIONS = INFO.add_parser('sections', description='course sections offered',
-                           formatter_class=SingleMetavarFormatter)
+SECTIONS = INFO.add_parser('sections', description='course sections offered')
+
 # TODO: make campus nicer
 SECTIONS.add_argument('--campus', '-c', choices=allowed['campus'] + ('%',), default='%')
 # TODO: allowed['term'] is a dumpster fire that needs to be nuked from orbit
