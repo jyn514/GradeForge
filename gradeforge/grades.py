@@ -2,7 +2,6 @@
 import re
 from sqlite3 import connect
 
-
 # https://stackoverflow.com/questions/5503601
 import matplotlib
 matplotlib.use("Agg")
@@ -45,8 +44,8 @@ def png_for(department, code, section, semester=get_semester_today()):
             uid, instructor, title = cursor.execute(metadata_query, info).fetchone()
             results = dict(zip(re.split('"?, "?', grades),
                                cursor.execute(grades_query, info).fetchone()))
-        except TypeError:
-            raise ValueError("No sections found for " + ' '.join(info))
+        except TypeError as e:
+            raise ValueError("No sections found for " + ' '.join(info)) from e
 
     if results == {}:
         quit("info for section did not match grades. query was",
