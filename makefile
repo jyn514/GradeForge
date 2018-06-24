@@ -28,10 +28,15 @@ TERM_OUTPUT = terms.csv
 # make config; don't change until you read man (1) make
 # WARNING: changing -j4 to -j will spawn arbitrary processes and probably set your computer thrashing
 MAKEFLAGS += -j4 --warn-undefined-variables
+ifeq ($(shell echo $$BASH_VERSION),,)
+export ENV = .virtualenv/bin/activate
+else
+export BASH_ENV = .virtualenv/bin/activate
+endif
 SHELL = sh
 
 # data variables
-GRADEFORGE = python -m gradeforge
+GRADEFORGE = gradeforge
 
 # NOTE: BOOKSTORE_OUTPUT is not here because a) getting books for every section would
 # get us IP-banned and b) cut doesn't work with newlines
@@ -65,7 +70,15 @@ data: $(DATA)
 install: .gradeforge_installed
 
 .gradeforge_installed:
-	if [ -z $$VIRTUAL_ENV ]; then pip install --user .; else pip install .; fi
+	if [ -z $$VIRTUAL_ENV ]; then \
+		which virtualenv || { \
+			echo 'refusing to install globally; run `pip install .` to continue'; \
+			exit 1; \
+			}; \
+		virtualenv .virtualenv; \
+		. .virtualenv/bin/activate; \
+		pip install .; \
+	else pip install .; fi
 	touch $@
 
 .PHONY: all_grades all_sections
