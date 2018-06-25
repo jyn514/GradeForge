@@ -9,8 +9,7 @@ addons:
         packages:
             - tidy
 
-install:
-    - pip install -r requirements.txt
+install: true
 
 cache:
     directories:
