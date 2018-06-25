@@ -109,56 +109,60 @@ GRADES = INFO.add_parser('grades', description='grade spreads for past semester'
 GRADES.add_argument('campus', nargs='?', type=str.lower,
                     choices=('columbia', 'aiken', 'upstate'))
 
-ARGS = PARSER.parse_args()
-if 'verbose' in ARGS.__dict__:
-    ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
+def main():
+    ARGS = PARSER.parse_args()
+    if 'verbose' in ARGS.__dict__:
+        ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
 
-if ARGS.subparser == 'web':
-    app.config['ENV'] = ('development' if ARGS.verbose else 'production')
-    app.run(debug=ARGS.verbose > 0, port=ARGS.port, use_debugger=ARGS.verbose > 0)
-elif ARGS.subparser == 'sql':
-    if ARGS.command == 'create':
-        # TODO: add params for csv files
-        create(database=ARGS.database)
-    elif not path.exists(ARGS.database):
-        raise ValueError("database '%s' does not exist or is invalid" % ARGS.database)
-    if ARGS.command == 'query':
-        print(query(ARGS.sql_query, database=ARGS.database))
-    elif ARGS.command == 'dump':
-        print(dump())
-elif ARGS.subparser == 'parse':
-    if ARGS.info == 'exam':
-        parse_exam(ARGS.input, ARGS.output)
-    elif ARGS.info == 'bookstore':
-        parse_bookstore(ARGS.input, ARGS.output)
-    elif ARGS.info == 'grades':
-        parse_grades(ARGS.input, ARGS.output)
-    elif ARGS.info == 'catalog':
-        parse_catalog(ARGS.input, catalog_output=ARGS.output,
-                      department_output=ARGS.departments)
-    else:
-        parse_sections(ARGS.input, instructor_output=ARGS.instructors,
-                       term_output=ARGS.terms,
-                       section_output=ARGS.output)
-elif ARGS.subparser == 'combine':
-    if ARGS.info == 'grades':
-        combine_grades(ARGS.input)
-    elif ARGS.info == 'instructors':
-        combine_instructors(ARGS.input)
-    elif ARGS.info == 'terms':
-        combine_terms(ARGS.input)
-    else:  # departments
-        combine_departments(ARGS.input)
-else:  # download
-    if ARGS.info == 'exam':
-        print(get_exam(ARGS.year, ARGS.season))
-    elif ARGS.info == 'sections':
-        print(get_sections(semester=parse_semester(ARGS.season, year=ARGS.year),
-                           campus=ARGS.campus, term=ARGS.term))
-    elif ARGS.info == 'catalog':
-        print(get_catalog(semester=parse_semester(ARGS.season, year=ARGS.year)))
-    elif ARGS.info == 'bookstore':
-        print(get_bookstore(parse_semester(ARGS.season, year=ARGS.year),
-                            ARGS.department, ARGS.number, ARGS.section))
-    else:
-        stdout.buffer.write(get_grades(ARGS.year, ARGS.season, ARGS.campus))
+    if ARGS.subparser == 'web':
+        app.config['ENV'] = ('development' if ARGS.verbose else 'production')
+        app.run(debug=ARGS.verbose > 0, port=ARGS.port, use_debugger=ARGS.verbose > 0)
+    elif ARGS.subparser == 'sql':
+        if ARGS.command == 'create':
+            # TODO: add params for csv files
+            create(database=ARGS.database)
+        elif not path.exists(ARGS.database):
+            raise ValueError("database '%s' does not exist or is invalid" % ARGS.database)
+        if ARGS.command == 'query':
+            print(query(ARGS.sql_query, database=ARGS.database))
+        elif ARGS.command == 'dump':
+            print(dump())
+    elif ARGS.subparser == 'parse':
+        if ARGS.info == 'exam':
+            parse_exam(ARGS.input, ARGS.output)
+        elif ARGS.info == 'bookstore':
+            parse_bookstore(ARGS.input, ARGS.output)
+        elif ARGS.info == 'grades':
+            parse_grades(ARGS.input, ARGS.output)
+        elif ARGS.info == 'catalog':
+            parse_catalog(ARGS.input, catalog_output=ARGS.output,
+                        department_output=ARGS.departments)
+        else:
+            parse_sections(ARGS.input, instructor_output=ARGS.instructors,
+                        term_output=ARGS.terms,
+                        section_output=ARGS.output)
+    elif ARGS.subparser == 'combine':
+        if ARGS.info == 'grades':
+            combine_grades(ARGS.input)
+        elif ARGS.info == 'instructors':
+            combine_instructors(ARGS.input)
+        elif ARGS.info == 'terms':
+            combine_terms(ARGS.input)
+        else:  # departments
+            combine_departments(ARGS.input)
+    else:  # download
+        if ARGS.info == 'exam':
+            print(get_exam(ARGS.year, ARGS.season))
+        elif ARGS.info == 'sections':
+            print(get_sections(semester=parse_semester(ARGS.season, year=ARGS.year),
+                            campus=ARGS.campus, term=ARGS.term))
+        elif ARGS.info == 'catalog':
+            print(get_catalog(semester=parse_semester(ARGS.season, year=ARGS.year)))
+        elif ARGS.info == 'bookstore':
+            print(get_bookstore(parse_semester(ARGS.season, year=ARGS.year),
+                                ARGS.department, ARGS.number, ARGS.section))
+        else:
+            stdout.buffer.write(get_grades(ARGS.year, ARGS.season, ARGS.campus))
+
+if __name__ == '__main__':
+    quit(main())

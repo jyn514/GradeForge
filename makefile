@@ -28,10 +28,15 @@ TERM_OUTPUT = terms.csv
 # make config; don't change until you read man (1) make
 # WARNING: changing -j4 to -j will spawn arbitrary processes and probably set your computer thrashing
 MAKEFLAGS += -j4 --warn-undefined-variables
+ifeq ($(shell echo $$BASH_VERSION),,)
+export ENV = .virtualenv/bin/activate
+else
+export BASH_ENV = .virtualenv/bin/activate
+endif
 SHELL = sh
 
 # data variables
-GRADEFORGE = python -m gradeforge
+GRADEFORGE = gradeforge
 
 # NOTE: BOOKSTORE_OUTPUT is not here because a) getting books for every section would
 # get us IP-banned and b) cut doesn't work with newlines
@@ -61,6 +66,21 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
+.PHONY: install
+install: .gradeforge_installed
+
+.gradeforge_installed:
+	if [ -z $$VIRTUAL_ENV ]; then \
+		which virtualenv || { \
+			echo 'refusing to install globally; run `pip install .` to continue'; \
+			exit 1; \
+			}; \
+		virtualenv .virtualenv; \
+		. .virtualenv/bin/activate; \
+		pip install .; \
+	else pip install .; fi
+	touch $@
+
 .PHONY: all_grades all_sections
 all_grades: $(GRADES_OUTPUT)
 all_sections: $(SECTIONS)
@@ -77,7 +97,7 @@ dump: sql
 test: sql | images
 	# these are ordered from least to most picky
 	python -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
-	pytest --pyargs gradeforge
+	pytest gradeforge
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
 	gradeforge/test/match.py gradeforge/**.py
