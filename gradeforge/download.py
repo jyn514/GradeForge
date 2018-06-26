@@ -4,6 +4,7 @@
 
 from datetime import date
 from os.path import exists
+from os import unlink
 from logging import getLogger
 
 from requests import get, post
@@ -189,6 +190,6 @@ def get_all_books(semester='201805'):
                         LOGGER.info("downloaded %s", f.name)
                     except Exception as e:
                         LOGGER.warning("Info for %s not available, deleting: %s", semester + ' '.join(section), e)
-                        os.unlink(output)
+                        unlink(output)
     finally:
         driver.quit()
