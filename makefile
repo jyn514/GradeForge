@@ -28,15 +28,10 @@ TERM_OUTPUT = terms.csv
 # make config; don't change until you read man (1) make
 # WARNING: changing -j4 to -j will spawn arbitrary processes and probably set your computer thrashing
 MAKEFLAGS += -j4 --warn-undefined-variables
-ifeq ($(shell echo $$BASH_VERSION),,)
-export ENV = .virtualenv/bin/activate
-else
-export BASH_ENV = .virtualenv/bin/activate
-endif
 SHELL = sh
 
 # data variables
-GRADEFORGE = gradeforge
+GRADEFORGE = python -m gradeforge
 
 # NOTE: BOOKSTORE_OUTPUT is not here because a) getting books for every section would
 # get us IP-banned and b) cut doesn't work with newlines
@@ -66,21 +61,6 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
-.PHONY: install
-install: .gradeforge_installed
-
-.gradeforge_installed:
-	if [ -z $$VIRTUAL_ENV ]; then \
-		which virtualenv || { \
-			echo 'refusing to install globally; run `pip install .` to continue'; \
-			exit 1; \
-			}; \
-		virtualenv .virtualenv; \
-		. .virtualenv/bin/activate; \
-		pip install .; \
-	else pip install .; fi
-	touch $@
-
 .PHONY: all_grades all_sections
 all_grades: $(GRADES_OUTPUT)
 all_sections: $(SECTIONS)
@@ -97,7 +77,7 @@ dump: sql
 test: sql | images
 	# these are ordered from least to most picky
 	python -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
-	pytest gradeforge
+	pytest --pyargs gradeforge
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
 	gradeforge/test/match.py gradeforge/**.py
@@ -120,11 +100,11 @@ define clean =
 endef
 
 .DELETE_ON_ERROR:
-webpages/catalog.html: | webpages .gradeforge_installed
+webpages/catalog.html: | webpages
 	$(GRADEFORGE) download catalog > $@
 	$(call clean,$@)
 
-$(EXAM_DIR)/%.html: | $(EXAM_DIR) .gradeforge_installed
+$(EXAM_DIR)/%.html: | $(EXAM_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $* | cut -d- -f1` \
 	  --year   `echo $* | cut -d- -f2`\
@@ -147,13 +127,13 @@ $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRAD
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
 
-$(NEW_GRADES): | $(GRADE_DIR) .gradeforge_installed
+$(NEW_GRADES): | $(GRADE_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
 	  grades > $@
 
-$(OLD_GRADES): | $(GRADE_DIR) .gradeforge_installed
+$(OLD_GRADES): | $(GRADE_DIR)
 	$(GRADEFORGE) download \
 	  --season `echo $@ | cut -d. -f1 | cut -d/ -f2 | cut -d- -f1` \
 	  --year `echo $@ | cut -d. -f1 | cut -d- -f2` \
@@ -183,7 +163,7 @@ $(subst .pdf,.csv,$(OLD_GRADES)): $$(subst .csv,.txt,$$@)
 # matches all html files in the directory. HOWEVER, the rule will fail for any
 # filename not in the format <department>-<code>-<section>.html
 .PRECIOUS: $(BOOK_DIR)/%.html
-$(BOOK_DIR)/%.html: | $(BOOK_DIR) .gradeforge_installed
+$(BOOK_DIR)/%.html: | $(BOOK_DIR)
 	$(GRADEFORGE) download bookstore \
 		`echo $* | cut -d- -f1- --output-delimiter=' '` > $@
 	if grep 'Textbook Not Registered' $@; then exit 1; fi
@@ -199,7 +179,7 @@ $(SECTIONS): $$(subst .csv,.html,$$@)
 				     --term-output $(subst .csv,.terms.csv,$@) \
 				     $^ $@
 
-$(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR) .gradeforge_installed
+$(subst .csv,.html.bak,$(SECTIONS)): | $(SECTION_DIR)
 	$(eval tmp := $(shell echo $@ | cut -d/ -f2 | cut -d. -f1 | cut -d- -f1-2 --output-delimiter=' '))
 	# keep original because we'll be changing it in a second
 	$(GRADEFORGE) download --season $(firstword $(tmp)) --year $(lastword $(tmp)) sections > $@

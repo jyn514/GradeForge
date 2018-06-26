@@ -1,7 +1,5 @@
 .cache
 .pytest_cache
-.gradeforge_installed
-.virtualenv
 *.csv
 books/
 exams/
