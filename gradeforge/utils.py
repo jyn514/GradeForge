@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 '''Misc utils. Strictly functional, not state-based.'''
-from __future__ import print_function
 
 import re
 from argparse import HelpFormatter

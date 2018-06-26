@@ -4,11 +4,14 @@
 
 from datetime import date
 from os.path import exists
+from logging import getLogger
 
 from requests import get, post
 from selenium.common.exceptions import NoSuchElementException
 
 from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
+
+LOGGER = getLogger(__name__)
 
 def get_sections(department='%', semester='201808', campus='%', number='', title='',
                  min_credits=0, max_credits='', level='%', term='%', times='%',
@@ -183,8 +186,9 @@ def get_all_books(semester='201805'):
                 with open(output, 'w') as f:
                     try:
                         f.write(get_bookstore(semester, *section, driver=driver))
-                        print(f.name)
+                        LOGGER.info("downloaded %s", f.name)
                     except Exception as e:
-                        print("Info for", semester, ' '.join(section), "not available:", e)
+                        LOGGER.warning("Info for %s not available, deleting: %s", semester + ' '.join(section), e)
+                        os.unlink(output)
     finally:
         driver.quit()

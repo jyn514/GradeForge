@@ -6,7 +6,8 @@ from datetime import date
 from sys import stdout
 from os import path
 import argparse
-# I tried making this relative and it failed miserably, not worth the pain
+import logging
+
 from . import *
 
 # override the default help formatter for ArgumentParser to avoid printing
@@ -16,13 +17,11 @@ argparse.HelpFormatter._format_action_invocation = utils.argparse_format_action_
 
 from argparse import ArgumentParser
 
-VERBOSITY = ArgumentParser(add_help=False)
-VERBOSITY.add_argument('--verbose', '--debug', '-v', action='count', default=0)
-# couldn't find a good way to do this in argparse; quiet will later be subtracted from verbose
-VERBOSITY.add_argument('--quiet', '-q', action='count', default=0)
-
 PARSER = ArgumentParser(prog='gradeforge',
                         description="backend for the GradeForge app")
+PARSER.add_argument('--verbose', '--debug', '-v', action='count', default=0)
+# couldn't find a good way to do this in argparse; quiet will later be subtracted from verbose
+PARSER.add_argument('--quiet', '-q', action='count', default=0)
 
 SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
 # this is a bug in argparse: https://stackoverflow.com/a/18283730
@@ -30,13 +29,11 @@ SUBPARSERS.required = True
 
 # begin web parser
 WEB = SUBPARSERS.add_parser('web',
-    description='run the web server',
-    parents=[VERBOSITY])
+    description='run the web server')
 WEB.add_argument('--port', '-p', type=int, default=5000)
 
 # begin `parse` parser
-PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files',
-                              parents=[VERBOSITY])
+PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files')
 
 # parent parser
 IO = ArgumentParser(add_help=False)
@@ -76,8 +73,7 @@ COMBINE.add_argument('info', choices=('grades', 'instructors', 'terms', 'departm
 COMBINE.add_argument('input', nargs='+')
 
 # begin download parser
-DOWNLOAD = SUBPARSERS.add_parser('download', description='download files from sc.edu',
-                                 parents=[VERBOSITY])
+DOWNLOAD = SUBPARSERS.add_parser('download', description='download files from sc.edu')
 DOWNLOAD.required = True
 
 DOWNLOAD.add_argument('--season', '-s', type=str.lower,

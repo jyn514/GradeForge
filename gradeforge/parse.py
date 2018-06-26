@@ -2,11 +2,10 @@
 # encoding: utf-8
 '''HTML parsing. Generally, works only on files, not on strings'''
 
-from __future__ import print_function
-
 from collections import defaultdict
 from tempfile import mkstemp  # used for downloading seats remaining
-from sys import stdout, stderr
+from sys import stdout
+from logging import getLogger
 from datetime import datetime
 import csv
 import re  # used for only very basic stuff
@@ -17,6 +16,7 @@ from requests import get
 from gradeforge.utils import save, army_time, parse_semester
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
+LOGGER = getLogger(__name__)
 
 def parse_catalog(file_handle, catalog_output='courses.csv', department_output='departments.csv'):
     '''
@@ -110,8 +110,8 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
         final = sorted(descriptions.items(), key=lambda tup: tup[1], reverse=True)
         most_common = final[0][0]
         if len(final) > 1:
-            print("WARNING: %d descriptions available for '%s'; choosing the most common (%s)"
-                  % (len(final), abbreviation, most_common), file=stderr)
+            LOGGER.info("%d descriptions available for '%s'; choosing the most common (%s)", len(final), abbreviation, most_common)
+            LOGGER.debug("all descriptions: %s", final)
         department.writerow((abbreviation, most_common))
 
 
@@ -235,7 +235,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             try:  # this is always first point of failure for parser
                 semester_raw, registration = after[:2]  # third is level, which we know
             except Exception:
-                print(after, course, list(main), text, file=stderr)
+                LOGGER.debug("%s %s %s %s", after, course, list(main), text)
                 raise
 
             term['semester'] = parse_semester(*re.split(r'\W+', semester_raw))
@@ -285,9 +285,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
                     email = None
             try:
                 if email is not None and email != instructor_dict[course['instructor']]:
-                    print("WARNING: email '%s' for instructor '%s' already exists and does not match '%s'"
-                          % (instructor_dict[course['instructor']], course['instructor'], email),
-                          file=stderr)
+                    LOGGER.warning("email '%s' for instructor '%s' already exists and does not match '%s'", instructor_dict[course['instructor']], course['instructor'], email)
             except KeyError:
                 instructor_dict[course['instructor']] = email
             for key, value in term.items():
@@ -418,7 +416,7 @@ def parse_exam(file_handle, output=stdout):
             else:
                 split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
                 if days_met == 'any':  # don't remember what this is
-                    print(split, file=stderr)
+                    LOGGER.debug(split)
                 # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
                 for time in re.split(', ?', split[-1]):
                     copy = current.copy()
@@ -517,8 +515,7 @@ def parse_grades(file_handle, output=stdout):
             season, year = match.groups()
             break
     if season is None:
-        print("WARNING: '%s' does not have enough info to parse semester, "
-              % metadata + "assuming season is Spring", file=stderr)
+        LOGGER.warning("'%s' does not have enough info to parse semester, assuming season is Spring", metadata)
         season = 'spring'
     semester = parse_semester(season, year)
     try:
@@ -526,13 +523,13 @@ def parse_grades(file_handle, output=stdout):
         campus = re.search(expr, metadata, flags=re.IGNORECASE)
         campus = campus.groups()[-1].replace(' CAMPUS', '').upper()
     except Exception:
-        print(metadata, file=stderr)
+        LOGGER.debug(metadata)
         raise
     while True:
         try:
             headers = next(file_handle)
         except StopIteration:
-            print(file_handle, file=stderr)
+            LOGGER.debug(file_handle)
             raise
         if re.match(' *DEP(ar)?T', headers, flags=re.IGNORECASE) is not None:
             headers = headers.upper()
