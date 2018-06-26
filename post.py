@@ -59,7 +59,7 @@ def login(username, password):
     return post(authsite, data=data).cookies
 
 
-def getClasses(subject, semester='201808', campus='COL', number='', title='',
+def get_classes(subject, semester='201808', campus='COL', number='', title='',
                min_credits=1, max_credits='', level='%', term='30', times='%',
                location='%', start_hour=0, start_minute=0, end_hour=0,
                end_minute=0, days='dummy'):
@@ -158,4 +158,4 @@ if __name__ == '__main__':
     parser.add_argument('subject', choices=allowed['subject'], metavar='DEPARTMENT')
 
     args = parser.parse_args()
-    print(getClasses(**{k: v for k, v in args.__dict__.items() if v is not None}))
+    print(get_classes(**{k: v for k, v in args.__dict__.items() if v is not None}))
