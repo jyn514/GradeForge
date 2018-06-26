@@ -135,8 +135,10 @@ def army_time(ampm):
         return ampm
     hours, minutes = ampm.split(':')
     minutes, ampm = minutes.split(' ')
-    if ampm == 'pm':
-        hours = str((int(hours) + 12) % 24)  # midnight is 00:00
+    if ampm == 'pm' and hours != '12':
+        hours = str((int(hours) + 12))  # midnight is 00:00
+    elif hours == '12' and ampm == 'am':
+        hours = '00'
     return ':'.join((hours, minutes))
 
 DAYS = {'Monday': 'M',
