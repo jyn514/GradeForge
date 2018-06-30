@@ -6,7 +6,7 @@ from django.conf import settings
 from gradeforge.grades import png_for
 from gradeforge.sql import query
 
-database = os.path.join(os.path.dirname(os.path.dirname(settings.BASE_DIR)), 'classes.sql')
+database = settings.DATABASES['default']['NAME']
 images = os.path.join(os.path.dirname(database), 'images')
 
 def grade_png(request, semester, department, code, section):
