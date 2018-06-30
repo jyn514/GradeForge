@@ -4,9 +4,12 @@ makefile; if you want to run SQL queries I recommend running `make` then
 
 from datetime import date
 from sys import stdout
-from os import path
+from sys import argv
+from os import path, execv
 import argparse
 import logging
+
+from django.core.management import ManagementUtility
 
 from . import *
 
@@ -28,9 +31,8 @@ SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
 SUBPARSERS.required = True
 
 # begin web parser
-WEB = SUBPARSERS.add_parser('web',
-    description='run the web server')
-WEB.add_argument('--port', '-p', type=int, default=5000)
+WEB = ManagementUtility(argv).fetch_command('runserver').create_parser('django', 'runserver')
+SUBPARSERS.add_parser('web', parents=[WEB], add_help=False)
 
 # begin `parse` parser
 PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files')
@@ -110,8 +112,7 @@ if 'verbose' in ARGS.__dict__:
     ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
 
 if ARGS.subparser == 'web':
-    app.config['ENV'] = ('development' if ARGS.verbose else 'production')
-    app.run(debug=ARGS.verbose > 0, port=ARGS.port, use_debugger=ARGS.verbose > 0)
+    execv('gradeforge/web/manage.py', ['gradeforge/web/manage.py', 'runserver'] + argv[2:])
 elif ARGS.subparser == 'sql':
     if ARGS.command == 'create':
         # TODO: add params for csv files
