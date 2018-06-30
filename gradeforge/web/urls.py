@@ -20,7 +20,7 @@ from django.contrib import admin, admindocs
 from . import views
 
 # should match 201705/NURS/U497/PC8/
-matches = r'2[0-9]{5}', r'[A-Z]{4}', r'[A-Z][0-9]{3}', r'[A-Z0-9]{3,5}'
+matches = r'2[0-9]{5}', r'[A-Z]{4}', r'[A-Z]?[0-9]{3}', r'[A-Z0-9]{3,5}'
 combined = r'^(?P<semester>%s)/(?P<department>%s)/(?P<code>%s)/(?P<section>%s)/grades' % matches
 
 urlpatterns = [
