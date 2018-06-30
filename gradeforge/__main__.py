@@ -108,7 +108,7 @@ ARGS = PARSER.parse_args()
 if 'verbose' in ARGS.__dict__:
     ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
 
-elif ARGS.subparser == 'sql':
+if ARGS.subparser == 'sql':
     if ARGS.command == 'create':
         # TODO: add params for csv files
         create(database=ARGS.database)
