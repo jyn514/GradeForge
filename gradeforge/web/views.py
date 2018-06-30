@@ -22,6 +22,10 @@ def grade_png(request, semester, department, code, section):
 
 def grade_csv(request, department, code, section, semester):
     sql_query = ('SELECT * FROM grade '
-                 'WHERE department = ? AND code = ? AND section = ? AND semester = ?')
-    csv = query(sql_query, (department, code, section,semester), seperator=',', database=database)
+                 'WHERE department = %s AND code = %s AND section = %s AND semester = %s')
+    with connection.cursor() as cursor:
+        data = cursor.execute(sql_query, (department, code, section, semester)).fetchone()
+        # https://www.python.org/dev/peps/pep-0249/#description
+        headers = map(lambda d: d[0], cursor.description)
+    csv = ','.join(headers) + '\n' + ','.join(map(str, data))
     return HttpResponse(csv, content_type='text/csv')
