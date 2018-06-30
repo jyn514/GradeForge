@@ -27,6 +27,8 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 - [`mod_wsgi`](https://pypi.org/project/mod_wsgi/) for python3 (mod_wsgi-python3 on Fedora/Red Hat/Centos)
 - [`django`](https://www.djangoproject.com/)
 - `sudo ln -s <root>/gradeforge/web/wsgi.py /var/www/cgi-bin`
+- `sudo ln -s <root>/gradeforge/web/static /var/www/html`
+- `sudo ln -sf <root>/gradeforge/web/httpd.conf /etc/httpd/conf`
 
 ## Goals
 ### Long-Term
