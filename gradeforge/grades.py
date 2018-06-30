@@ -10,16 +10,16 @@ from matplotlib import pyplot
 
 from gradeforge.utils import get_semester_today
 
-def png_for(department, code, section, semester=get_semester_today(), database='classes.sql', directory='images'):
+def png_for(department, code, section, semester=get_semester_today()):
     '''Given the appropriate info, create a bar graph of the grades for that section
     department: 4 character abbreviation (ex: CSCE)
     code: a 3-5 character major descriptor (ex: 145)
     section: a 3-4 character minor descriptor (ex: 001)
-    semester: standard USC form, YYYYMM
-    outputs to images/<department>-<code>-<section>-<semester>.png
-    TODO: allow customization of output file'''
+    semester: standard USC form, YYYYMM (ex: 201705)
+    outputs to images/<department>-<code>-<section>-<semester>.png'''
     info = tuple(map(str, (semester, department, code, section)))
-    output = os.path.join(directory, "%s-%s-%s-%s.png" % info)
+    root = os.path.dirname(os.path.dirname(__file__))
+    output = os.path.join(root, 'images', "%s-%s-%s-%s.png" % info)
     if not os.path.exists(output):
         metadata_query = '''
                 SELECT uid, instructor, title
@@ -39,7 +39,7 @@ def png_for(department, code, section, semester=get_semester_today(), database='
                                         AND department = ?
                                         AND code = ?
                                         AND section = ?''')
-        with connect(database) as connection:
+        with connect(os.path.join(root, 'classes.sql')) as connection:
             cursor = connection.cursor()
             try:
                 uid, instructor, title = cursor.execute(metadata_query, info).fetchone()

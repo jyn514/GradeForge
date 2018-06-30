@@ -1,19 +1,11 @@
-import os
-
 from django.http import HttpResponse, Http404
-from django.conf import settings
+from django.db import connection
 
 from gradeforge.grades import png_for
-from gradeforge.sql import query
-
-database = settings.DATABASES['default']['NAME']
-images = os.path.join(os.path.dirname(database), 'images')
 
 def grade_png(request, semester, department, code, section):
     try:
-        # side effects
-        png_file = png_for(department, code, section, semester,
-                           database=database, directory=images)
+        png_file = png_for(department, code, section, semester)  # side effects
     except ValueError as e:
         raise Http404("No such class exists") from e
     with open(png_file, 'rb') as png:
