@@ -18,7 +18,7 @@ def png_for(department, code, section, semester=get_semester_today(), database='
     semester: standard USC form, YYYYMM
     outputs to images/<department>-<code>-<section>-<semester>.png
     TODO: allow customization of output file'''
-    department, code, section, semester = map(str, (department, code, section, semester))
+    info = tuple(map(str, (semester, department, code, section)))
     output = os.path.join(directory, "%s-%s-%s-%s.png" % info)
     if os.path.exists(output):
         return
@@ -30,20 +30,19 @@ def png_for(department, code, section, semester=get_semester_today(), database='
                             AND class.code = section.code
                          INNER JOIN term
                             ON term.id = section.term
-            WHERE class.department = ?
+            WHERE semester = ?
+                  AND class.department = ?
                   AND class.code = ?
-                  AND section = ?
-                  AND semester = ?'''
+                  AND section = ?'''
     grades = 'A, "B+", B, "C+", C, "D+", D, F, INCOMPLETE, W, WF'
     # NOTE: we can't use prepared statements for column names
     grades_query = ('SELECT ' + grades
-                    + ''' FROM grade WHERE department = ?
+                    + ''' FROM grade WHERE semester = ?
+                                     AND department = ?
                                      AND code = ?
-                                     AND section = ?
-                                     AND semester = ?''')
-    info = department, code, section, semester
-    with connect('classes.sql') as database:
-        cursor = database.cursor()
+                                     AND section = ?''')
+    with connect(database) as connection:
+        cursor = connection.cursor()
         try:
             uid, instructor, title = cursor.execute(metadata_query, info).fetchone()
             results = dict(zip(re.split('"?, "?', grades),
