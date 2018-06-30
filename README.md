@@ -7,9 +7,13 @@ viewing offline. Support is available for an SQL database. Work on a web
 interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 
 ## Requirements
-- GNU `make` (`gmake` for BSD users)
+### Anything
 - `python3`
-- `pip` and modules from `requirements.txt`. if not using a packaged version of `lxml`, you will need
+- `pip`
+
+### Data
+- GNU `make` (`gmake` for BSD users)
+- modules from `requirements.txt`. if not using a packaged version of `lxml`, you will need
 	- a working C compiler
 	- the `python-dev` library
 	- `libxml2-dev`
@@ -17,6 +21,12 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 - [`pdftotext`](https://poppler.freedesktop.org/) (part of `poppler-utils`)
 - [`chromedriver`](http://chromedriver.chromium.org/)
 - [`tidy`](http://www.html-tidy.org/)
+
+### Website
+- [`httpd`](https://httpd.apache.org/)
+- [`mod_wsgi`](https://pypi.org/project/mod_wsgi/) for python3 (mod_wsgi-python3 on Fedora/Red Hat/Centos)
+- [`django`](https://www.djangoproject.com/)
+- `sudo ln -s <root>/gradeforge/web/wsgi.py /var/www/cgi-bin`
 
 ## Goals
 ### Long-Term

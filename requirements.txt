@@ -8,3 +8,4 @@ pandas<=0.23.0
 matplotlib
 xlsx2csv
 pylint
+django
