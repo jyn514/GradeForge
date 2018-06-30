@@ -30,6 +30,18 @@ interface is [ongoing](https://github.com/jyn514/GradeForge/tree/frontend).
 - `sudo ln -s <root>/gradeforge/web/static /var/www/html`
 - `sudo ln -sf <root>/gradeforge/web/httpd.conf /etc/httpd/conf`
 
+### Admin site
+Django has an [admin site](https://docs.djangoproject.com/en/2.0/ref/contrib/admin/)
+that makes it easy to view and modify objects in a database.
+To set it up:
+1. `gradeforge/web/manage.py collectstatic`
+2. `gradeforge/web/manage.py migrate`
+3. `gradeforge/web/manage.py createsuperuser`
+4. `pip install docutils`
+
+We intentionally do not store the superuser in the git
+repo, so you'll always be the superuser. To access the site, go to http://localhost/admin
+
 ## Goals
 ### Long-Term
 - have all the information needed or useful to register on one page. this includes
