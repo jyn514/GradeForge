@@ -2,14 +2,15 @@
 makefile; if you want to run SQL queries I recommend running `make` then
 `gradeforge sql query <your_query>`.'''
 
-from datetime import date
-from sys import stdout
-from sys import argv
+from sys import stdout, argv
 from os import path, execv
+
+if argv[1] == 'web':
+    execv('gradeforge/web/manage.py', ['gradeforge/web/manage.py', 'runserver'] + argv[2:])
+
+from datetime import date
 import argparse
 import logging
-
-from django.core.management import ManagementUtility
 
 from . import *
 
@@ -29,10 +30,6 @@ PARSER.add_argument('--quiet', '-q', action='count', default=0)
 SUBPARSERS = PARSER.add_subparsers(dest='subparser', help='commands to run')
 # this is a bug in argparse: https://stackoverflow.com/a/18283730
 SUBPARSERS.required = True
-
-# begin web parser
-WEB = ManagementUtility(argv).fetch_command('runserver').create_parser('django', 'runserver')
-SUBPARSERS.add_parser('web', parents=[WEB], add_help=False)
 
 # begin `parse` parser
 PARSE = SUBPARSERS.add_parser('parse', description='parse downloaded files')
@@ -111,8 +108,6 @@ ARGS = PARSER.parse_args()
 if 'verbose' in ARGS.__dict__:
     ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
 
-if ARGS.subparser == 'web':
-    execv('gradeforge/web/manage.py', ['gradeforge/web/manage.py', 'runserver'] + argv[2:])
 elif ARGS.subparser == 'sql':
     if ARGS.command == 'create':
         # TODO: add params for csv files
