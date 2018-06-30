@@ -1,4 +1,5 @@
 '''Heavily adapted version of the original grade creator from jpc/grades.py'''
+import os
 import re
 from sqlite3 import connect
 
@@ -9,7 +10,7 @@ from matplotlib import pyplot
 
 from gradeforge.utils import get_semester_today
 
-def png_for(department, code, section, semester=get_semester_today()):
+def png_for(department, code, section, semester=get_semester_today(), database='classes.sql', directory='images'):
     '''Given the appropriate info, create a bar graph of the grades for that section
     department: 4 character abbreviation (ex: CSCE)
     code: a 3-5 character major descriptor (ex: 145)
@@ -18,6 +19,9 @@ def png_for(department, code, section, semester=get_semester_today()):
     outputs to images/<department>-<code>-<section>-<semester>.png
     TODO: allow customization of output file'''
     department, code, section, semester = map(str, (department, code, section, semester))
+    output = os.path.join(directory, "%s-%s-%s-%s.png" % info)
+    if os.path.exists(output):
+        return
 
     metadata_query = '''
             SELECT uid, instructor, title
@@ -58,4 +62,4 @@ def png_for(department, code, section, semester=get_semester_today()):
     pyplot.bar(range(len(results)), results.values(), align='center')
     pyplot.xticks(range(len(results)), results.keys())
     figure.autofmt_xdate()
-    pyplot.savefig("images/%s-%s-%s-%s.png" % (department, code, section, semester))
+    pyplot.savefig(output)
