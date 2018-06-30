@@ -148,11 +148,11 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
         return connection.execute(command).fetchall()
 
 
-def query(sql_query, database='classes.sql'):
+def query(sql_query, params=(), seperator='|', database='classes.sql'):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
     with sqlite3.connect(database) as connection:
-        return '\n'.join('|'.join(map(str, t))
-                         for t in connection.execute(sql_query).fetchall())
+        return '\n'.join(seperator.join(map(str, t))
+                         for t in connection.execute(sql_query, params).fetchall())
 
 
 def dump(database='classes.sql'):
