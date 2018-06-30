@@ -26,7 +26,7 @@ combined = r'^(?P<semester>%s)/(?P<department>%s)/(?P<code>%s)/(?P<section>%s)/g
 urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    re_path('^(%s/%s/%s/%s/grades)$' % matches, lambda request, url: redirect('grades.png', permanent=True)),
+    re_path(combined + '$', lambda *args, **kwargs: redirect('grades.png', permanent=True)),
     re_path(combined + '.png$', views.grade_png),
     re_path(combined + '.csv$', views.grade_csv)
 ]
