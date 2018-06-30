@@ -20,45 +20,44 @@ def png_for(department, code, section, semester=get_semester_today(), database='
     TODO: allow customization of output file'''
     info = tuple(map(str, (semester, department, code, section)))
     output = os.path.join(directory, "%s-%s-%s-%s.png" % info)
-    if os.path.exists(output):
-        return
+    if not os.path.exists(output):
+        metadata_query = '''
+                SELECT uid, instructor, title
+                FROM section INNER JOIN class
+                                ON class.department = section.department
+                                AND class.code = section.code
+                            INNER JOIN term
+                                ON term.id = section.term
+                WHERE semester = ?
+                    AND class.department = ?
+                    AND class.code = ?
+                    AND section = ?'''
+        grades = 'A, "B+", B, "C+", C, "D+", D, F, INCOMPLETE, W, WF'
+        # NOTE: we can't use prepared statements for column names
+        grades_query = ('SELECT ' + grades
+                        + ''' FROM grade WHERE semester = ?
+                                        AND department = ?
+                                        AND code = ?
+                                        AND section = ?''')
+        with connect(database) as connection:
+            cursor = connection.cursor()
+            try:
+                uid, instructor, title = cursor.execute(metadata_query, info).fetchone()
+                results = dict(zip(re.split('"?, "?', grades),
+                                cursor.execute(grades_query, info).fetchone()))
+            except TypeError as e:
+                raise ValueError("No sections found for " + ' '.join(info)) from e
 
-    metadata_query = '''
-            SELECT uid, instructor, title
-            FROM section INNER JOIN class
-                            ON class.department = section.department
-                            AND class.code = section.code
-                         INNER JOIN term
-                            ON term.id = section.term
-            WHERE semester = ?
-                  AND class.department = ?
-                  AND class.code = ?
-                  AND section = ?'''
-    grades = 'A, "B+", B, "C+", C, "D+", D, F, INCOMPLETE, W, WF'
-    # NOTE: we can't use prepared statements for column names
-    grades_query = ('SELECT ' + grades
-                    + ''' FROM grade WHERE semester = ?
-                                     AND department = ?
-                                     AND code = ?
-                                     AND section = ?''')
-    with connect(database) as connection:
-        cursor = connection.cursor()
-        try:
-            uid, instructor, title = cursor.execute(metadata_query, info).fetchone()
-            results = dict(zip(re.split('"?, "?', grades),
-                               cursor.execute(grades_query, info).fetchone()))
-        except TypeError as e:
-            raise ValueError("No sections found for " + ' '.join(info)) from e
+        if results == {}:
+            quit("info for section did not match grades. query was",
+                grades_query.replace('?', str(uid)))
+        course_code = "%s %s (S: %s)" % (department, code, section)
+        header = "%s - %s - %s" % (instructor, title, course_code)
 
-    if results == {}:
-        quit("info for section did not match grades. query was",
-             grades_query.replace('?', str(uid)))
-    course_code = "%s %s (S: %s)" % (department, code, section)
-    header = "%s - %s - %s" % (instructor, title, course_code)
-
-    figure = pyplot.figure()
-    figure.suptitle(header)
-    pyplot.bar(range(len(results)), results.values(), align='center')
-    pyplot.xticks(range(len(results)), results.keys())
-    figure.autofmt_xdate()
-    pyplot.savefig(output)
+        figure = pyplot.figure()
+        figure.suptitle(header)
+        pyplot.bar(range(len(results)), results.values(), align='center')
+        pyplot.xticks(range(len(results)), results.keys())
+        figure.autofmt_xdate()
+        pyplot.savefig(output)
+    return output
