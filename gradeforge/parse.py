@@ -262,9 +262,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     terms = []
 
     doc = etree.parse(file_handle, etree.HTMLParser())
-    xpath = ('/html/body//table[@class="datadisplaytable" and @width="100%"][1]'
-             '/tr[position() > 2]')
-    rows = doc.xpath(xpath)
+    rows = doc.xpath('/html/body//table[@class="datadisplaytable" '
+                                       'and @width="100%"][1]/tr[position() > 2]')
     assert not len(rows) & 1  # even
     HEADER = True
     for row in rows:
