@@ -108,6 +108,9 @@ GRADES.add_argument('campus', nargs='?', type=str.lower,
 ARGS = PARSER.parse_args()
 if 'verbose' in ARGS.__dict__:
     ARGS.verbose -= ARGS.quiet - 1  # verbosity defaults to 1
+# https://docs.python.org/3/library/logging.html#logging-levels
+logging.basicConfig(level=max(40 - ARGS.verbose * 10, 10),
+                    format="%(levelname)s: %(name)s: %(message)s")
 
 if ARGS.subparser == 'web':
     app.config['ENV'] = ('development' if ARGS.verbose else 'production')
