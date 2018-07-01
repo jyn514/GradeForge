@@ -174,10 +174,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     TODO:
     - figure out why start_date and end_date are sometimes the same
     - department is overwritten by last seen, so there's a lot of stuff specific to upstate
-    - remove 'Department' from departments
     - fix misc screwiness
-    - term is different from semester, i.e. a course over summer can be three or six weeks
-        TODO: organize start_date/end_date by term, not semester
     '''
 
     if not hasattr(instructor_output, 'write'):

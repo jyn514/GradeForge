@@ -57,8 +57,7 @@ repo, so you'll always be the superuser. To access the site, go to http://localh
 	- if true, assert the output file does not exist
 	- if false, don't write headers
 - the submit button for `index.html` is broken
-- add rules in the makefile for courses and sections in past years.
-  png_for won't work until this is implemented.
+- add rules in the makefile for courses in past years.
 
 ### Non-Goals
 - registering automatically. this would require storing the *university*
