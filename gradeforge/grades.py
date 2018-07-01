@@ -20,7 +20,7 @@ def png_for(department, code, section, semester=get_semester_today()):
     department, code, section, semester = map(str, (department, code, section, semester))
 
     metadata_query = '''
-            SELECT uid, instructor, title
+            SELECT uid, primary_instructor, title
             FROM section INNER JOIN class
                             ON class.department = section.department
                             AND class.code = section.code
