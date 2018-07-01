@@ -136,6 +136,58 @@ def clean_catalog(course):
     return course
 
 
+def _add_instructors(instructors, emails, instructor_dict):
+    '''INTERNAL DO NOT USE'''
+    assert len(instructors) == len(emails), (instructors, emails)
+    for instructor, email in zip(instructors, emails):
+            try:
+                if email is not None and email != instructor_dict[instructor]:
+                    LOGGER.warning("email '%s' for instructor '%s' already exists; refusing to overwrite with '%s'",
+                                instructor_dict[instructor], instructor, email)
+            except KeyError:
+                instructor_dict[instructor] = email
+
+def _parse_instructors(row, instructors, instructor_dict):
+    '''note that this is so messy because we do NOT assume
+    the primary instructor always comes first'''
+
+    if instructors == 'TBA':
+        return instructors, None
+
+    email_struct = row.xpath("td/a/@*[name()='href' or name()='target']")
+
+    if not email_struct:
+        LOGGER.debug(instructors)
+        instructors = re.sub(r'\s+', ' ', instructors).replace(' (P)', '').split(',')
+        LOGGER.info("No emails present for instructors %s", instructors)
+    else:
+        instructors, emails = email_struct[1::2], email_struct[::2]
+        LOGGER.debug("instructors: %s; emails: %s", instructors, emails)
+        _add_instructors(instructors, emails, instructor_dict)
+
+    return instructors[0], ','.join(instructors[1:])
+
+
+def _parse_inner_row(row, course, term, instructor_dict):
+    table_info = row.xpath('td//text()')
+    if not table_info:  # independent study; this is handled on the frontend
+        for key in ['days', 'location', 'startTime', 'endTime',
+                    'instructor']:
+            course[key] = None
+        term['startDate'], term['endDate'] = None, None
+    else:
+        _, times, course['days'], course['location'], dates, _ = table_info[:6]
+        instructors = ''.join(table_info[6:])
+
+        course['primary_instructor'], course['secondary_instructors'] = _parse_instructors(row, instructors, instructor_dict)
+
+        if times == 'TBA':
+            course['startTime'], course['endTime'] = 'TBA', 'TBA'
+        else:
+            course['startTime'], course['endTime'] = map(army_time, times.split(' - '))
+        term['startDate'], term['endDate'] = dates.split(' - ')
+
+
 def parse_sections(file_handle, instructor_output='instructors.csv',
                    term_output='semesters.csv', section_output='sections.csv'):
     '''file_handle -> None
@@ -194,7 +246,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
     headers = ('section_link', 'department', 'code', 'section', 'UID', 'term', 'campus',
                'type', 'method', 'catalog_link', 'bookstore_link', 'days',
-               'location', 'startTime', 'endTime', 'instructor', 'syllabus', 'attributes')
+               'location', 'startTime', 'endTime', 'primary_instructor',
+               'secondary_instructors', 'syllabus', 'attributes')
     sections = csv.DictWriter(section_output, headers)
     sections.writeheader()
 
@@ -252,39 +305,11 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             if len(links) == 3:
                 course['syllabus'] = links[0]
 
-            table_info = main.xpath('table/tr[2]/td//text()')
-            if len(table_info) == 9:  # instructor exists
-                table_info = table_info[:-2]  # don't get junk at end
-            elif len(table_info) > 9:  # multiple instructors
-                # combine instructors into one element
-                table_info = table_info[:6] + [''.join([table_info[7]] + table_info[9:])]
-            elif len(table_info) == 8:  # multiple instructors and no junk
-                table_info = table_info[:6] + [''.join(table_info[6:])]
-            if not table_info:  # independent study; this is handled on the frontend
-                for key in ['days', 'location', 'startTime', 'endTime',
-                            'instructor']:
-                    course[key] = None
-                email, term['startDate'], term['endDate'] = [None] * 3
-            else:
-                _, times, course['days'], course['location'], dates, _, course['instructor'] = table_info
-                course['instructor'] = re.sub(r'\W+', ' ',
-                                              course['instructor'].strip().replace(' (', ''))
-                course['instructor'] = re.sub('^P,? ', '', course['instructor'])
-                if times == 'TBA':
-                    course['startTime'], course['endTime'] = 'TBA', 'TBA'
-                else:
-                    course['startTime'], course['endTime'] = map(army_time, times.split(' - '))
-                term['startDate'], term['endDate'] = dates.split(' - ')
-                try:
-                    # str is necessary, otherwise returns _ElementUnicodeResult
-                    email = str(main.xpath('table/tr[2]/td/a/@href')[0])
-                except IndexError:
-                    email = None
-            try:
-                if email is not None and email != instructor_dict[course['instructor']]:
-                    LOGGER.warning("email '%s' for instructor '%s' already exists and does not match '%s'", instructor_dict[course['instructor']], course['instructor'], email)
-            except KeyError:
-                instructor_dict[course['instructor']] = email
+            inner_row = main.xpath('table/tr[2]')
+            if inner_row:
+                assert len(inner_row) == 1, (row, course)
+                _parse_inner_row(inner_row[0], course, term, instructor_dict)
+
             for key, value in term.items():
                 if key != 'semester' and value is not None:
                     'Aug 24, 2018 -> 2018-08-24'
@@ -308,7 +333,6 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     term_writer = csv.DictWriter(term_output, headers)
     term_writer.writeheader()
     term_writer.writerows(terms)
-
 
 
 def clean_section(course):
