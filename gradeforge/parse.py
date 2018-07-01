@@ -148,9 +148,7 @@ def _add_instructors(instructors, emails, instructor_dict):
                 instructor_dict[instructor] = email
 
 def _parse_instructors(row, instructors, instructor_dict):
-    '''note that this is so messy because we do NOT assume
-    the primary instructor always comes first'''
-
+    'Element, str, dict -> str, str'
     if instructors == 'TBA':
         return instructors, None
 
