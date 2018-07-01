@@ -57,7 +57,8 @@ TABLES = {'class': ["title tinytext",
                       "location smallint",
                       "startTime time",
                       "endTime time",
-                      "instructor tinytext",
+                      "primary_instructor tinytext",
+                      'secondary_instructors tinytext',
                       "finalExam dateTime"],
                       # always out of date; requires parsing different page
                       #"capacity tinyint", "remaining tinyint"
