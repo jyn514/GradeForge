@@ -51,7 +51,26 @@ NEW_GRADES := $(addsuffix .xlsx,$(addprefix $(GRADE_DIR)/,Summer-2014 Summer-201
 
 SECTIONS := $(addsuffix .csv,$(addprefix $(SECTION_DIR)/,Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Summer-2014 Summer-2015 Summer-2016 Summer-2017 Summer-2018 Spring-2014 Spring-2015 Spring-2016 Spring-2017 Spring-2018))
 
+.PHONY: help
+help tasks:
+	@# grep doesn't respect capturing groups; we use sed instead
+	@# additionally, we abuse echo to treat newlines as spaces
+	@echo .PHONY: $$(sed -n -e 's/^\.PHONY: \(.*\)/\1/p' makefile)
+	@echo
+	@echo PATTERNS: $$(sed -n -e 's/^\([^%]*%[^ ]*\):.*/\1/p' makefile)
+	@echo
+	@echo DERIVED: $$(sed -n -e 's/^\($$(subst .*)\):.*/\1/p' makefile)
 
+.PHONY: help-tasks
+help-tasks:
+	@# modified from https://stackoverflow.com/a/26339924
+	$(MAKE) -npRr | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$$$1 !~ "^[#.]") {print $$$$1}}' | grep --color=auto -v "^[#`printf '\t'`]" | sed 's/:$$//'
+
+.PHONY: help-recipies
+help-recipies:
+	$(MAKE) -npRr | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$$$1 !~ "^[#.]") {print $$$$1}}' | grep --color=auto -v "^#"
+
+.DEFAULT_GOAL = all
 .PHONY: all
 all: sql
 
