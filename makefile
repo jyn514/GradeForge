@@ -80,9 +80,9 @@ sql: classes.sql
 .PHONY: data
 data: $(DATA)
 
-.PHONY: all_grades all_sections
-all_grades: $(GRADES_OUTPUT)
-all_sections: $(SECTIONS)
+.PHONY: all-grades all-sections
+all-grades: $(GRADES_OUTPUT)
+all-sections: $(SECTIONS)
 
 .PHONY: web server website
 web server website: sql
@@ -221,8 +221,8 @@ $(SECTION_OUTPUT) $(EXAM_OUTPUT):
 	for exam in $^; do tail -n+2 $$exam >> $@; done
 
 # TODO: the HTML needs to be rate limited
-.PHONY: all_books
-all_books: classes.sql | $(BOOK_DIR)
+.PHONY: all-books
+all-books: classes.sql | $(BOOK_DIR)
 	for semester in `sqlite3 $^ "select distinct semester from section;"`; do \
 		python -c "from gradeforge.download import get_all_books; \
 			   get_all_books($$semester)"; done
@@ -232,7 +232,7 @@ all_books: classes.sql | $(BOOK_DIR)
 # we've made the database.
 # TODO: can be parallel
 .PHONY: bookstore
-bookstore: classes.sql all_books
+bookstore: classes.sql all-books
 	# sqlite uses '||' for string concatenation for some reason
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
