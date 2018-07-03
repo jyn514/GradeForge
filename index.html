@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search for Classes</title>
+  <meta name="description" content="Find a section offered by the University of South Carolina" />
+  <meta name="author" content="Joshua Nelson">
+</head>
+<body>
+<h1>Search for Classes</h1>
+<form action="/sections.html" method='get' id='form' onsubmit="disableEmpty(this)">
+  <fieldset name="semester"><legend>Semester</legend>
+  <select name="semester">
+    <option value="201808">Fall 2018</option>
+    <option value="201805">Summer 2018</option>
+    <option value="201801">Spring 2018</option>
+    <option value="201708">Fall 2017</option>
+    <option value="201705">Summer 2017</option>
+    <option value="201701">Spring 2017</option>
+    <option value="201608">Fall 2016</option>
+    <option value="201605">Summer 2016</option>
+    <option value="201601">Spring 2016</option>
+    <option value="201508">Fall 2015</option>
+    <option value="201505">Summer 2015</option>
+    <option value="201501">Spring 2015</option>
+    <option value="201408">Fall 2014</option>
+    <option value="201405">Summer 2014</option>
+    <option value="201401">Spring 2014</option>
+    <option value="201341">Fall 2013</option>
+  </select></fieldset>
+
+  <fieldset id="subjects" name="subjects"><legend>Subject</legend>
+    <input id="firstSubject" type="text" list="subject" oninput="addSubject(this)" autofocus required>
+  </fieldset>
+
+  <fieldset name="campus"><legend>Campus</legend>
+    <input name="campus" type="checkbox" value="Columbia" id="Columbia" checked><label for="Columbia">Columbia</label>
+    <input name="campus" type="checkbox" value="Aiken" id="Aiken"><label for="Aiken">Aiken</label>
+    <input name="campus" type="checkbox" value="Beaufort" id="Beaufort"><label for="Beaufort">Beaufort</label>
+    <input name="campus" type="checkbox" value="Lancaster" id="Lancaster"><label for="Lancaster">Lancaster</label>
+    <input name="campus" type="checkbox" value="Salkehatchie" id="Salkehatchie"><label for="Salkehatchie">Salkehatchie</label>
+    <input name="campus" type="checkbox" value="Sumter" id="Sumter"><label for="Sumter">Sumter</label>
+    <input name="campus" type="checkbox" value="Union" id="Union"><label for="Union">Union</label>
+    <input name="campus" type="checkbox" value="Upstate" id="Upstate"><label for="Upstate">Upstate</label>
+    <input name="campus" type="button" value="Toggle All" onclick="toggleCampuses()">
+  </fieldset><label for=""></label>
+
+  <fieldset name="level"><legend>Level</legend>
+    <input type="radio" value="Undergraduate" id="Undergraduate" name="level" checked><label for="Undergraduate">Undergraduate</label>
+    <input type="radio" value="Graduate" id="Graduate" name="level"><label for="Graduate">Graduate</label>
+    <input type="radio" value="Law" id="Law" name="level"><label for="Law">Law School</label>
+    <input type="radio" value="Medical" id="Medical" name="level"><label for="Medical">Medical School</label>
+  </fieldset><label for=""></label>
+
+  <fieldset name="course"><legend>Course</legend>
+    <input type="number" name="number" min="1" max="1000"> Number
+    <input name="title"> Title
+  </fieldset>
+
+  <fieldset name="credits" id="credits"><legend>Credits</legend>
+    <input type="range" min="0" max="5" name="credit_from" value="0" oninput="updateValue(this, fromText)">
+    <p id="from">Min Credits:  </p>
+    <input type="range" min="0" max="5" name="credit_to" value="5" oninput="updateValue(this, toText)">
+    <p id="to">Max Credits:  </p>
+  </fieldset>
+
+  <fieldset name="registration"><legend>Registration</legend>
+    <input type="date" name="registration_start"> Start Date<br />
+    <input type="date" name="registration_end"> End Date
+  </fieldset>
+
+  <input type="submit" value="Submit">
+  <input type="reset">
+
+  <datalist id="subject">
+    <option value="ACCT">ACCT - Accounting</option>
+    <option value="AERO">AERO - Aerospace Studies</option>
+    <option value="AFAM">AFAM - African Amer Studies</option>
+    <option value="AFCI">AFCI - Critical Inquiry</option>
+    <option value="AFYS">AFYS - First Year Seminar</option>
+    <option value="AMMG">AMMG - Advanced Manufacturing Management</option>
+    <option value="AMST">AMST - American Studies</option>
+    <option value="ANES">ANES - Anesthesiology</option>
+    <option value="ANTH">ANTH - Anthropology</option>
+    <option value="ARAB">ARAB - Arabic</option>
+    <option value="ARMY">ARMY - Military Science</option>
+    <option value="ARTE">ARTE - Art Education</option>
+    <option value="ARTH">ARTH - Art History</option>
+    <option value="ARTS">ARTS - Art Studio</option>
+    <option value="ASLG">ASLG - American Sign Language</option>
+    <option value="ASTR">ASTR - Astronomy</option>
+    <option value="ASUP">ASUP - Academic Support Services</option>
+    <option value="ATEP">ATEP - Athletic Training</option>
+    <option value="BADM">BADM - Business Administration</option>
+    <option value="BIOL">BIOL - Biology</option>
+    <option value="BIOS">BIOS - Biostatistics</option>
+    <option value="BMEN">BMEN - Biomedical Engineering</option>
+    <option value="BMSC">BMSC - Biomedical Science</option>
+    <option value="CAST">CAST - Child Advocacy Studies</option>
+    <option value="CHEM">CHEM - Chemistry</option>
+    <option value="CHIN">CHIN - Chinese</option>
+    <option value="CLAS">CLAS - Classics</option>
+    <option value="COLA">COLA - College of Liberal Arts</option>
+    <option value="COMD">COMD - Communication Disorders</option>
+    <option value="COMM">COMM - Communications</option>
+    <option value="COSM">COSM - Prof Master of Science Program</option>
+    <option value="CPLT">CPLT - Comparative Literature</option>
+    <option value="CRJU">CRJU - Criminal Justice</option>
+    <option value="CSCE">CSCE - Computer Science &amp; Computer Engineering</option>
+    <option value="CSCI">CSCI - Computer Science</option>
+    <option value="CSXE">CSXE - Computational Engineering</option>
+    <option value="DANC">DANC - Dance</option>
+    <option value="DGST">DGST - Digital Studies</option>
+    <option value="DMED">DMED - Medical Topics</option>
+    <option value="DMSB">DMSB - Darla Moore School of Business</option>
+    <option value="ECHE">ECHE - Chemical Engineering</option>
+    <option value="ECIV">ECIV - Civil Engineering</option>
+    <option value="ECON">ECON - Economics</option>
+    <option value="EDCE">EDCE - Counseling Education</option>
+    <option value="EDCF">EDCF - Child Development &amp; Family Standards</option>
+    <option value="EDCI">EDCI - Curriculum, Instruction</option>
+    <option value="EDCS">EDCS - Curriculum Studies</option>
+    <option value="EDEC">EDEC - Early Childhood Education</option>
+    <option value="EDEL">EDEL - Elementary Education</option>
+    <option value="EDET">EDET - Educational Technology</option>
+    <option value="EDEX">EDEX - Exceptional Children</option>
+    <option value="EDFI">EDFI - Education Foundations &amp; Inquiries</option>
+    <option value="EDFN">EDFN - Foundations of Education</option>
+    <option value="EDFO">EDFO - Education - Foundations</option>
+    <option value="EDHE">EDHE - Higher Education</option>
+    <option value="EDHL">EDHL - Health Education</option>
+    <option value="EDLC">EDLC - Literacy Education</option>
+    <option value="EDLD">EDLD - Learning Disabilities</option>
+    <option value="EDLP">EDLP - School Leadership</option>
+    <option value="EDML">EDML - Middle Level Education</option>
+    <option value="EDPH">EDPH - Physical Education</option>
+    <option value="EDPS">EDPS - Professional Studies</option>
+    <option value="EDPY">EDPY - Educational Psychology</option>
+    <option value="EDRD">EDRD - Reading</option>
+    <option value="EDRE">EDRE - Reading Education</option>
+    <option value="EDRM">EDRM - Research &amp; Measurement</option>
+    <option value="EDSC">EDSC - Secondary Education</option>
+    <option value="EDSE">EDSE - Secondary Education</option>
+    <option value="EDTE">EDTE - Instructor and Teacher Education</option>
+    <option value="EDUC">EDUC - Education</option>
+    <option value="EDVI">EDVI - Visual Impairment</option>
+    <option value="ELCT">ELCT - Electrical Engineering</option>
+    <option value="EMCH">EMCH - Mechanical Engineering</option>
+    <option value="EMED">EMED - Emergency Medicine</option>
+    <option value="ENCP">ENCP - Engineering and Computing</option>
+    <option value="ENFS">ENFS - English - Foreign Students</option>
+    <option value="ENGL">ENGL - English</option>
+    <option value="ENHS">ENHS - Environmental Health Science</option>
+    <option value="ENSL">ENSL - English as a Second Language</option>
+    <option value="ENVR">ENVR - Environment</option>
+    <option value="EPID">EPID - Epidemiology</option>
+    <option value="ETMG">ETMG - Engineering Tech Management</option>
+    <option value="EURO">EURO - European Studies</option>
+    <option value="EXSC">EXSC - Exercise Science</option>
+    <option value="FAMS">FAMS - Film and Media Studies</option>
+    <option value="FILM">FILM - Film Studies</option>
+    <option value="FINA">FINA - Finance</option>
+    <option value="FORL">FORL - Foreign Languages</option>
+    <option value="FPMD">FPMD - Family &amp; Preventive Med</option>
+    <option value="FREN">FREN - French</option>
+    <option value="GENE">GENE - Genetics</option>
+    <option value="GEOG">GEOG - Geography</option>
+    <option value="GEOL">GEOL - Geology</option>
+    <option value="GERM">GERM - German</option>
+    <option value="GLST">GLST - Global Studies</option>
+    <option value="GMED">GMED - Greenville Medicine</option>
+    <option value="GRAD">GRAD - The Graduate School</option>
+    <option value="GREK">GREK - Greek</option>
+    <option value="HGEN">HGEN - Genetic Counseling</option>
+    <option value="HIMS">HIMS - Health Care Info Management</option>
+    <option value="HIST">HIST - History</option>
+    <option value="HMSV">HMSV - Human Services</option>
+    <option value="HONS">HONS - Honors</option>
+    <option value="HPEB">HPEB - Health Promo Education &amp; Beh</option>
+    <option value="HPRO">HPRO - Health Promotion</option>
+    <option value="HRSM">HRSM - Hosp Retail Sport Management</option>
+    <option value="HRTM">HRTM - Hotel Rest Tourism Management</option>
+    <option value="HSPM">HSPM - Health Serv Policy Management</option>
+    <option value="IBUS">IBUS - International Business</option>
+    <option value="IDST">IDST - Interdisciplinary Studies</option>
+    <option value="INFO">INFO - Info Management Systems</option>
+    <option value="INTL">INTL - Intl Study Abroad</option>
+    <option value="ITAL">ITAL - Italian</option>
+    <option value="ITEC">ITEC - Integrated Info Tech</option>
+    <option value="JAPA">JAPA - Japanese</option>
+    <option value="JOUR">JOUR - Journalism</option>
+    <option value="JSTU">JSTU - Jewish Studies</option>
+    <option value="LANU">LANU - Nursing</option>
+    <option value="LASP">LASP - Latin American Studies</option>
+    <option value="LATN">LATN - Latin</option>
+    <option value="LAWS">LAWS - Law School</option>
+    <option value="LBST">LBST - Liberal Studies</option>
+    <option value="LIBR">LIBR - Libraries</option>
+    <option value="LING">LING - Linguistics</option>
+    <option value="LOGC">LOGC - Logic</option>
+    <option value="MART">MART - Media Arts</option>
+    <option value="MATH">MATH - Mathematics</option>
+    <option value="MBAD">MBAD - Master Business Admin Program</option>
+    <option value="MBIM">MBIM - Microbiology &amp; Immunology</option>
+    <option value="MCBA">MCBA - Cell Biology &amp; Anatomy</option>
+    <option value="MEDI">MEDI - Medicine Clinical</option>
+    <option value="MGMT">MGMT - Management</option>
+    <option value="MGSC">MGSC - Management Science</option>
+    <option value="MILS">MILS - Military Science</option>
+    <option value="MKTG">MKTG - Marketing</option>
+    <option value="MSCI">MSCI - Marine Science</option>
+    <option value="MUED">MUED - Music Education</option>
+    <option value="MUSC">MUSC - Music</option>
+    <option value="MUSM">MUSM - Museum Management</option>
+    <option value="NAVY">NAVY - Navy</option>
+    <option value="NEUR">NEUR - Neurology</option>
+    <option value="NPAD">NPAD - Non-profit Admin</option>
+    <option value="NPSY">NPSY - Neuropsychiatry</option>
+    <option value="NURS">NURS - Nursing</option>
+    <option value="OBGY">OBGY - Obstetrics / Gynecology</option>
+    <option value="OPTH">OPTH - Ophthalmology</option>
+    <option value="ORSU">ORSU - Orthopaedic Surgery</option>
+    <option value="PALM">PALM - Palmetto Programs</option>
+    <option value="PAMB">PAMB - Patholgy &amp; Microbiology</option>
+    <option value="PATH">PATH - Pathology</option>
+    <option value="PEDI">PEDI - Pediatrics</option>
+    <option value="PEDU">PEDU - Physical Education</option>
+    <option value="PHAR">PHAR - Pharmacy</option>
+    <option value="PHIL">PHIL - Philosophy</option>
+    <option value="PHMY">PHMY - Pharmacy Professional</option>
+    <option value="PHPH">PHPH - Physiology &amp; Pharmacology</option>
+    <option value="PHYS">PHYS - Physics</option>
+    <option value="PHYT">PHYT - Physical Therapy</option>
+    <option value="PLAW">PLAW - Pre-Law</option>
+    <option value="PMDR">PMDR - Physical Medicine &amp; Rehab</option>
+    <option value="POLI">POLI - Political Science</option>
+    <option value="PORT">PORT - Portuguese</option>
+    <option value="PSYC">PSYC - Psychology</option>
+    <option value="PUBH">PUBH - Public Health</option>
+    <option value="PCAM">PCAM - Palmetto College</option>
+    <option value="RADI">RADI - Radiology</option>
+    <option value="RCON">RCON - Rehabilitation Counslng</option>
+    <option value="RELG">RELG - Religious Studies</option>
+    <option value="RETL">RETL - Retailing</option>
+    <option value="RHAB">RHAB - Rehab Counseling</option>
+    <option value="RUSS">RUSS - Russian</option>
+    <option value="SAEL">SAEL - Social Advocacy &amp; Ethical Life</option>
+    <option value="SCCP">SCCP - College of Pharmacy</option>
+    <option value="SCHC">SCHC - Honors College</option>
+    <option value="SLIS">SLIS - Library &amp; Info Science</option>
+    <option value="SMED">SMED - Science and Math Education</option>
+    <option value="SOCY">SOCY - Sociology</option>
+    <option value="SOST">SOST - Southern Studies</option>
+    <option value="SOWK">SOWK - Social Work</option>
+    <option value="SPAN">SPAN - Spanish</option>
+    <option value="SPCH">SPCH - Speech</option>
+    <option value="SPTE">SPTE - Sport &amp; Entertainment Management</option>
+    <option value="STAT">STAT - Statistics</option>
+    <option value="SURG">SURG - Surgery</option>
+    <option value="THEA">THEA - Theatre</option>
+    <option value="UNIV">UNIV - University Experience</option>
+    <option value="URBN">URBN - Urban &amp; Regional Studies</option>
+    <option value="WGST">WGST - Women &amp; Gender Studies</option>
+  </datalist>
+</form>
+<style>
+h1, h2 {
+  display: flex;
+  justify-content: center;
+}
+select {
+    resize: vertical;
+}
+</style>
+<script>
+NodeList.prototype.filter = Array.prototype.filter;
+HTMLFormControlsCollection.prototype.filter = Array.prototype.filter;
+
+// https://stackoverflow.com/a/18120786
+Element.prototype.remove = function () {
+  this.parentElement.removeChild(this);
+};
+
+// https://stackoverflow.com/a/4673436
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) {
+      return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+  };
+}
+
+const fromText = document.getElementById('from');
+const toText = document.getElementById('to');
+const campuses = document.getElementsByName('campus').filter(e => e.tagName == "INPUT");
+const subjects = document.getElementById('subjects');
+const firstSubject = document.getElementById('firstSubject');
+const emptySubject = document.createElement("INPUT");
+emptySubject.type = "text";
+emptySubject.setAttribute('list', 'subject');
+emptySubject.setAttribute('oninput', 'addSubject(this)');
+
+function toggleCampuses() {
+  const check = campuses.some(i => !i.checked);
+  campuses.forEach(i => i.checked = check);
+}
+
+// show numbers for credit min and max
+function updateValue(node, text) {
+  text.textContent = text.textContent.slice(0, -1) + node.value;
+}
+
+// todo: acts funky with spaces
+// todo: don't special case the first subject
+function addSubject(input) {
+  const last = subjects.lastElementChild;
+  if (last.isSameNode(input) && last.value.trim() != '') {
+    subjects.appendChild(emptySubject.cloneNode());
+  } else if (!firstSubject.isSameNode(input) && input.value == '') {
+    last.remove();
+  }
+}
+
+updateValue(document.getElementsByName('credit_to')[0], toText);
+updateValue(document.getElementsByName('credit_from')[0], fromText);
+// updateBookstore('ACCT', '222', '001', 'F18')
+
+function disableEmpty() {
+  form.elements
+      .filter(i => i.tagName == "INPUT" && i.value == "" )
+      .forEach(i => i.setAttribute('disabled', 'disabled'));
+  return true;
+}
+
+// undo disableEmpty on refresh
+form.elements
+    .filter(i => i.disabled)
+    .forEach(i => i.setAttribute('disabled', false));
+</script>
+</body>
+</html>
