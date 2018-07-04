@@ -47,8 +47,8 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             return
 
 
-    catalog_headers = ('course_link', 'title', 'department', 'code', 'description',
-                       'credits', 'attributes', 'level', 'type', 'all_sections', 'division')
+    catalog_headers = ('title', 'department', 'code', 'description', 'credits',
+                       'attributes', 'level', 'type', 'all_sections', 'division')
     catalog = csv.DictWriter(catalog_output, catalog_headers)
     catalog.writeheader()
 
@@ -60,10 +60,9 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
 
     for row in rows:
         if HEADER:
-            anchor = row.find('td').find('a')
-            course = {'course_link': anchor.attrib['href']}
+            course = {}
+            header_text = row.find('td').find('a').text.split(' - ')
             # some courses have '-' in title
-            header_text = anchor.text.split(' - ')
             course_id, course['title'] = header_text[0], ' - '.join(header_text[1:]).strip()
             course['department'], course['code'] = course_id.split(' ')
         else:
@@ -242,10 +241,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             parse_sections(file_handle, instructor_output, term_output, writable)
             return
 
-    headers = ('section_link', 'department', 'code', 'section', 'UID', 'term', 'campus',
-               'type', 'method', 'catalog_link', 'bookstore_link', 'days',
-               'location', 'startTime', 'endTime', 'primary_instructor',
-               'secondary_instructors', 'syllabus', 'attributes')
+    headers = ('department', 'code', 'section', 'UID', 'term', 'campus',
+               'type', 'method', 'days', 'location', 'startTime', 'endTime',
+               'primary_instructor', 'secondary_instructors', 'syllabus', 'attributes')
     sections = csv.DictWriter(section_output, headers)
     sections.writeheader()
 
@@ -266,9 +264,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     HEADER = True
     for row in rows:
         if HEADER:
-            anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
-            course = {'section_link': anchor.attrib.get('href')}
-            text = re.split(r'\W-\W', anchor.text)
+            course = {}
+            text = re.split(r'\W-\W', row.xpath('th/a[1]/text()')[0])
             # everything before last three is title
             course['UID'], course_id, course['section'] = text[-3:]
             course['department'], course['code'] = re.split(r'\W+', course_id)
@@ -296,11 +293,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             course['type'] = schedule_type.replace(' Schedule Type', '')
             course['method'] = method.replace(' Instructional Method', '')
 
-            links = main.xpath('(.|b|p)/a/@href')
-            course['catalog_link'], course['bookstore_link'] = links[-2:]
-
-            if len(links) == 3:
-                course['syllabus'] = links[0]
+            syllabus = main.xpath('(.|b|p)/a[position() = 3]/@href')
+            if syllabus:
+                    course['syllabus'] = syllabus[0]
 
             inner_row = main.xpath('table/tr[2]')
             if inner_row:
