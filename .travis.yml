@@ -1,0 +1,25 @@
+sudo: false
+language: python
+python:
+    - "3.5"
+    - "3.6"
+
+addons:
+    apt:
+        packages:
+            - tidy
+
+install:
+    - pip install -r requirements.txt
+
+cache:
+    directories:
+        - webpages
+        - exams
+        - grades
+        - books
+        - sections
+
+script:
+    - make test
+    - make clean

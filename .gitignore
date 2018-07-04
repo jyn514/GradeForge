@@ -1,3 +1,13 @@
-output.data
+.cache
+.pytest_cache
+*.csv
+books/
+exams/
+grades/
+sections/
+images/
 secrets.py
 classes.sql
+build
+dist
+*.egg-info

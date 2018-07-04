@@ -1,0 +1,10 @@
+# after this lxml breaks matplotlib (??!?)
+lxml<=4.2.1
+requests
+flask
+selenium
+# pandas 0.23.1 doesn't properly write to stdout
+pandas<=0.23.0
+matplotlib
+xlsx2csv
+pylint
