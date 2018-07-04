@@ -68,7 +68,13 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
         else:
             td = row.xpath('td')[0]
             course['description'] = td.text.strip()
-            course['credits'] = td.xpath('br[1]/following-sibling::text()')[0]
+            credits = td.xpath('br[1]/following-sibling::text()')[0]
+                # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
+            course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
+                                       credits.replace('Credit hours', '')
+                                       .replace('.000', '')
+                                       .strip())
+
             spans = td.xpath('span/following-sibling::text()')
             spans = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', spans)))
             course['level'], spans = spans[0], spans[1:]
@@ -98,7 +104,7 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']
-            catalog.writerow(clean_catalog(course))
+            catalog.writerow(course)
             del course
         HEADER = not HEADER
 
@@ -112,27 +118,6 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             LOGGER.info("%d descriptions available for '%s'; choosing the most common (%s)", len(final), abbreviation, most_common)
             LOGGER.debug("all descriptions: %s", final)
         department.writerow((abbreviation, most_common))
-
-
-def clean_catalog(course):
-    '''Make elements of dict predictable'''
-    if course['course_link'].startswith('/'):
-        course['course_link'] = BASE_URL + course['course_link']
-    # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
-    course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
-                               course['credits'].replace('Credit hours', '')
-                               .replace('.000', '')
-                               .strip())
-    try:
-        course['attributes']
-    except KeyError:
-        course['attributes'] = None
-    try:
-        if course['all_sections'].startswith('/'):
-            course['all_sections'] = BASE_URL + course['all_sections']
-    except KeyError:
-        course['all_sections'] = None
-    return course
 
 
 def _add_instructors(instructors, emails, instructor_dict):
@@ -295,6 +280,10 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
             syllabus = main.xpath('(.|b|p)/a[position() = 3]/@href')
             if syllabus:
+                if syllabus[0].startswith('/'):
+                    course['syllabus'] = BASE_URL + syllabus[0]
+                else:
+                    LOGGER.debug("syllabus '%s' doesn't start with '/'", syllabus)
                     course['syllabus'] = syllabus[0]
 
             inner_row = main.xpath('table/tr[2]')
@@ -312,7 +301,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             except ValueError:
                 terms.append(term)
                 course['term'] = len(terms) - 1
-            sections.writerow(clean_section(course))
+            sections.writerow(course)
             # error instead of silently addding wrong info when rows/headers out of order
             del course
         HEADER = not HEADER
@@ -325,23 +314,6 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     term_writer = csv.DictWriter(term_output, headers)
     term_writer.writeheader()
     term_writer.writerows(terms)
-
-
-def clean_section(course):
-    '''Make course elements more predictable'''
-    try:
-        if course['syllabus'].startswith('/'):
-            course['syllabus'] = BASE_URL + course['syllabus']
-    except KeyError:
-        course['syllabus'] = None
-    try:
-        course['attributes']
-    except KeyError:
-        course['attributes'] = None
-    for key in ('catalog_link', 'bookstore_link', 'section_link'):
-        if course[key].startswith('/'):
-            course[key] = BASE_URL + course[key]
-    return course
 
 
 def parse_exam(file_handle, output=stdout):
