@@ -19,16 +19,15 @@ def test_parse_semester():
 
 
 def test_army_time():
-    assert army_time('1:00 a.m') == '1:00'
+    assert army_time('1:00 a.m') == '01:00'
     assert army_time('1:00 pm') == '13:00'
     assert army_time('11:59a.m.') == '11:59'
     assert army_time('12:00 p.m') == '12:00'
-    assert army_time('12:00am') == '0:00'
+    assert army_time('12:00am') == '00:00'
     assert army_time('14:00') == '14:00'
-    assert army_time('00:00') == '0:00'
-    for time in ['65:00 am', '-51:00 p.m', '14:00 a.m', '0:00 am']:
-        with pytest.raises(ValueError):
-            army_time(time)
+    assert army_time('00:00') == '00:00'
+    assert army_time('00:00\x01') == '00:00'
+    assert army_time('10:00 a.\x01m.') == '10:00'
 
 
 def test_get_season():
