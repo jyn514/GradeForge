@@ -158,7 +158,7 @@ def catalog_link(semester, department, code):
 
     NOTE: there's a different 'catalog link' used by the university (bwckctlg.p_display_courses),
     but the info it has is a strict subset of the link above.
-    As such, we don't a function to link to it.'''
+    As such, we don't have a function to link to it.'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
     url_format = "{base_url}?cat_term_in={semester}&subj_code_in={department}crse_numb_in={code}"
     return url_format.format_map(locals())
