@@ -154,7 +154,11 @@ def army_time(time):
 
 def catalog_link(semester, department, code):
     '''Example:
-    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
+    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210
+
+    NOTE: there's a different 'catalog link' used by the university (bwckctlg.p_display_courses),
+    but the info it has is a strict subset of the link above.
+    As such, we don't a function to link to it.'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
     url_format = "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s"
     return url_format % (base_url, semester, department, code)
@@ -170,3 +174,12 @@ def section_link(semester, uid):
     https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
     return "%s?term_in=%s&crn_in=%s" % (base_url, semester, uid)
+
+
+def bookstore_link(semester, department, code, section):
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=WGST&p_crse_numb_in=621&p_seq_in=001'''
+    section = str(section).zfill(3)
+    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
+    url_format = "%s?p_term_in=%s&p_subj_in=%s&p_crse_numb_in=%s&p_seq_in=%s"
+    return url_format % (base_url, semester, department, code, section)
