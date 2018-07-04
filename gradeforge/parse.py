@@ -419,24 +419,23 @@ def get_seats(section_link):
 
 def parse_bookstore(file_handle, output=stdout):
     '''
-    Output must be a file_handle, not a file path
-
     Implemented:
     - name
     - ISBN
     - prices
+        Note that if price is not available on bookstore,
+        it is not entered as a key
         - used rent
         - new rent
         - used buy
         - new buy
-    Note that if price is not available on bookstore, it is not entered as a key
     - link
     - author
     - edition
     - required/recommended/optional
 
     Not implemented:
-    - price on amazon
+    - price on amazon, abebooks, etc
     '''
 
     if not hasattr(output, 'write'):
