@@ -13,7 +13,7 @@ import re  # used for only very basic stuff
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester
+from gradeforge.utils import army_time, parse_semester
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 LOGGER = getLogger(__name__)
@@ -445,12 +445,9 @@ def parse_exam(file_handle, output=stdout):
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
-    tmp_file = mkstemp()[1]
-    save(get(section_link).text, tmp_file)
-    body = etree.iterparse(open(tmp_file, 'rb'), html=True).__next__()[1].getparent().getnext()
-    table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
-    elements = list(list(table.iterdescendants('tr'))[1])[-3:]
-    return tuple(map(lambda x: x.text, elements))
+    document = etree.fromstring(get(section_link).text, parser=etree.HTMLParser())
+    return document.xpath('/html/body//table[@class="datadisplaytable"]/tr[2]/td'
+                          '//table/tr[2]/td/text()')
 
 
 def parse_bookstore(file_handle, output=stdout):

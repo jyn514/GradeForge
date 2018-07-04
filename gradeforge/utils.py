@@ -131,12 +131,6 @@ def get_semester_today():
     return parse_semester(get_season_today())
 
 
-def save(obj, output=stdout):
-    '''Put some data on disk'''
-    with open(output, 'wb') as i:
-        i.write(obj)
-
-
 def army_time(time):
     '''Convert 12-hour a.m./p.m. time to 24-hour time'''
     if ':' not in time:
