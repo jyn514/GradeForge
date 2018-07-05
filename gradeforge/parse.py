@@ -366,7 +366,10 @@ def parse_exam(file_handle, output=stdout):
             return
 
     def parse_days(text):
-        '''TODO: this doesn't need to be a function'''
+        '''
+        'Monday/Wednesday/Friday Meeting Times' -> 'MWF'
+        'Monday Only Meetings Times' -> 'M'
+        '''
         days = {'Monday': 'M',
                 'Tuesday': 'T',
                 'Wednesday': 'W',
@@ -381,6 +384,40 @@ def parse_exam(file_handle, output=stdout):
         elif 'Only' in text:
             return days[text.split(' Only')[0]]
         return ''.join(days[d] for d in text.split('/'))
+
+    def parse_exam_datetime(datetime):
+        '''str -> (date:str, time:str)
+
+        There are five cases to handle.
+        0. 'TBA'
+        1. <month>\.? <day>, <day of week>, regular class meeting time
+        2. <day of week>, <month>\.?, <day> - normal class meeting time
+        3. <month>\. <day>, <day of week> - <time>
+        4. <day of week> <month> <day> - <time>
+        '''
+        # case 0
+        if datetime == 'TBA':
+            return 'TBA', 'TBA'
+        # case 1, no dash
+        if 'regular class meeting time' in datetime.lower():
+            exam_time = None
+            exam_date = datetime.split(',')[0]
+        else:
+            date, time = re.split(r'\s*[–-]\s*', datetime)
+            # case 2
+            if 'normal class meeting time' in time.lower():
+                exam_time = None
+                exam_date = date[date.index(', ') + 2:]
+            # case 3
+            elif ',' in date:
+                exam_time = army_time(time)
+                exam_date = date.split(', ')[0]
+            # case 4
+            else:
+                exam_time = army_time(time)
+                exam_date = date[date.index(' ') + 1:]
+        exam_date = re.sub('(th|nd|st|rd)', '', exam_date).replace('.', '')
+        return exam_date, exam_time
 
     doc = etree.parse(file_handle, etree.HTMLParser())
 
@@ -400,7 +437,9 @@ def parse_exam(file_handle, output=stdout):
             days_met = parse_days(header.text)
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
-            days_met = 'any'  # TODO
+            terms = re.findall('\(([0-9][A-Z])\)', header.text)
+            days_met = ','.join(terms)
+
         for row in bodies[i].findall('tr'):
             current = {'semester': semester, 'days': days_met}
             # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
@@ -409,39 +448,28 @@ def parse_exam(file_handle, output=stdout):
                                           .strip()
                                           .replace('\xa0', ' '),
                                           row.findall('td'))
-            if exam_datetime == 'TBA':  # this is frustrating
-                exam_date, exam_time = 'TBA', 'TBA'
-            else:
-                split = exam_datetime.split(', ')
-                regex = r'\s*[–-]\s*'
-                if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
-                    exam_date, exam_time = split[0], split[-1]  # commma after Friday
-                    try:
-                        exam_time = re.split(regex, exam_time)[1]
-                    except IndexError:
-                        assert 'class meeting time' in exam_time.lower(), exam_time
-                else:  # Friday, May 4 - 8:30 p.m.
-                    exam_date, exam_time = re.split(r'\s*[–-]\s*', split[1])
-                exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
-                try:
-                    exam_time = army_time(exam_time)
-                except ValueError:  # TODO: DRY
-                    assert 'class meeting time' in exam_time.lower(), exam_time
+
+            exam_date, exam_time = parse_exam_datetime(exam_datetime)
+
             if 'all sections' in time_met.lower():
                 # TODO: add post-processing
-                current.update({'time_met': 'any'})
+                if exam_time is None:
+                    exam_time = 'any'
+                current.update({'time_met': 'any', 'exam_time': exam_time,
+                                'exam_date': exam_date})
                 writer.writerow(current)
             else:
                 split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
-                if days_met == 'any':  # don't remember what this is
-                    LOGGER.debug(split)
                 # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
                 for time in re.split(', ?', split[-1]):
+                    time = army_time(time)
                     copy = current.copy()
-                    copy.update({'time_met': army_time(time),
-                                 'exam_date': exam_date, 'exam_time': exam_time})
+                    if exam_time is None:
+                        copy['exam_time'] = time
+                    else:
+                        copy['exam_time'] = exam_time
+                    copy.update({'time_met': time, 'exam_date': exam_date})
                     writer.writerow(copy)
-
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
