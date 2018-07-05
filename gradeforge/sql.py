@@ -27,6 +27,12 @@ TABLES = {'class': ["title tinytext",
                     "all_sections tinytext"],
           'department': ["code char(4) PRIMARY KEY",
                          "description tinytext"],
+          'exam': ["semester char(6)",
+                   "days varchar(7)",
+                   "time_met time",
+                   "exam_date date",
+                   "exam_time time"
+                   ],
           'instructor': ["name tinytext PRIMARY KEY",
                          "email tinytext"],
           'term': ["id INTEGERY PRIMARY KEY",
@@ -121,7 +127,7 @@ def csv_insert(table, csv_file, cursor):
 def create(catalog='catalog.csv', departments='departments.csv',
            instructors='instructors.csv', terms='terms.csv',
            sections='sections.csv', grades='grades.csv',
-           database='../classes.sql'):
+           exams='exams.csv', database='../classes.sql'):
     '''main create function for the gradeforge project. for every table in
     TABLES, create it in the database and add the corresponding CSV file.'''
     with sqlite3.connect(database) as connection:
@@ -135,6 +141,7 @@ def create(catalog='catalog.csv', departments='departments.csv',
         csv_insert('term', terms, connection)
         csv_insert('section', sections, connection)
         csv_insert('grade', grades, connection)
+        csv_insert('exam', exams, connection)
 
 
 def limited_query(database='classes.sql', table='section', columns='*', **filters):
