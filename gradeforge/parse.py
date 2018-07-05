@@ -366,7 +366,10 @@ def parse_exam(file_handle, output=stdout):
             return
 
     def parse_days(text):
-        '''TODO: this doesn't need to be a function'''
+        '''
+        'Monday/Wednesday/Friday Meeting Times' -> 'MWF'
+        'Monday Only Meetings Times' -> 'M'
+        '''
         days = {'Monday': 'M',
                 'Tuesday': 'T',
                 'Wednesday': 'W',
