@@ -385,6 +385,40 @@ def parse_exam(file_handle, output=stdout):
             return days[text.split(' Only')[0]]
         return ''.join(days[d] for d in text.split('/'))
 
+    def parse_exam_datetime(datetime):
+        '''str -> (date:str, time:str)
+
+        There are five cases to handle.
+        0. 'TBA'
+        1. <month>\.? <day>, <day of week>, regular class meeting time
+        2. <day of week>, <month>\.?, <day> - normal class meeting time
+        3. <month>\. <day>, <day of week> - <time>
+        4. <day of week> <month> <day> - <time>
+        '''
+        # case 0
+        if datetime == 'TBA':
+            return 'TBA', 'TBA'
+        # case 1, no dash
+        if 'regular class meeting time' in datetime.lower():
+            exam_time = None
+            exam_date = datetime.split(',')[0]
+        else:
+            date, time = re.split(r'\s*[–-]\s*', datetime)
+            # case 2
+            if 'normal class meeting time' in time.lower():
+                exam_time = None
+                exam_date = date[date.index(', ') + 2:]
+            # case 3
+            elif ',' in date:
+                exam_time = army_time(time)
+                exam_date = date.split(', ')[0]
+            # case 4
+            else:
+                exam_time = army_time(time)
+                exam_date = date[date.index(' ') + 1:]
+        exam_date = re.sub('(th|nd|st|rd)', '', exam_date).replace('.', '')
+        return exam_date, exam_time
+
     doc = etree.parse(file_handle, etree.HTMLParser())
 
     title = doc.xpath('/html/head/title/text()')[0]
@@ -414,24 +448,9 @@ def parse_exam(file_handle, output=stdout):
                                           .strip()
                                           .replace('\xa0', ' '),
                                           row.findall('td'))
-            if exam_datetime == 'TBA':  # this is frustrating
-                exam_date, exam_time = 'TBA', 'TBA'
-            else:
-                split = exam_datetime.split(', ')
-                regex = r'\s*[–-]\s*'
-                if any(map(str.isnumeric, split[0])):  # sometimes it's 'May 4th, Fri.'
-                    exam_date, exam_time = split[0], split[-1]  # commma after Friday
-                    try:
-                        exam_time = re.split(regex, exam_time)[1]
-                    except IndexError:
-                        assert 'class meeting time' in exam_time.lower(), exam_time
-                else:  # Friday, May 4 - 8:30 p.m.
-                    exam_date, exam_time = re.split(r'\s*[–-]\s*', split[1])
-                exam_date = re.sub('(th|nd|st|rd)', '', exam_date)
-                try:
-                    exam_time = army_time(exam_time)
-                except ValueError:  # TODO: DRY
-                    assert 'class meeting time' in exam_time.lower(), exam_time
+
+            exam_date, exam_time = parse_exam_datetime(exam_datetime)
+
             if 'all sections' in time_met.lower():
                 # TODO: add post-processing
                 current.update({'time_met': 'any'})
