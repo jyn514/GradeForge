@@ -403,7 +403,9 @@ def parse_exam(file_handle, output=stdout):
             days_met = parse_days(header.text)
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
-            days_met = 'any'  # TODO
+            terms = re.findall('\(([0-9][A-Z])\)', header.text)
+            days_met = ','.join(terms)
+
         for row in bodies[i].findall('tr'):
             current = {'semester': semester, 'days': days_met}
             # Example: ('TR - 8:30 a.m.', 'Thursday, May 3 - 9:00 a.m.')
