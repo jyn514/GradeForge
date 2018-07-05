@@ -62,6 +62,13 @@ the dependencies will drive you mad. use the beautiful makefile instead.
 - png_for won't work for this semester (because the grades haven't been published).
   this sounds stupid but I was wracking my brains trying to figure out why it was broken.
 
+### Types
+- semester: a date in YYYYMM format, where MM is one of 01, 05, 08 and YYYY >= 2008; for example, 201608
+- department: a department name which matches the regex [A-Z]{4}; for example, CSCE
+- code: a class name which matches the regex [A-Z]?[0-9]{3}; for example, 145
+- section: a section identifier which identifies an instance of a class; for example 001
+- uid: a section identifier which is unique within a semester; matches the regex [0-9]{5}. for example, 84495
+
 ## Relevant Links
 ### Search Pages
 - [Bookstore](http://sc.bncollege.com/webapp/wcs/stores/servlet/TBWizardView?catalogId=10001&langId=-1&storeId=10052)
