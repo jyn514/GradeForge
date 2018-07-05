@@ -453,19 +453,23 @@ def parse_exam(file_handle, output=stdout):
 
             if 'all sections' in time_met.lower():
                 # TODO: add post-processing
-                current.update({'time_met': 'any'})
+                if exam_time is None:
+                    exam_time = 'any'
+                current.update({'time_met': 'any', 'exam_time': exam_time,
+                                'exam_date': exam_date})
                 writer.writerow(current)
             else:
                 split = re.split(r'\s*[MTWRFSU]+\s+(-\s+)?', time_met)
-                if days_met == 'any':  # don't remember what this is
-                    LOGGER.debug(split)
                 # example: '8:30 a.m.,11:40 a.m., 2:50 p.m., 6:00 p.m.'
                 for time in re.split(', ?', split[-1]):
+                    time = army_time(time)
                     copy = current.copy()
-                    copy.update({'time_met': army_time(time),
-                                 'exam_date': exam_date, 'exam_time': exam_time})
+                    if exam_time is None:
+                        copy['exam_time'] = time
+                    else:
+                        copy['exam_time'] = exam_time
+                    copy.update({'time_met': time, 'exam_date': exam_date})
                     writer.writerow(copy)
-
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
