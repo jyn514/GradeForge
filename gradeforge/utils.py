@@ -7,6 +7,8 @@ from argparse import HelpFormatter
 from datetime import date
 from sys import stdout
 
+from dateutil.parser import parse as time_parse
+
 # first semester is not a typo, this is how it is really accepted on the USC side
 allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
                         "201508", "201601", "201605", "201608", "201701", "201705",
@@ -131,25 +133,8 @@ def get_semester_today():
     return parse_semester(get_season_today())
 
 
-def army_time(time):
-    '''Convert 12-hour a.m./p.m. time to 24-hour time'''
-    if ':' not in time:
-        raise ValueError("Invalid time " + time)
-    hours, minutes = time.split(':')
-    hours = int(hours)
-    if hours > 24 or hours < 0:
-        raise ValueError("Invalid time " + time)
-
-    try:
-        minutes, ampm = re.split(r' *([ap])\.? *m', minutes)[:2]
-    except ValueError:
-        ampm = None
-    if (hours > 12 or hours == 0) and ampm is not None:
-        raise ValueError("Conflicting time system used in " + time)
-
-    if not (ampm == 'p') ^ (hours != 12):
-        hours += 12
-    return ':'.join((str(hours % 24), minutes))
+def army_time(given_time):
+    return time_parse(given_time.replace('\x01', '')).strftime("%H:%M")
 
 
 def catalog_link(semester, department, code):
