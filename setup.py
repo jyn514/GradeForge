@@ -31,6 +31,6 @@ setup(name='gradeforge', version='0.0.1-dev',
           'Topic::Internet::WWW/HTTP::Dynamic Content'
           # TODO: add license (full list at https://pypi.org/classifiers/)
     ),
-      entry_points={'console_scripts': ['gradeforge = gradeforge.__main__']},
+      entry_points={'console_scripts': ['gradeforge = gradeforge.__main__:main']},
       package_data={'gradeforge': ['classes.sql']}
 )
