@@ -10,7 +10,7 @@ from logging import getLogger
 from requests import get, post
 from selenium.common.exceptions import NoSuchElementException
 
-from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester
+from gradeforge.utils import allowed, parse_semester, get_season, b_and_n_semester, DEFAULT_DATABASE
 
 LOGGER = getLogger(__name__)
 
@@ -177,7 +177,7 @@ def get_all_books(semester='201805'):
     query = '''SELECT department, code, section
                FROM section INNER JOIN term ON term = term.id
                WHERE semester = ?'''
-    with connect('classes.sql') as database:
+    with connect(DEFAULT_DATABASE) as database:
         result = database.execute(query, [semester]).fetchall()
     driver = make_driver()
     try:

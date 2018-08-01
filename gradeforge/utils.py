@@ -3,11 +3,14 @@
 '''Misc utils. Strictly functional, not state-based.'''
 
 import re
+from os import path
 from argparse import HelpFormatter
 from datetime import date
 from sys import stdout
 
 from dateutil.parser import parse as time_parse
+
+DEFAULT_DATABASE = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'classes.sql')
 
 # first semester is not a typo, this is how it is really accepted on the USC side
 allowed = {'semester': ("201341", "201401", "201405", "201408", "201501", "201505",
