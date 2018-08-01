@@ -55,7 +55,7 @@ for opt in ['instructor', 'term']:
 
 # begin sql parser
 SQL = SUBPARSERS.add_parser('sql', description='create, query, and modify the sql database')
-SQL.add_argument('--database', '-d', default=path.abspath('classes.sql'))
+SQL.add_argument('--database', '-d', default=DEFAULT_DATABASE)
 COMMAND = SQL.add_subparsers(dest='command', help='command to execute')
 COMMAND.required = True
 
