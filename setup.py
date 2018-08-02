@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import subprocess
 from setuptools import setup
+from distutils.command.bdist import bdist
 
 with open("README.md") as f:
     long_description = f.read()
@@ -8,6 +10,12 @@ with open('requirements.txt') as f:
     requirements = tuple(map(str.strip,
                              filter(lambda s: not s.startswith('#'),
                                     f.readlines())))
+
+class CustomBuild(bdist):
+    def run(self):
+        if subprocess.run(['scripts/pre-commit']).returncode:
+            raise RuntimeError("make failed")
+        super().run()
 
 setup(name='gradeforge', version='0.0.1-dev',
       description='view available classes for the University of South Carolina',
@@ -32,5 +40,6 @@ setup(name='gradeforge', version='0.0.1-dev',
           # TODO: add license (full list at https://pypi.org/classifiers/)
     ),
       entry_points={'console_scripts': ['gradeforge = gradeforge.__main__:main']},
-      package_data={'gradeforge': ['classes.sql']}
+      package_data={'gradeforge': ['classes.sql']},
+      cmdclass={'bdist': CustomBuild}
 )
