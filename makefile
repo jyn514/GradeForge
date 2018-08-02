@@ -96,7 +96,7 @@ dump: sql
 test: sql | images
 	# these are ordered from least to most picky
 	python -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
-	pytest --pyargs gradeforge
+	pytest gradeforge
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
 	gradeforge/test/match.py gradeforge/**.py
