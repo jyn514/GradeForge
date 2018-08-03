@@ -6,7 +6,7 @@
 # it wants to stop the commit.
 
 # don't run expensive tests if nothing changed
-if [ -z $(git diff-index --cached --name-only HEAD) ]; then exit 0; fi
+if [ -z "$(git diff-index --cached --name-only HEAD)" ]; then exit 0; fi
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
