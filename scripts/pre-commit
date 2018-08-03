@@ -53,11 +53,11 @@ if ! git diff-index --check --cached $against --; then exit 1; fi
 mkdir -p test
 git checkout-index -a -f --prefix test/
 
-# cache html
+# cache downloads
 mkdir -p test/grades test/sections test/exams
-ln -sf -t test/grades $(realpath grades/*.pdf grades/*.xlsx)
-ln -sf -t test/sections $(realpath sections/*.html.bak)
-ln -sf -t test/exams $(realpath exams/*.html)
+ln -f -t test/grades grades/*.pdf grades/*.xlsx
+ln -f -t test/sections sections/*.html.bak
+ln -f -t test/exams exams/*.html
 ln -sf -t test $(realpath webpages)
 
-make -C test test || exit 1
+make -C test clean && make -C test test || exit 1
