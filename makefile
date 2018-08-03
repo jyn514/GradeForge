@@ -142,6 +142,9 @@ $(DEPARTMENT_OUTPUT): $(CATALOG_OUTPUT)
 $(GRADES_OUTPUT): $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES))
 	$(GRADEFORGE) combine grades $^ > $@
 
+.PHONY: all-exams
+all-exams: $(EXAMS)
+
 .SECONDEXPANSION:
 $(EXAMS): $$(subst .csv,.html, $$@)
 	$(GRADEFORGE) parse exam $^ $@
@@ -237,9 +240,7 @@ bookstore: classes.sql all-books
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
 $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR) images webpages:
-	mkdir $@
-
-
+	mkdir -p $@
 
 .PHONY: clean
 clean:

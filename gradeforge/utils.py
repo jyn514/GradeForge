@@ -133,22 +133,20 @@ def get_semester_today():
     return parse_semester(get_season_today())
 
 
-def save(obj, output=stdout):
-    '''Put some data on disk'''
-    with open(output, 'wb') as i:
-        i.write(obj)
-
-
 def army_time(given_time):
     return time_parse(given_time.replace('\x01', '')).strftime("%H:%M")
 
 
 def catalog_link(semester, department, code):
     '''Example:
-    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210'''
+    https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail?cat_term_in=201808&subj_code_in=BADM&crse_numb_in=B210
+
+    NOTE: there's a different 'catalog link' used by the university (bwckctlg.p_display_courses),
+    but the info it has is a strict subset of the link above.
+    As such, we don't have a function to link to it.'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckctlg.p_disp_course_detail'
-    url_format = "%s?cat_term_in=%s&subj_code_in=%s&crse_numb_in=%s"
-    return url_format % (base_url, semester, department, code)
+    url_format = "{base_url}?cat_term_in={semester}&subj_code_in={department}crse_numb_in={code}"
+    return url_format.format_map(locals())
 
 
 def bulletin_link():
@@ -160,4 +158,13 @@ def section_link(semester, uid):
     '''Example:
     https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched?term_in=201808&crn_in=12566'''
     base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckschd.p_disp_detail_sched'
-    return "%s?term_in=%s&crn_in=%s" % (base_url, semester, uid)
+    return "{base_url}?term_in={semester}&crn_in={uid}".format_map(locals())
+
+
+def bookstore_link(semester, department, code, section):
+    '''Example:
+    https://ssb.onecarolina.sc.edu/BANP/bwckbook.site?p_term_in=201808&p_subj_in=WGST&p_crse_numb_in=621&p_seq_in=001'''
+    section = str(section).zfill(3)
+    base_url = 'https://ssb.onecarolina.sc.edu/BANP/bwckbook.site'
+    url_format = "{base_url}?p_term_in={semester}&p_subj_in={department}&p_crse_numb_in={code}&p_seq_in={section}"
+    return url_format.format_map(locals())

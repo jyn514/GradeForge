@@ -4,7 +4,6 @@
 TODO:
 - have James redo schema
 - add location table (all info is available in course['location'])
-- make bookstore_link a property of course instead of section
 - compare section attribute to course attribute and remove if same
 - ask brady if we care about registration start
 '''
@@ -20,7 +19,6 @@ TABLES = {'class': ["title tinytext",
                     "attributes text",
                     "level tinytext",
                     "type tinytext",
-                    "course_link tinytext UNIQUE",
                     # I don't even know, this is a campus I think?
                     'division tinytext',
                     # NOTE: not unique because course could be crosslisted
@@ -47,7 +45,6 @@ TABLES = {'class': ["title tinytext",
                        "room smallint"],
                       # NOTE: unique within a semester, duplicated across semesters
           'section': ["uid tinyint(5)",
-                      "section_link tinytext UNIQUE",
                       "section tinytext",
                       "department char(4)",
                       "code varchar(5)",
@@ -56,8 +53,6 @@ TABLES = {'class': ["title tinytext",
                       "campus tinytext",
                       'type tinytext',
                       'method tinytext',
-                      'catalog_link tinytext',
-                      'bookstore_link tinytext',
                       "syllabus tinytext",
                       "days varchar(7)",
                       "location smallint",
