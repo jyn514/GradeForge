@@ -11,6 +11,8 @@ TODO:
 import sqlite3
 import csv
 
+from .utils import DEFAULT_DATABASE
+
 TABLES = {'class': ["title tinytext",
                     "department char(4)",
                     "code varchar(4)",
@@ -122,7 +124,7 @@ def csv_insert(table, csv_file, cursor):
 def create(catalog='catalog.csv', departments='departments.csv',
            instructors='instructors.csv', terms='terms.csv',
            sections='sections.csv', grades='grades.csv',
-           exams='exams.csv', database='../classes.sql'):
+           exams='exams.csv', database=DEFAULT_DATABASE):
     '''main create function for the gradeforge project. for every table in
     TABLES, create it in the database and add the corresponding CSV file.'''
     with sqlite3.connect(database) as connection:
@@ -139,7 +141,7 @@ def create(catalog='catalog.csv', departments='departments.csv',
         csv_insert('exam', exams, connection)
 
 
-def limited_query(database='classes.sql', table='section', columns='*', **filters):
+def limited_query(database=DEFAULT_DATABASE, table='section', columns='*', **filters):
     '''NOTE: Does NOT validate input, that is the responsibility of calling code.
     Fails noisily if args are incorrect. Example: query_sql.py --department CSCE CSCI'''
     # ex: subject IN ('CSCE', 'CSCI') AND CRN IN (12345, 12346)
@@ -151,13 +153,13 @@ def limited_query(database='classes.sql', table='section', columns='*', **filter
         return connection.execute(command).fetchall()
 
 
-def query(sql_query, database='classes.sql'):
+def query(sql_query, database=DEFAULT_DATABASE):
     '''Return the result of an sql query exactly as if it had been passed to the sqlite3 binary'''
     with sqlite3.connect(database) as connection:
         return '\n'.join('|'.join(map(str, t))
                          for t in connection.execute(sql_query).fetchall())
 
 
-def dump(database='classes.sql'):
+def dump(database=DEFAULT_DATABASE):
     '''Dump the whole database. Assumes the database was created by GradeForge.'''
     print('\n'.join(query("SELECT * FROM " + table) for table in TABLES))

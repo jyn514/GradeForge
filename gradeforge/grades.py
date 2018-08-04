@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot
 
-from gradeforge.utils import get_semester_today
+from gradeforge.utils import get_semester_today, DEFAULT_DATABASE
 
 def png_for(department, code, section, semester=get_semester_today()):
     '''Given the appropriate info, create a bar graph of the grades for that section
@@ -38,7 +38,7 @@ def png_for(department, code, section, semester=get_semester_today()):
                                      AND section = ?
                                      AND semester = ?''')
     info = department, code, section, semester
-    with connect('classes.sql') as database:
+    with connect(DEFAULT_DATABASE) as database:
         cursor = database.cursor()
         try:
             uid, instructor, title = cursor.execute(metadata_query, info).fetchone()

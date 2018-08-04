@@ -49,6 +49,11 @@ for), but absolutely unacceptable for other users.
 - Unit tests (the few we have): `make test`
 
 ## Development
+### Setting up
+1. `git clone https://github.com/jyn514/gradeforge` && cd gradeforge
+2. ln -s ../../scripts/pre-commit .git/hooks
+3. (optional) run `make data` to pre-populate the HTML
+
 ### Bugs
 - `parse_section` does not parse days met properly if the times are different
 on different days. run `make` on branch `broken` for an example.
