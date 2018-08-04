@@ -21,5 +21,4 @@ cache:
         - sections
 
 script:
-    - make test
-    - make clean
+    - scripts/pre-commit
