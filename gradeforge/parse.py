@@ -13,7 +13,7 @@ import re  # used for only very basic stuff
 from lxml import etree
 from requests import get
 
-from gradeforge.utils import save, army_time, parse_semester
+from gradeforge.utils import army_time, parse_semester
 
 BASE_URL = 'https://ssb.onecarolina.sc.edu'
 LOGGER = getLogger(__name__)
@@ -47,8 +47,8 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             return
 
 
-    catalog_headers = ('course_link', 'title', 'department', 'code', 'description',
-                       'credits', 'attributes', 'level', 'type', 'all_sections', 'division')
+    catalog_headers = ('title', 'department', 'code', 'description', 'credits',
+                       'attributes', 'level', 'type', 'all_sections', 'division')
     catalog = csv.DictWriter(catalog_output, catalog_headers)
     catalog.writeheader()
 
@@ -60,16 +60,21 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
 
     for row in rows:
         if HEADER:
-            anchor = row.find('td').find('a')
-            course = {'course_link': anchor.attrib['href']}
+            course = {}
+            header_text = row.find('td').find('a').text.split(' - ')
             # some courses have '-' in title
-            header_text = anchor.text.split(' - ')
             course_id, course['title'] = header_text[0], ' - '.join(header_text[1:]).strip()
             course['department'], course['code'] = course_id.split(' ')
         else:
             td = row.xpath('td')[0]
             course['description'] = td.text.strip()
-            course['credits'] = td.xpath('br[1]/following-sibling::text()')[0]
+            credits = td.xpath('br[1]/following-sibling::text()')[0]
+                # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
+            course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
+                                       credits.replace('Credit hours', '')
+                                       .replace('.000', '')
+                                       .strip())
+
             spans = td.xpath('span/following-sibling::text()')
             spans = tuple(map(lambda s: s.replace('\n', ''), filter(lambda s: s != '\n', spans)))
             course['level'], spans = spans[0], spans[1:]
@@ -99,7 +104,7 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             a = td.find('a')
             if a is not None:
                 course['all_sections'] = a.attrib['href']
-            catalog.writerow(clean_catalog(course))
+            catalog.writerow(course)
             del course
         HEADER = not HEADER
 
@@ -113,27 +118,6 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
             LOGGER.info("%d descriptions available for '%s'; choosing the most common (%s)", len(final), abbreviation, most_common)
             LOGGER.debug("all descriptions: %s", final)
         department.writerow((abbreviation, most_common))
-
-
-def clean_catalog(course):
-    '''Make elements of dict predictable'''
-    if course['course_link'].startswith('/'):
-        course['course_link'] = BASE_URL + course['course_link']
-    # ex: '7.000    OR  8.000 Credit hours' -> '7 TO 8'
-    course['credits'] = re.sub(' +(TO|OR) +', ' TO ',
-                               course['credits'].replace('Credit hours', '')
-                               .replace('.000', '')
-                               .strip())
-    try:
-        course['attributes']
-    except KeyError:
-        course['attributes'] = None
-    try:
-        if course['all_sections'].startswith('/'):
-            course['all_sections'] = BASE_URL + course['all_sections']
-    except KeyError:
-        course['all_sections'] = None
-    return course
 
 
 def _add_instructors(instructors, emails, instructor_dict):
@@ -242,10 +226,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             parse_sections(file_handle, instructor_output, term_output, writable)
             return
 
-    headers = ('section_link', 'department', 'code', 'section', 'UID', 'term', 'campus',
-               'type', 'method', 'catalog_link', 'bookstore_link', 'days',
-               'location', 'startTime', 'endTime', 'primary_instructor',
-               'secondary_instructors', 'syllabus', 'attributes')
+    headers = ('department', 'code', 'section', 'UID', 'term', 'campus',
+               'type', 'method', 'days', 'location', 'startTime', 'endTime',
+               'primary_instructor', 'secondary_instructors', 'syllabus', 'attributes')
     sections = csv.DictWriter(section_output, headers)
     sections.writeheader()
 
@@ -266,9 +249,8 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     HEADER = True
     for row in rows:
         if HEADER:
-            anchor = row.xpath('th/a[1]')[0]  # etree returns list even if only one element
-            course = {'section_link': anchor.attrib.get('href')}
-            text = re.split(r'\W-\W', anchor.text)
+            course = {}
+            text = re.split(r'\W-\W', row.xpath('th/a[1]/text()')[0])
             # everything before last three is title
             course['UID'], course_id, course['section'] = text[-3:]
             course['department'], course['code'] = re.split(r'\W+', course_id)
@@ -296,11 +278,13 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             course['type'] = schedule_type.replace(' Schedule Type', '')
             course['method'] = method.replace(' Instructional Method', '')
 
-            links = main.xpath('(.|b|p)/a/@href')
-            course['catalog_link'], course['bookstore_link'] = links[-2:]
-
-            if len(links) == 3:
-                course['syllabus'] = links[0]
+            syllabus = main.xpath('(.|b|p)/a[position() = 3]/@href')
+            if syllabus:
+                if syllabus[0].startswith('/'):
+                    course['syllabus'] = BASE_URL + syllabus[0]
+                else:
+                    LOGGER.debug("syllabus '%s' doesn't start with '/'", syllabus)
+                    course['syllabus'] = syllabus[0]
 
             inner_row = main.xpath('table/tr[2]')
             if inner_row:
@@ -317,7 +301,7 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
             except ValueError:
                 terms.append(term)
                 course['term'] = len(terms) - 1
-            sections.writerow(clean_section(course))
+            sections.writerow(course)
             # error instead of silently addding wrong info when rows/headers out of order
             del course
         HEADER = not HEADER
@@ -330,23 +314,6 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     term_writer = csv.DictWriter(term_output, headers)
     term_writer.writeheader()
     term_writer.writerows(terms)
-
-
-def clean_section(course):
-    '''Make course elements more predictable'''
-    try:
-        if course['syllabus'].startswith('/'):
-            course['syllabus'] = BASE_URL + course['syllabus']
-    except KeyError:
-        course['syllabus'] = None
-    try:
-        course['attributes']
-    except KeyError:
-        course['attributes'] = None
-    for key in ('catalog_link', 'bookstore_link', 'section_link'):
-        if course[key].startswith('/'):
-            course[key] = BASE_URL + course[key]
-    return course
 
 
 def parse_exam(file_handle, output=stdout):
@@ -473,34 +440,30 @@ def parse_exam(file_handle, output=stdout):
 
 def get_seats(section_link):
     'str -> (capacity, taken, remaining)'
-    tmp_file = mkstemp()[1]
-    save(get(section_link).text, tmp_file)
-    body = etree.iterparse(open(tmp_file, 'rb'), html=True).__next__()[1].getparent().getnext()
-    table = list(body.iterdescendants('table'))[2].iterdescendants('table').__next__()
-    elements = list(list(table.iterdescendants('tr'))[1])[-3:]
-    return tuple(map(lambda x: x.text, elements))
+    document = etree.fromstring(get(section_link).text, parser=etree.HTMLParser())
+    return document.xpath('/html/body//table[@class="datadisplaytable"]/tr[2]/td'
+                          '//table/tr[2]/td/text()')
 
 
 def parse_bookstore(file_handle, output=stdout):
     '''
-    Output must be a file_handle, not a file path
-
     Implemented:
     - name
     - ISBN
     - prices
+        Note that if price is not available on bookstore,
+        it is not entered as a key
         - used rent
         - new rent
         - used buy
         - new buy
-    Note that if price is not available on bookstore, it is not entered as a key
     - link
     - author
     - edition
     - required/recommended/optional
 
     Not implemented:
-    - price on amazon
+    - price on amazon, abebooks, etc
     '''
 
     if not hasattr(output, 'write'):
