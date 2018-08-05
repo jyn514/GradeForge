@@ -1,0 +1,12 @@
+#!/bin/sh
+# exit on error
+set -e
+# show commands as they are executed
+set -v
+
+pip install --upgrade setuptools wheel twine
+python setup.py sdist bdist_wheel bdist bdist_egg
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+pip install -i https://test.pypi.org/simple/ gradeforge
+gradeforge sql query
+test -n "$(gradeforge sql query 'SELECT * FROM instructor')"
