@@ -21,4 +21,15 @@ cache:
         - sections
 
 script:
-    - scripts/pre-commit
+    - make clean && make test
+      # note: only tests return code of grep
+    - sh -c 'set -e; if git diff-index --name-only HEAD | grep "setup.py|MANIFEST.in"; then scripts/test-upload; else exit 0; fi'
+
+before_cache:
+    - make clean
+
+env:
+    global:
+        - TWINE_USERNAME=jyn514
+        # TWINE_PASSWORD
+        - secure: "g6rdXaR+TuqMY0TLxzDu9fNWwDYbcP5FplCeHBviLClY45XxZ/hOCS6hnsUZTEthr+qAPaqzwKIUJ6vQo27jP9ifkXqrpRVOzorWMTdcWWP/aDg8Cdy35WJNJbynxx7KzItBhYt4mI4R0GI1ItZ5MK96vTdYxRDwQqfi0yjptXMwSxRr2dBJUWhMkB5zg+XLwmWJxtIlYcZo4cztxNwOBITP+IXWVZSv2qAqL3yzTnEqTQMTh9AuzTUXuTezWJww5lUq/BfXkAZN838O0BvkfKDm/4eJUiJubWh8mr0nZy273HXI7iMlnaNRNMS0gyhp88Go6J38iJwRnH9LJ4UXupEUKLxKxEgHrixm9NQiqRiA13sLygSA6twjrXMi27jU+lVOVjyhZj/8u9joKZCOiIa8LAhgt1jHSPgTCYdSBsa1zLsQstWIOhO2MGhCnndoPoUYRoSTRXPCu4B2X1SD+BC1qPwJon9d/kUunLp8ma9a9Xz0aNI35e1P+9SAb6cuhuhoI1Igou0HOehbfQMV6tVhHzlBm8vEZhWSyt1/JliiQHSJEQfpMW/a12HrKHsc1M1Fh+mYJ0FB8DcupBSRRYIsWmgkQbmx56ceoPIsOBjCVk8q84nBkjrsSez8U65p4WRQdEj//UtanXc1qp5c+i8OcYq/pReieZZWy8KkRos="
