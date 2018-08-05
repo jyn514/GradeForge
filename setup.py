@@ -17,6 +17,19 @@ class CustomBuild(bdist_wheel):
             raise RuntimeError("make failed")
         super().run()
 
+
+# Work around mbcs bug in distutils.
+# allows building .exe files on linux
+# http://bugs.python.org/issue10945
+import codecs
+try:
+    codecs.lookup('mbcs')
+except LookupError:
+    ascii = codecs.lookup('ascii')
+    func = lambda name, enc=ascii: {True: enc}.get(name=='mbcs')
+    codecs.register(func)
+
+
 setup(name='gradeforge', version='0.0.1-dev',
       description='view available classes for the University of South Carolina',
       author="Joshua Nelson, Brady O'Leary, Charles Daniels, and James Coman",
