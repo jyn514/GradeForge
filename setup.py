@@ -26,7 +26,6 @@ setup(name='gradeforge', version='0.0.1-dev',
       long_description=long_description,
       url='https://github.com/jyn514/GradeForge',  # TODO: make a website
       classifiers=(
-          # TODO: add license (full list at https://pypi.org/classifiers/)
           'Development Status :: 2 - Pre-Alpha',
           'Environment :: Console',
           'Intended Audience :: Developers',
@@ -34,6 +33,7 @@ setup(name='gradeforge', version='0.0.1-dev',
           'Operating System :: OS Independent',
           'Programming Language :: Python :: 3 :: Only',
           'Topic :: Database',
+          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
     ),
       entry_points={'console_scripts': ['gradeforge = gradeforge.__main__:main']},
       package_data={'gradeforge': ['classes.sql']},
