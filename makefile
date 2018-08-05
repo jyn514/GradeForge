@@ -39,13 +39,13 @@ DATA := $(CATALOG_OUTPUT) $(GRADES_OUTPUT) $(EXAM_OUTPUT) $(SECTION_OUTPUT) $(IN
 
 EXAMS := $(addsuffix .csv,$(addprefix exams/,Fall-2016 Fall-2017 Fall-2018 Summer-2016 Summer-2017 Summer-2018 Spring-2017 Spring-2018))
 
-OLD_GRADES != for season in Fall Spring; do \
-		for campus in Columbia Aiken Upstate; do \
-			for year in `seq 2008 2013`; do \
-				if ! ([ $$year = 2013 ] && [ $$season = Fall ]); then \
-					printf "$(GRADE_DIR)/$$season-$$year-$$campus.pdf "; \
-				fi \
-			done; done; done
+OLD_GRADES := $(shell for season in Fall Spring; do \
+	for campus in Columbia Aiken Upstate; do \
+		for year in `seq 2008 2013`; do \
+			if ! ([ $$year = 2013 ] && [ $$season = Fall ]); then \
+				printf "$(GRADE_DIR)/$$season-$$year-$$campus.pdf "; \
+			fi \
+done; done; done)
 
 NEW_GRADES := $(addsuffix .xlsx,$(addprefix $(GRADE_DIR)/,Summer-2014 Summer-2015 Summer-2016 Summer-2017 Fall-2013 Fall-2014 Fall-2015 Fall-2016 Fall-2017 Spring-2014 Spring-2015 Spring-2016 Spring-2017))
 
