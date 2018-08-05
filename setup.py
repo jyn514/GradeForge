@@ -13,7 +13,7 @@ with open('requirements.txt') as f:
 
 class CustomBuild(bdist_wheel):
     def run(self):
-        if subprocess.run(['scripts/pre-commit']).returncode:
+        if subprocess.run(['make']).returncode:
             raise RuntimeError("make failed")
         super().run()
 
