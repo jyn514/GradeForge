@@ -404,7 +404,7 @@ def parse_exam(file_handle, output=stdout):
             days_met = parse_days(header.text)
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
-            terms = re.findall('\(([0-9][A-Z])\)', header.text)
+            terms = re.findall(r'\(([0-9][A-Z])\)', header.text)
             days_met = ','.join(terms)
 
         for row in bodies[i].findall('tr'):
