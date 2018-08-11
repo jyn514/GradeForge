@@ -404,7 +404,7 @@ def parse_exam(file_handle, output=stdout):
             days_met = parse_days(header.text)
         # given session, not days. Ex: 'Spring I (3A) and Spring II (3B)'
         except KeyError:
-            terms = re.findall('\(([0-9][A-Z])\)', header.text)
+            terms = re.findall(r'\(([0-9][A-Z])\)', header.text)
             days_met = ','.join(terms)
 
         for row in bodies[i].findall('tr'):
@@ -518,8 +518,8 @@ def parse_grades(file_handle, output=stdout):
 
     while True:  # sometimes header is not on first line
         metadata = next(file_handle).strip()
-        metadata = re.sub(' ?GRADE ?(SPREAD FOR|DISTRIBUTION)', '', metadata)
-        match = re.search('(FALL|SUMMER|SPRING)? ?([0-9]{4})', metadata, re.IGNORECASE)
+        metadata = re.sub(r'\s?GRADE\s?(SPREAD FOR|DISTRIBUTION)', '', metadata)
+        match = re.search(r'(FALL|SUMMER|SPRING)?\s?([0-9]{4})', metadata, re.IGNORECASE)
         if match is not None:
             season, year = match.groups()
             break
@@ -528,9 +528,9 @@ def parse_grades(file_handle, output=stdout):
         season = 'spring'
     semester = parse_semester(season, year)
     try:
-        expr = '((THE )?UNIVERSITY OF SOUTH CAROLINA ?([‐-]|at) ?|USC[‐ -])([^:]*)'
+        expr = r'((THE\s)?UNIVERSITY\sOF\sSOUTH\sCAROLINA\s?([‐-]|at)\s?|USC[‐\s-])([^:]*)'
         campus = re.search(expr, metadata, flags=re.IGNORECASE)
-        campus = campus.groups()[-1].replace(' CAMPUS', '').upper()
+        campus = re.sub(r'\sCAMPUS', '', campus.groups()[0]).upper()
     except Exception:
         LOGGER.debug(metadata)
         raise
@@ -540,14 +540,14 @@ def parse_grades(file_handle, output=stdout):
         except StopIteration:
             LOGGER.debug(file_handle)
             raise
-        if re.match(' *DEP(ar)?T', headers, flags=re.IGNORECASE) is not None:
+        if re.match(r'\s*DEP(ar)?T', headers, flags=re.IGNORECASE) is not None:
             headers = headers.upper()
             headers = re.sub(r'DEP(AR)?T(\.|MENT)?', 'DEPARTMENT', headers)
             headers = re.sub(r'SEC(T(ION)?)?\.?', 'SECTION', headers)
-            headers = re.sub(r'C(OU)?RSE( ?#)?', 'CODE', headers)
+            headers = re.sub(r'C(OU)?RSE(\s?#)?', 'CODE', headers)
             headers = headers.replace('DEPARTMENT/CODE', 'DEPARTMENT CODE')
             headers = headers.replace('AUD', 'AUDIT')
-            headers = headers.replace(' I ', ' INCOMPLETE ').split()
+            headers = re.sub(r'\sI\s', ' INCOMPLETE ', headers).split()
             break
     if len(headers) < 18:
         raise ValueError("Bad value '%s' for headers" % headers)
