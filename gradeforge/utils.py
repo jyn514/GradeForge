@@ -7,6 +7,7 @@ from os import path
 from argparse import HelpFormatter
 from datetime import date
 from sys import stdout
+from collections import defaultdict
 
 from dateutil.parser import parse as time_parse
 
@@ -73,11 +74,11 @@ def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''
     semester = str(semester)
     season = get_season(semester)
-    if season == 'Fall':
-        return 'F' + semester[2:4]
-    elif season == 'Summer':
-        return 'A' + semester[2:4]
-    return 'W' + semester[2:4]
+    letters = defaultdict(lambda: 'W', {
+        'Fall': 'F',
+        'Summer': 'A'
+    })
+    return letters[season] + semester[2:4]
 
 
 def get_season(semester='201808'):
@@ -85,13 +86,15 @@ def get_season(semester='201808'):
     semester = str(semester)
     if not (len(semester) == 6 and semester.isnumeric()):
         raise ValueError("Expected 6 digit semester; got " + semester)
-    if semester[-2:] == '08':
-        return 'Fall'
-    elif semester[-2:] == '01':
-        return 'Spring'
-    elif semester[-2:] == '05':
-        return 'Summer'
-    raise ValueError("Bad month %s in %s" % (semester[-2:], semester))
+
+    def error():
+        raise ValueError("Bad month %s in %s" % (semester[-2:], semester))
+    seasons = defaultdict(error, {
+        '01': 'Spring',
+        '05': 'Summer',
+        '08': 'Fall',
+    })
+    return seasons[semester[-2:]]
 
 
 def get_season_today():
@@ -110,25 +113,20 @@ def parse_semester(season, year=date.today().year):
     season = str(season).lower()
     if season in allowed['semester']:
         return season
-    elif season.isnumeric() and len(season) == 6:
+    if season.isnumeric() and len(season) == 6:
         error = season + " is the right format but invalid. The year is likely too early or late."
         raise ValueError(error)
     year = str(year)
     if len(year) != 4 or not year.isnumeric():
         raise ValueError("expected four digit year; was given " + year)
     if int(year) >= 2014:
-        if season == 'fall':
-            return year + '08'
-        elif season == 'spring':
-            return year + '01'
-        elif season == 'summer':
-            return year + '05'
+        seasons = {'fall': '08', 'spring': '01', 'summer': '05'}
     else:
-        if season == 'fall':
-            return year + '41'
-        elif season == 'spring':
-            return year + '11'
-    raise ValueError("'%s' not a valid USC season for year %s" % (season, year))
+        seasons = {'fall': '41', 'spring': '11'}
+    try:
+        return year + seasons[season]
+    except KeyError as e:
+        raise ValueError("'{0}' not a valid USC season for year {1}".format(season, year)) from e
 
 
 def get_semester_today():
