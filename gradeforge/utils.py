@@ -2,11 +2,8 @@
 
 '''Misc utils. Strictly functional, not state-based.'''
 
-import re
 from os import path
-from argparse import HelpFormatter
 from datetime import date
-from sys import stdout
 from collections import defaultdict
 
 from dateutil.parser import parse as time_parse
@@ -69,6 +66,7 @@ def argparse_format_action_invocation(self, action):
     if action.nargs != 0:
         parts[-1] += ' %s' % self._format_args(action, action.dest.upper())
     return ', '.join(parts)
+
 
 def b_and_n_semester(semester):
     '''Example: 201808 -> F18'''

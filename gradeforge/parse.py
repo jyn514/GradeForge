@@ -3,7 +3,6 @@
 '''HTML parsing. Generally, works only on files, not on strings'''
 
 from collections import defaultdict
-from tempfile import mkstemp  # used for downloading seats remaining
 from sys import stdout
 from logging import getLogger
 from datetime import datetime

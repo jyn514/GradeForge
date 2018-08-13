@@ -8,14 +8,15 @@ from os import path
 import argparse
 import logging
 
-from . import *
+from .__init__ import *
+from .utils import argparse_format_action_invocation
 
 def main():
     'since setup.py requires a function for main, we just wrap the whole module in a function'
     # override the default help formatter for ArgumentParser to avoid printing
     # duplicate copies of possible parameters
     # pylint: disable=undefined-variable
-    argparse.HelpFormatter._format_action_invocation = utils.argparse_format_action_invocation
+    argparse.HelpFormatter._format_action_invocation = argparse_format_action_invocation
 
     from argparse import ArgumentParser
 
