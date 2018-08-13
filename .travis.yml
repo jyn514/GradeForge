@@ -29,8 +29,34 @@ script:
 before_cache:
     - make clean
 
+# for checking GPG signed commit for deployment
+after_success:
+    - mkdir -p ~/.gnupg
+    # this is wiped after every build
+    - printf '\nkeyserver-options auto-key-retrieve\nauto-key-locate hkp://pool.sks-keyservers.net' >> ~/.gnupg/gpg.conf
+
 env:
     global:
         - TWINE_USERNAME=jyn514
         # TWINE_PASSWORD
         - secure: "g6rdXaR+TuqMY0TLxzDu9fNWwDYbcP5FplCeHBviLClY45XxZ/hOCS6hnsUZTEthr+qAPaqzwKIUJ6vQo27jP9ifkXqrpRVOzorWMTdcWWP/aDg8Cdy35WJNJbynxx7KzItBhYt4mI4R0GI1ItZ5MK96vTdYxRDwQqfi0yjptXMwSxRr2dBJUWhMkB5zg+XLwmWJxtIlYcZo4cztxNwOBITP+IXWVZSv2qAqL3yzTnEqTQMTh9AuzTUXuTezWJww5lUq/BfXkAZN838O0BvkfKDm/4eJUiJubWh8mr0nZy273HXI7iMlnaNRNMS0gyhp88Go6J38iJwRnH9LJ4UXupEUKLxKxEgHrixm9NQiqRiA13sLygSA6twjrXMi27jU+lVOVjyhZj/8u9joKZCOiIa8LAhgt1jHSPgTCYdSBsa1zLsQstWIOhO2MGhCnndoPoUYRoSTRXPCu4B2X1SD+BC1qPwJon9d/kUunLp8ma9a9Xz0aNI35e1P+9SAb6cuhuhoI1Igou0HOehbfQMV6tVhHzlBm8vEZhWSyt1/JliiQHSJEQfpMW/a12HrKHsc1M1Fh+mYJ0FB8DcupBSRRYIsWmgkQbmx56ceoPIsOBjCVk8q84nBkjrsSez8U65p4WRQdEj//UtanXc1qp5c+i8OcYq/pReieZZWy8KkRos="
+
+deploy:
+  - provider: releases
+    api_key:
+        secure: "EkpJys5qDaBNPDsfhl9YycRZrSnlgYa3iHutrKoemSDrX5jB6l9JG6/DYPqC1GlwnMSkHKqjgZ6ZRcVWyqr1IhJbQ8lnNEyOkkMZ8/IUyPi3SA0qPf+evqjaRv0gsXegbXIJmReVrQWZGdHYW5xfi+3VK4mYHNEBUZd1w84/5L0wsUAqQSFwJDOjQzYE7Wo98y33ZJcJVLpTmAOC6crXs3VIBs1mEPAG+tLtnsTLKUP6AfRq7c49QAETwP+cTAZHLM58uPBGgjntDa4SYK9scSfmgzN767CyUPbF3YYskQq63lJUJ7OjPr4bO/bgEghVaMRLzT5RpVR06TOxrfTJaQBND6dWqXDzLdeMlePyI9UMqosNbQkZ+h/O/OY7kubevEpIlOtutwCz8WORXjY/+er8Y749Lj/OqwRJoB5cN/H32piROzf3mrxzdMT+URo/GfpJukEpLgk+NjzLXNYDR7PptfpjpTpwCKJPmSNR1yb2n2ud6Egq71U/kJ7vqWQWDiWXln4Ari4OYLdkaitsNwRu8oCS0z86nWjM825QobQ57PBEBytg0xHI+4kkJrjP1/36t43omrKZASIKCd+CV924TtrkAYfNR+Z06zm1OK948BPaaxJ8LJVmwHxdtqYPph3h1b+MKnCul/WMWq+D3v1xwoXq+kno692lq78+b6I="
+    file: gradeforge/**/*
+    on:
+        repo: jyn514/GradeForge
+        tags: true
+  - provider: pypi
+    user: 'jynelson'
+    password:
+        secure: "V4LwmuBdXxNXtyB8BNZ31VcQICcRFvYyy/2EYf762WkoRRxmtqRYnIQTyUdB+ektTbZMcOw7Owzqkg8yVfo8dCUx7lntl1ABnQsHImSkEBdX16X5bmqpKkqEFSu1dD2/WnJi58Tnrx8QuzqWnepP8sdubApq4N44G9ijgC4viPl32nU4+ksNx8AZmMqZz3qYH6DBIAxzANyx5U8AfYC+0scwcUO1aLHrmrZtevx56utThSS4buFEyqddzO/QQI8rgRT8YJZJ+2atoLYsq9V0xWc5szlCL0jr75vzWOZ0WFpCN7bPXAYu6+1mM+Zw+YRK0hc43T0Xt/cI3MoyOACTAfZpeFyfPd9GG4pzPe0lzNHFIbJXI0tQ0+gMoSbBVm8Xz1wLOUlwU4XKMNJrRLDh+ZtLwAj/wTFKUrtO1n5qWzJeya2SrPZIfiGsAgQOXVDv1xsy5rYw26R8LFXYlgEZs7L+Q1DSo0BGiWulQAv43DZ6rJjbwJ7Lweuo1/FOEZFpQ3Q77jPMUwQDFAuOlmauqBxi+AXcA86o7ZoN+MX3o4qxCHGAianTZthBSmY4+aOHSTDJ6+XX4zkrar8li+UwFOEYs7w30LysCxhsRnvN9ZARaCMMgj1TwF0XqqhZocQ/WU4O8n6mpmeP19YlY9cqlD7sfyZgPDtV3SF+JSZkRZU="
+    skip_cleanup: true
+    distributions: 'sdist bdist_wheel bdist_egg bdist_dumb bdist_wininst'
+    on:
+        repo: jyn514/GradeForge
+        tags: true
+        # signed commit; see https://docs.travis-ci.com/user/deployment#examples-of-conditional-deployment
+        condition: '$(git verify-commit HEAD > /dev/null; echo $?) -eq 0'
