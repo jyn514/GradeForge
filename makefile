@@ -31,7 +31,7 @@ MAKEFLAGS += -j4 --warn-undefined-variables
 SHELL = sh
 
 # data variables
-GRADEFORGE = python -m gradeforge
+GRADEFORGE = python3 -m gradeforge
 
 # NOTE: BOOKSTORE_OUTPUT is not here because a) getting books for every section would
 # get us IP-banned and b) cut doesn't work with newlines
@@ -95,7 +95,7 @@ dump: sql
 .PHONY: test
 test: sql | images
 	# these are ordered from least to most picky
-	python -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
+	python3 -c 'from gradeforge.grades import png_for; png_for("NURS", "U497", "PC8", 201705)'
 	pytest gradeforge
 	pylint --extension-pkg-whitelist=lxml gradeforge | tee pylint.txt
 	if grep '^E:' pylint.txt; then exit 1; fi
@@ -167,7 +167,7 @@ cleanup = 1 s/\([A-DF]+?\)_GF/\1/g; 1 s/COURSE_SECTION/SECTION/; 1 s/_NUMBER//g;
 $(subst .xlsx,.csv,$(NEW_GRADES)): $$(subst .csv,.xlsx,$$@)
 	xlsx2csv $^ $@
 	sed -i '$(cleanup)' $@
-	$(eval SEMESTER := $(shell python -c 'from gradeforge.utils import parse_semester; \
+	$(eval SEMESTER := $(shell python3 -c 'from gradeforge.utils import parse_semester; \
 					      tmp = "$@".split("/")[1].split(".")[0].split("-"); \
 					      print(parse_semester(*tmp))'))
 	sed -i '1 s/^/SEMESTER,CAMPUS,/' $@
@@ -227,7 +227,7 @@ $(SECTION_OUTPUT) $(EXAM_OUTPUT):
 .PHONY: all-books
 all-books: gradeforge/classes.sql | $(BOOK_DIR)
 	for semester in `sqlite3 $^ "select distinct semester from section;"`; do \
-		python -c "from gradeforge.download import get_all_books; \
+		python3 -c "from gradeforge.download import get_all_books; \
 			   get_all_books($$semester)"; done
 
 # the reason this calls make recursively is because it's really a collection of
