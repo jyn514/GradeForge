@@ -383,7 +383,7 @@ def parse_exam(file_handle, output=stdout):
             else:
                 exam_time = army_time(time)
                 exam_date = date[date.index(' ') + 1:]
-        exam_date = re.sub('(th|nd|st|rd)', '', exam_date).replace('.', '')
+        exam_date = re.sub(r'(th|nd|st|rd)\s*$', '', exam_date).replace('.', '')
         return exam_date, exam_time
 
     doc = etree.parse(file_handle, etree.HTMLParser())
