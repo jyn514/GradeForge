@@ -11,7 +11,7 @@ import logging
 from . import *
 
 def main():
-
+    'since setup.py requires a function for main, we just wrap the whole module in a function'
     # override the default help formatter for ArgumentParser to avoid printing
     # duplicate copies of possible parameters
     # pylint: disable=undefined-variable
@@ -164,6 +164,6 @@ def main():
             stdout.buffer.write(get_grades(ARGS.year, ARGS.season, ARGS.campus))
 
 if __name__ == '__main__':
+    # when is this not the case? when we are imported by setup.py
+    # in this case, __name__ is 'gradeforge.__main__'
     main()
-else:
-    logging.debug(__name__)
