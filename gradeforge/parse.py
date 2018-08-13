@@ -352,7 +352,7 @@ def parse_exam(file_handle, output=stdout):
         text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
         if 'Session' in text:
             return text  # don't mess with this
-        elif 'Only' in text:
+        if 'Only' in text:
             return days[text.split(' Only')[0]]
         return ''.join(days[d] for d in text.split('/'))
 
