@@ -5,9 +5,9 @@ set -e
 set -v
 
 [ $# -gt 0 ] && PIP_OPTS="$@"
-pip install --upgrade $PIP_OPTS setuptools wheel twine
-python setup.py sdist bdist_wheel bdist bdist_egg
+python3 -m pip install --upgrade $PIP_OPTS setuptools wheel twine
+python3 setup.py sdist bdist_wheel bdist bdist_egg
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-pip install -i https://test.pypi.org/simple/ $PIP_OPTS gradeforge
+python3 -m pip install -i https://test.pypi.org/simple/ gradeforge
 gradeforge sql query
 test -n "$(gradeforge sql query 'SELECT * FROM instructor')"
