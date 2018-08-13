@@ -30,8 +30,7 @@ def main():
     SUBPARSERS.required = True
 
     # begin web parser
-    WEB = SUBPARSERS.add_parser('web',
-        description='run the web server')
+    WEB = SUBPARSERS.add_parser('web', description='run the web server')
     WEB.add_argument('--port', '-p', type=int, default=5000)
 
     # begin `parse` parser
@@ -48,12 +47,12 @@ def main():
     INFO.add_parser('bookstore', parents=[IO])
     INFO.add_parser('grades', parents=[IO])
     INFO.add_parser('catalog', parents=[IO]).add_argument('--departments', '--department-output',
-                                                        default=stdout)
+                                                          default=stdout)
 
     SECTIONS = INFO.add_parser('sections', parents=[IO])
     for opt in ['instructor', 'term']:
         SECTIONS.add_argument('--%ss' % opt, '--%s-output' % opt,
-                            default=stdout)
+                              default=stdout)
 
     # begin sql parser
     SQL = SUBPARSERS.add_parser('sql', description='create, query, and modify the sql database')
@@ -63,8 +62,8 @@ def main():
 
     QUERY = COMMAND.add_parser('query', help='query information from an existing database')
     QUERY.add_argument('sql_query', default='SELECT sql FROM sqlite_master', nargs='?',
-                    help='query to run. must be valid SQLite3 syntax, '
-                    + 'but ending semicolon is optional.')
+                       help='query to run. must be valid SQLite3 syntax, '
+                       + 'but ending semicolon is optional.')
 
     COMMAND.add_parser('create', help='create a new database')
     COMMAND.add_parser('dump', help='show everything in a database')
@@ -79,10 +78,10 @@ def main():
     DOWNLOAD.required = True
 
     DOWNLOAD.add_argument('--season', '-s', type=str.lower,
-                        default=get_season_today(),
-                        choices=('fall', 'summer', 'spring'))
+                          default=get_season_today(),
+                          choices=('fall', 'summer', 'spring'))
     DOWNLOAD.add_argument('--year', '-y', type=int, default=date.today().year,
-                        choices=range(2008, date.today().year + 1))
+                          choices=range(2008, date.today().year + 1))
 
     INFO = DOWNLOAD.add_subparsers(dest='info')
     INFO.required = True
@@ -96,7 +95,7 @@ def main():
 
     BOOKSTORE = INFO.add_parser('bookstore', description='textbooks for a given section')
     BOOKSTORE.add_argument('department', choices=allowed['department'],
-                        metavar='DEPARTMENT', type=str.upper)
+                           metavar='DEPARTMENT', type=str.upper)
     BOOKSTORE.add_argument('number', choices=range(1000), type=int, metavar='CODE')
 
     BOOKSTORE.add_argument('section')
@@ -136,11 +135,11 @@ def main():
             parse_grades(ARGS.input, ARGS.output)
         elif ARGS.info == 'catalog':
             parse_catalog(ARGS.input, catalog_output=ARGS.output,
-                        department_output=ARGS.departments)
+                          department_output=ARGS.departments)
         else:
             parse_sections(ARGS.input, instructor_output=ARGS.instructors,
-                        term_output=ARGS.terms,
-                        section_output=ARGS.output)
+                           term_output=ARGS.terms,
+                           section_output=ARGS.output)
     elif ARGS.subparser == 'combine':
         if ARGS.info == 'grades':
             combine_grades(ARGS.input)
@@ -155,7 +154,7 @@ def main():
             print(get_exam(ARGS.year, ARGS.season))
         elif ARGS.info == 'sections':
             print(get_sections(semester=parse_semester(ARGS.season, year=ARGS.year),
-                            campus=ARGS.campus, term=ARGS.term))
+                               campus=ARGS.campus, term=ARGS.term))
         elif ARGS.info == 'catalog':
             print(get_catalog(semester=parse_semester(ARGS.season, year=ARGS.year)))
         elif ARGS.info == 'bookstore':
