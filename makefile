@@ -12,6 +12,7 @@ CATALOG_DIR = catalogs
 
 # output config
 BOOKSTORE_OUTPUT = books.csv
+DATABASE = gradeforge/classes.sql
 
 CATALOG_OUTPUT = catalog.csv
 DEPARTMENT_OUTPUT = departments.csv
@@ -75,7 +76,7 @@ help-recipies:
 all: sql
 
 .PHONY: sql
-sql: gradeforge/classes.sql
+sql: $(DATABASE)
 
 .PHONY: data
 data: $(DATA)
@@ -101,7 +102,7 @@ test: sql | images
 	if grep '^E:' pylint.txt; then exit 1; fi
 	gradeforge/test/match.py gradeforge/**.py
 
-gradeforge/classes.sql: $(DATA)
+$(DATABASE): $(DATA)
 	$(RM) $@
 	$(GRADEFORGE) sql create
 
@@ -225,7 +226,7 @@ $(SECTION_OUTPUT) $(EXAM_OUTPUT):
 
 # TODO: the HTML needs to be rate limited
 .PHONY: all-books
-all-books: gradeforge/classes.sql | $(BOOK_DIR)
+all-books: $(DATABASE) | $(BOOK_DIR)
 	for semester in `sqlite3 $^ "select distinct semester from section;"`; do \
 		python -c "from gradeforge.download import get_all_books; \
 			   get_all_books($$semester)"; done
@@ -235,7 +236,7 @@ all-books: gradeforge/classes.sql | $(BOOK_DIR)
 # we've made the database.
 # TODO: can be parallel
 .PHONY: bookstore
-bookstore: gradeforge/classes.sql all-books
+bookstore: $(DATABASE) all-books
 	# sqlite uses '||' for string concatenation for some reason
 	for f in `sqlite3 $^ "select '$(BOOK_DIR)/' || semester || '-' || department || '-' || code || '-' || section || '.csv' from section"`; do $(MAKE) $$f; done;
 
@@ -244,7 +245,7 @@ $(EXAM_DIR) $(GRADE_DIR) $(BOOK_DIR) $(SECTION_DIR) $(CATALOG_DIR) images webpag
 
 .PHONY: clean
 clean:
-	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) $(SECTION_DIR)/*.csv gradeforge/classes.sql catalog.departments.csv
+	$(RM) $(DATA) $(EXAMS) $(subst .pdf,.csv,$(OLD_GRADES)) $(subst .xlsx,.csv,$(NEW_GRADES)) $(SECTION_DIR)/*.csv $(DATABASE) catalog.departments.csv
 
 .PHONY: clobber
 clobber: clean
