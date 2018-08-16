@@ -35,7 +35,7 @@ TABLES = {'class': ["title tinytext",
                    ],
           'instructor': ["name tinytext PRIMARY KEY",
                          "email tinytext"],
-          'term': ["id INTEGERY PRIMARY KEY",
+          'term': ["id INTEGER PRIMARY KEY",
                    "semester char(6)",
                    "startDate date",
                    "endDate date",
@@ -160,6 +160,6 @@ def query(sql_query, database=DEFAULT_DATABASE):
                          for t in connection.execute(sql_query).fetchall())
 
 
-def dump(database=DEFAULT_DATABASE):
+def dump():
     '''Dump the whole database. Assumes the database was created by GradeForge.'''
     print('\n'.join(query("SELECT * FROM " + table) for table in TABLES))

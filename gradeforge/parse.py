@@ -3,7 +3,6 @@
 '''HTML parsing. Generally, works only on files, not on strings'''
 
 from collections import defaultdict
-from tempfile import mkstemp  # used for downloading seats remaining
 from sys import stdout
 from logging import getLogger
 from datetime import datetime
@@ -115,7 +114,9 @@ def parse_catalog(file_handle, catalog_output='courses.csv', department_output='
         final = sorted(descriptions.items(), key=lambda tup: tup[1], reverse=True)
         most_common = final[0][0]
         if len(final) > 1:
-            LOGGER.info("%d descriptions available for '%s'; choosing the most common (%s)", len(final), abbreviation, most_common)
+            LOGGER.info("%d descriptions available for '%s'; "
+                        "choosing the most common (%s)",
+                        len(final), abbreviation, most_common)
             LOGGER.debug("all descriptions: %s", final)
         department.writerow((abbreviation, most_common))
 
@@ -124,12 +125,13 @@ def _add_instructors(instructors, emails, instructor_dict):
     '''INTERNAL DO NOT USE'''
     assert len(instructors) == len(emails), (instructors, emails)
     for instructor, email in zip(instructors, emails):
-            try:
-                if email is not None and email != instructor_dict[instructor]:
-                    LOGGER.warning("email '%s' for instructor '%s' already exists; refusing to overwrite with '%s'",
-                                instructor_dict[instructor], instructor, email)
-            except KeyError:
-                instructor_dict[instructor] = email
+        try:
+            if email is not None and email != instructor_dict[instructor]:
+                LOGGER.warning("email '%s' for instructor '%s' already exists; "
+                               "refusing to overwrite with '%s'",
+                               instructor_dict[instructor], instructor, email)
+        except KeyError:
+            instructor_dict[instructor] = email
 
 def _parse_instructors(row, instructors, instructor_dict):
     'Element, str, dict -> str, str'
@@ -243,8 +245,9 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
     terms = []
 
     doc = etree.parse(file_handle, etree.HTMLParser())
-    rows = doc.xpath('/html/body//table[@class="datadisplaytable" '
-                                       'and @width="100%"][1]/tr[position() > 2]')
+    rows = doc.xpath('/html/body'
+                     '//table[@class="datadisplaytable" and @width="100%"][1]'
+                     '/tr[position() > 2]')
     assert not len(rows) & 1  # even
     HEADER = True
     for row in rows:
@@ -288,12 +291,12 @@ def parse_sections(file_handle, instructor_output='instructors.csv',
 
             inner_row = main.xpath('table/tr[2]')
             if inner_row:
-                assert len(inner_row) == 1, (row, course)
+                assert len(inner_row) == 1, (inner_row, course)
                 _parse_inner_row(inner_row[0], course, term, instructor_dict)
 
             for key, value in term.items():
                 if key != 'semester' and value is not None:
-                    'Aug 24, 2018 -> 2018-08-24'
+                    # Aug 24, 2018 -> 2018-08-24
                     term[key] = datetime.strptime(value.replace(',', ''),
                                                   "%b %d %Y").date().isoformat()
             try:
@@ -348,7 +351,7 @@ def parse_exam(file_handle, output=stdout):
         text = text.split(' Meeting Times')[0].replace('\xa0', ' ')
         if 'Session' in text:
             return text  # don't mess with this
-        elif 'Only' in text:
+        if 'Only' in text:
             return days[text.split(' Only')[0]]
         return ''.join(days[d] for d in text.split('/'))
 
@@ -357,9 +360,9 @@ def parse_exam(file_handle, output=stdout):
 
         There are five cases to handle.
         0. 'TBA'
-        1. <month>\.? <day>, <day of week>, regular class meeting time
-        2. <day of week>, <month>\.?, <day> - normal class meeting time
-        3. <month>\. <day>, <day of week> - <time>
+        1. <month>. <day>, <day of week>, regular class meeting time
+        2. <day of week>, <month>., <day> - normal class meeting time
+        3. <month>. <day>, <day of week> - <time>
         4. <day of week> <month> <day> - <time>
         '''
         # case 0
@@ -470,13 +473,11 @@ def parse_bookstore(file_handle, output=stdout):
         with open(output, 'w') as writable:
             parse_bookstore(file_handle, writable)
             return
-    doc = etree.parse(file_handle, etree.HTMLParser())
-    xpath = ('/html/body/header/section/div[@class="courseMaterialsList"]'
-             '/div/form[@id="courseListForm"]')
-    form = doc.xpath(xpath)[0]
-    books = form.xpath('div[@class="book_sec"]/div/div[@class="book-list"]/div')
+    books = etree.parse(file_handle, etree.HTMLParser()).xpath(
+        '/html/body/header/section/div[@class="courseMaterialsList"]'
+        '/div/form[@id="courseListForm"]'
+        '/div[@class="book_sec"]/div/div[@class="book-list"]/div')
 
-    # TODO: sometimes prices are missing. need to handle this gracefully
     headers = ('title', 'required', 'author', 'edition', 'publisher', 'isbn',
                'image', 'link', 'buy-new', 'buy-used', 'rent-new', 'rent-used')
     writer = csv.DictWriter(output, headers)
@@ -524,7 +525,8 @@ def parse_grades(file_handle, output=stdout):
             season, year = match.groups()
             break
     if season is None:
-        LOGGER.warning("'%s' does not have enough info to parse semester, assuming season is Spring", metadata)
+        LOGGER.warning("'%s' does not have enough info to parse semester, "
+                       "assuming season is Spring", metadata)
         season = 'spring'
     semester = parse_semester(season, year)
     try:
