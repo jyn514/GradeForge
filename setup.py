@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess
+from distutils.command.build import build
 from setuptools import setup
-from wheel.bdist_wheel import bdist_wheel
 
 with open("README.md") as f:
     long_description = f.read()
@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
                              filter(lambda s: not s.startswith('#'),
                                     f.readlines())))
 
-class CustomBuild(bdist_wheel):
+class CustomBuild(build):
     def run(self):
         if subprocess.run(['make']).returncode:
             raise RuntimeError("make failed")
@@ -50,5 +50,5 @@ setup(name='gradeforge', version='0.0.1-dev',
     ),
       entry_points={'console_scripts': ['gradeforge = gradeforge.__main__:main']},
       package_data={'gradeforge': ['classes.sql']},
-      cmdclass={'bdist_wheel': CustomBuild}
+      cmdclass={'build': CustomBuild}
 )
